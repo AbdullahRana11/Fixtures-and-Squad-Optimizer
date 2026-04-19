@@ -1,1 +1,2 @@
-# Fixtures-and-Squad-Optimizer
+## Developed By
+Muhammad Abdullah Rana
