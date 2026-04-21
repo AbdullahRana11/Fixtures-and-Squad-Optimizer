@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import uclController from './controllers/ucl.controller';
+import * as fplController from './controllers/fpl.controller';
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ app.use(cors({
 app.use(express.json());
 
 app.post('/api/ucl/draw-match', uclController.drawMatch);
+app.post('/api/fpl/optimize', fplController.optimizeSquad);
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
