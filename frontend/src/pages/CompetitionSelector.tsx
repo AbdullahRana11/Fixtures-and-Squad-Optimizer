@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { History as HistoryIcon } from 'lucide-react';
+import HistoryDrawer from '../components/HistoryDrawer';
+import { HistoryEntry } from '../utils/fixtureUtils';
 
 // Asset Imports
 import plBg from '../assets/pics/Premier-League.png';
@@ -31,10 +34,25 @@ const competitions: Competition[] = [
 
 const CompetitionSelector: React.FC = () => {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [historyOpen, setHistoryOpen] = useState(false);
   const navigate = useNavigate();
+
+  const handleViewHistory = (entry: HistoryEntry) => {
+    // Navigate to local display or custom generator with the history data
+    // For simplicity, we can reuse FixtureDisplay for league data 
+    // and CustomGenerator for custom data
+    if (entry.source === 'Custom') {
+       // We'd need to update CustomGenerator to take initial data
+       // For now, let's just log or implement a quick preview
+       alert(`Viewing: ${entry.name}. Matches: ${entry.fixtures.length}`);
+    } else {
+       navigate('/fixtures/display', { state: { schedule: { fixtures: entry.fixtures, league: entry.name, teams: entry.teams }, leagueId: entry.source.toLowerCase().includes('premier') ? 'pl' : 'ucl' } });
+    }
+  };
 
   return (
     <div className="relative w-full h-screen overflow-y-auto flex flex-wrap justify-center bg-void">
+      {/* Competitions Map ... */}
       {competitions.map((comp) => {
         const isHovered = hoveredId === comp.id;
         const isDimmed = hoveredId !== null && !isHovered;
@@ -46,9 +64,14 @@ const CompetitionSelector: React.FC = () => {
             onMouseEnter={() => setHoveredId(comp.id)}
             onMouseLeave={() => setHoveredId(null)}
             onClick={() => {
-              navigate(`/fixtures/select?league=${comp.id}`);
+              if (comp.id === 'custom') {
+                navigate('/fixtures/custom');
+              } else {
+                navigate(`/fixtures/select?league=${comp.id}`);
+              }
             }}
           >
+            {/* ... Background and Glow code ... */}
             {/* Background Image */}
             <div 
               className="absolute inset-0 z-0 bg-cover bg-center transition-all duration-700"
@@ -91,6 +114,15 @@ const CompetitionSelector: React.FC = () => {
         );
       })}
       
+      {/* History Button Shortcut */}
+      <button 
+        onClick={() => setHistoryOpen(true)}
+        className="absolute top-8 right-8 z-50 flex items-center gap-3 px-6 py-2 rounded-full border border-white/10 bg-black/40 backdrop-blur-xl text-white/50 hover:text-white hover:border-white/30 transition-all uppercase text-[10px] tracking-[0.3em] font-bold"
+      >
+        <HistoryIcon className="w-4 h-4" />
+        View History
+      </button>
+      
       {/* Home Button Shortcut */}
       <button 
         onClick={() => navigate('/')}
@@ -98,6 +130,13 @@ const CompetitionSelector: React.FC = () => {
       >
         ← Return Home
       </button>
+
+      {/* History Drawer */}
+      <HistoryDrawer 
+        isOpen={historyOpen}
+        onClose={() => setHistoryOpen(false)}
+        onView={handleViewHistory}
+      />
     </div>
   );
 };
