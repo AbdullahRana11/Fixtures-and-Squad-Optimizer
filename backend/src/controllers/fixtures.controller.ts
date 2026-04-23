@@ -4,6 +4,7 @@ import { FixtureGenerator, TeamInfo } from '../algorithms/fixture-generator';
 import { CLLeaguePhaseEngine, CLTeamInfo } from '../algorithms/cl-league-phase-engine';
 import { FACupEngine, FACupTeam } from '../algorithms/fa-cup-engine';
 import { MatchPredictor } from '../algorithms/match-predictor';
+import { CLKnockoutEngine } from '../algorithms/cl-knockout-engine';
 import { FPLKnapsackEngine } from '../algorithms/fpl-knapsack-engine';
 import clTeamsJson from '../data/cl-teams.json';
 
@@ -33,7 +34,8 @@ const REQUIRED_COUNTS: Record<string, number> = {
   laliga: 20,
   seriea: 20,
   bundesliga: 18,
-  ucl: 36,
+  ucl: 36, // Standard league phase
+  'ucl-knockout': 24, // New knockout format
   facup: 64,
   custom: 20, // Default to 20 but user can pick
 };
@@ -114,10 +116,13 @@ export const generateFixtures = async (req: Request, res: Response) => {
       return res.status(400).json({ error: { message: 'Missing league or teamNames' } });
     }
 
-    const requiredCount = REQUIRED_COUNTS[league];
+    // Use mode-specific count if available (e.g. ucl-knockout)
+    const effectiveLeague = (mode && REQUIRED_COUNTS[mode]) ? mode : league;
+    const requiredCount = REQUIRED_COUNTS[effectiveLeague];
+
     if (requiredCount && teamNames.length !== requiredCount) {
       return res.status(400).json({
-        error: { message: `${league} requires exactly ${requiredCount} teams, got ${teamNames.length}` },
+        error: { message: `${effectiveLeague} requires exactly ${requiredCount} teams, got ${teamNames.length}` },
       });
     }
 
@@ -141,7 +146,13 @@ export const generateFixtures = async (req: Request, res: Response) => {
       return res.json(schedule);
     }
 
-    // ---- CHAMPIONS LEAGUE (from JSON) ----
+    // ---- UCL KNOCKOUT ----
+    if (league === 'ucl' && mode === 'ucl-knockout') {
+        const engine = new CLKnockoutEngine(teamNames);
+        return res.json(engine.generateInitialBracket());
+    }
+
+    // ---- CHAMPIONS LEAGUE LEAGUE PHASE (from JSON) ----
     if (league === 'ucl') {
       const allCL = clTeamsJson as any[];
       const selected = allCL.filter(t => teamNames.includes(t.name));
@@ -167,7 +178,7 @@ export const generateFixtures = async (req: Request, res: Response) => {
             date: md.date,
             time: m.time,
             stadium: m.stadium,
-            is_derby: false // Could be enhanced later
+            is_derby: false
           });
         }
       }
@@ -182,6 +193,8 @@ export const generateFixtures = async (req: Request, res: Response) => {
         telemetry: clResult.telemetry
       });
     }
+
+
 
     // ---- FA CUP ----
     if (league === 'facup') {
@@ -289,9 +302,54 @@ export const advanceFACupRound = async (req: Request, res: Response) => {
 };
 
 /**
+ * POST /api/fixtures/ucl/next-round
+ */
+export const getNextUCLRound = async (req: Request, res: Response) => {
+  try {
+    const { bracket, winners, roundIndex } = req.body;
+    
+    // Logical progression for UCL
+    const nextRoundIdx = roundIndex + 1;
+    if (nextRoundIdx >= bracket.rounds.length) return res.json(bracket);
+
+    const nextRound = bracket.rounds[nextRoundIdx];
+    
+    // Fill matches in the next round using winners
+    if (nextRound.name === 'Round of 16') {
+      // Winners of playoffs (8 teams) join top 8 (who are already in bracket.away for R16)
+      for (let i = 0; i < winners.length; i++) {
+        nextRound.matches[i].home = winners[i];
+      }
+    } else {
+      // QF, SF, Final
+      for (let i = 0; i < winners.length; i += 2) {
+        const matchIdx = Math.floor(i / 2);
+        if (nextRound.matches[matchIdx]) {
+          nextRound.matches[matchIdx].home = winners[i];
+          nextRound.matches[matchIdx].away = winners[i + 1];
+        }
+      }
+    }
+
+    return res.json(bracket);
+  } catch (error: any) {
+    return res.status(500).json({ error: { message: 'Failed to advance UCL round' } });
+  }
+};
+
+// Mapping Full Team Name -> FPL Short Code
+const TEAM_CODE_MAP: Record<string, string> = {
+  'Arsenal': 'ARS', 'Aston Villa': 'AVL', 'Bournemouth': 'BOU', 'Brentford': 'BRE',
+  'Brighton': 'BHA', 'Brighton & Hove Albion': 'BHA', 'Chelsea': 'CHE', 'Crystal Palace': 'CRY',
+  'Everton': 'EVE', 'Fulham': 'FUL', 'Ipswich Town': 'IPS', 'Ipswich': 'IPS', 'Leicester City': 'LEI', 
+  'Leicester': 'LEI', 'Liverpool': 'LIV', 'Manchester City': 'MCI', 'Man City': 'MCI',
+  'Manchester United': 'MUN', 'Man Utd': 'MUN', 'Newcastle United': 'NEW', 'Newcastle': 'NEW',
+  'Nottingham Forest': 'NFO', 'Southampton': 'SOU', 'Tottenham Hotspur': 'TOT', 'Tottenham': 'TOT', 'Spurs': 'TOT',
+  'West Ham United': 'WHU', 'West Ham': 'WHU', 'Wolverhampton Wanderers': 'WOL', 'Wolves': 'WOL'
+};
+
+/**
  * POST /api/fpl/optimize-matchweek
- * FPL Integration — optimize squad with fixture context for a specific matchweek.
- * Body: { budget, matchweek, fixtures: [{home, away}], k_index? }
  */
 export const optimizeMatchweek = async (req: Request, res: Response) => {
   try {
@@ -301,11 +359,15 @@ export const optimizeMatchweek = async (req: Request, res: Response) => {
       return res.status(400).json({ error: { message: 'Missing matchweek or fixtures' } });
     }
 
-    // Build opponent difficulty map: team → opponent name
+    // Build opponent difficulty map using Short Codes
     const opponentMap = new Map<string, { opponent: string; isHome: boolean }>();
+    
     for (const f of fixtures) {
-      opponentMap.set(f.home, { opponent: f.away, isHome: true });
-      opponentMap.set(f.away, { opponent: f.home, isHome: false });
+      const homeCode = TEAM_CODE_MAP[f.home] || f.home;
+      const awayCode = TEAM_CODE_MAP[f.away] || f.away;
+      
+      opponentMap.set(homeCode, { opponent: awayCode, isHome: true });
+      opponentMap.set(awayCode, { opponent: homeCode, isHome: false });
     }
 
     const players = await prisma.player.findMany();
@@ -313,14 +375,16 @@ export const optimizeMatchweek = async (req: Request, res: Response) => {
     // Adjust player values based on fixture context
     const adjustedPlayers = players.map(p => {
       const matchup = opponentMap.get(p.club);
-      if (!matchup) return p; // Club not playing this MW
+      if (!matchup) return p; 
 
-      // Boost home players, slight nerf for away
-      const homeBoost = matchup.isHome ? 1.08 : 0.95;
+      // AGGRESSIVE multipliers to ensure VISIBLE rotation between gameweeks
+      // MILDER multipliers: Don't bench superstars just because they are away
+      const fixtureMultiplier = matchup.isHome ? 1.25 : 0.85;
 
       return {
         ...p,
-        home_stadium_multiplier: p.home_stadium_multiplier * homeBoost,
+        // Compounding logic: keep original stats but pivot strongly on the current fixture
+        home_stadium_multiplier: p.home_stadium_multiplier * fixtureMultiplier,
       };
     });
 
@@ -338,8 +402,8 @@ export const optimizeMatchweek = async (req: Request, res: Response) => {
   }
 };
 
-// Legacy endpoint
-export const generateSeason = async (req: Request, res: Response) => {
+// Get a fixed 38-week PL season for FPL context
+export const getSeasonFixtures = async (req: Request, res: Response) => {
   try {
     const teamsData = await prisma.team.findMany({
       where: { sheet_source: 'English_FA_Pool_64', league: 'Premier League' },
@@ -350,8 +414,10 @@ export const generateSeason = async (req: Request, res: Response) => {
       name: `Team ${i + 1}`, city: `City ${i + 1}`, stadium: `Stadium ${i + 1}`, biggest_rival: null, policing_conflict: null,
     }))).map(t => ({ ...t }));
 
+    // Use a fixed season for FPL tactical planning
     const engine = new FixtureGenerator(teamInfos, 'pl', 2025);
-    return res.json(engine.generate());
+    const season = engine.generate();
+    return res.json(season);
   } catch (error: any) {
     return res.status(500).json({ error: { message: 'Internal server error' } });
   }
