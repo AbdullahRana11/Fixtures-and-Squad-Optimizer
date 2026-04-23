@@ -4,7 +4,7 @@ export interface FPLOptimizationResult {
   squad: Player[];
   summary: {
     total_cost: number;
-    total_points: number;
+    total_dynamic_value: number;
   };
   telemetry: {
     branches_evaluated: number;
@@ -14,12 +14,17 @@ export interface FPLOptimizationResult {
   };
 }
 
+export interface PlayerWithDynamic extends Player {
+  dynamicValue: number;
+}
+
 export class FPLKnapsackEngine {
-  private players: Player[];
+  private players: PlayerWithDynamic[];
   private maxBudget: number;
+  private targetK: number;
   
-  private bestPoints: number = -1;
-  private bestSquad: Player[] = [];
+  // To store top K solutions
+  private bestSolutions: { points: number, squad: PlayerWithDynamic[] }[] = [];
   
   private branchesEvaluated: number = 0;
   private branchesPruned: number = 0;
@@ -29,14 +34,34 @@ export class FPLKnapsackEngine {
   private readonly TIME_LIMIT_MS = 4500; // 4.5 seconds cutoff for safety
   private timeExceeded = false;
 
-  constructor(players: Player[], budget: number) {
-    // Sort players by value density (points / cost)
-    this.players = players.sort((a, b) => {
-      const ratioA = a.points / Number(a.cost_millions);
-      const ratioB = b.points / Number(b.cost_millions);
-      return ratioB - ratioA; // Descending
-    });
+  constructor(players: Player[], budget: number, kIndex: number = 1) {
     this.maxBudget = budget;
+    this.targetK = kIndex;
+
+    const TEAM_CODE_MAP: Record<string, string> = {
+      'Arsenal': 'ARS', 'Aston Villa': 'AVL', 'Bournemouth': 'BOU', 'Brentford': 'BRE',
+      'Brighton': 'BHA', 'Brighton & Hove Albion': 'BHA', 'Chelsea': 'CHE', 'Crystal Palace': 'CRY',
+      'Everton': 'EVE', 'Fulham': 'FUL', 'Ipswich Town': 'IPS', 'Ipswich': 'IPS', 'Leicester City': 'LEI', 
+      'Leicester': 'LEI', 'Liverpool': 'LIV', 'Manchester City': 'MCI', 'Man City': 'MCI',
+      'Manchester United': 'MUN', 'Man Utd': 'MUN', 'Newcastle United': 'NEW', 'Newcastle': 'NEW',
+      'Nottingham Forest': 'NFO', 'Southampton': 'SOU', 'Tottenham Hotspur': 'TOT', 'Tottenham': 'TOT', 'Spurs': 'TOT',
+      'West Ham United': 'WHU', 'West Ham': 'WHU', 'Wolverhampton Wanderers': 'WOL', 'Wolves': 'WOL'
+    };
+
+    this.players = players.map(p => {
+      // Normalize club name for constraint enforcement
+      const club = TEAM_CODE_MAP[p.club] || p.club;
+      
+      // $Value = ((Base_Form * 0.4) + (last_3 * 0.3) + (overall_ability / 10 * 0.3)) * stadium * expectation
+      const dynamicValue = ((p.base_form * 0.4) + (p.last_3_vs_opponent_pts * 0.3) + ((p.overall_ability / 10.0) * 0.3)) * p.home_stadium_multiplier * p.expectation_multiplier;
+      
+      return { ...p, club, dynamicValue };
+    }).sort((a, b) => {
+      // Sort by value density
+      const ratioA = a.dynamicValue / Number(a.cost_millions);
+      const ratioB = b.dynamicValue / Number(b.cost_millions);
+      return ratioB - ratioA; 
+    });
   }
 
   // Fractional knapsack upper bound ignoring club and exact position constraints
@@ -50,22 +75,35 @@ export class FPLKnapsackEngine {
 
     while (j < this.players.length && weight + Number(this.players[j].cost_millions) <= this.maxBudget && selected < 15) {
       weight += Number(this.players[j].cost_millions);
-      boundPoints += this.players[j].points;
+      boundPoints += this.players[j].dynamicValue;
       j++;
       selected++;
     }
 
     if (j < this.players.length && selected < 15) {
       const remainingBudget = this.maxBudget - weight;
-      boundPoints += this.players[j].points * (remainingBudget / Number(this.players[j].cost_millions));
+      boundPoints += this.players[j].dynamicValue * (remainingBudget / Number(this.players[j].cost_millions));
     }
 
     return boundPoints;
   }
 
+  private getLowestDynamicValueInTopK(): number {
+    if (this.bestSolutions.length < this.targetK) return -1;
+    return this.bestSolutions[this.bestSolutions.length - 1].points;
+  }
+
+  private addSolution(points: number, squad: PlayerWithDynamic[]) {
+    this.bestSolutions.push({ points, squad: [...squad] });
+    this.bestSolutions.sort((a, b) => b.points - a.points);
+    if (this.bestSolutions.length > this.targetK) {
+      this.bestSolutions.pop();
+    }
+  }
+
   private backtrack(
     idx: number,
-    selected: Player[],
+    selected: PlayerWithDynamic[],
     currentPoints: number,
     currentCost: number,
     posCounts: Record<string, number>,
@@ -86,9 +124,8 @@ export class FPLKnapsackEngine {
         posCounts['MID'] === 5 &&
         posCounts['FWD'] === 3
       ) {
-        if (currentPoints > this.bestPoints) {
-          this.bestPoints = currentPoints;
-          this.bestSquad = [...selected];
+        if (this.bestSolutions.length < this.targetK || currentPoints > this.getLowestDynamicValueInTopK()) {
+          this.addSolution(currentPoints, selected);
         }
       }
       return;
@@ -104,8 +141,8 @@ export class FPLKnapsackEngine {
 
     this.branchesEvaluated++;
 
-    // Prune if theoretical max is worse than best found
-    if (this.bound(idx, currentCost, currentPoints, selected.length) <= this.bestPoints) {
+    // Prune if theoretical max is worse than lowest in our K-best container
+    if (this.bestSolutions.length === this.targetK && this.bound(idx, currentCost, currentPoints, selected.length) <= this.getLowestDynamicValueInTopK()) {
       this.branchesPruned++;
       return;
     }
@@ -114,7 +151,7 @@ export class FPLKnapsackEngine {
     const playerCost = Number(p.cost_millions);
 
     // Branch 1: Include player
-    if (currentCost + playerCost <= this.maxBudget && (clubCounts[p.club_name] || 0) < 3) {
+    if (currentCost + playerCost <= this.maxBudget && (clubCounts[p.club] || 0) < 3) {
       let canAdd = false;
       if (p.position === 'GK' && posCounts['GK'] < 2) canAdd = true;
       if (p.position === 'DEF' && posCounts['DEF'] < 5) canAdd = true;
@@ -124,13 +161,13 @@ export class FPLKnapsackEngine {
       if (canAdd) {
         selected.push(p);
         posCounts[p.position]++;
-        clubCounts[p.club_name] = (clubCounts[p.club_name] || 0) + 1;
+        clubCounts[p.club] = (clubCounts[p.club] || 0) + 1;
 
-        this.backtrack(idx + 1, selected, currentPoints + p.points, currentCost + playerCost, posCounts, clubCounts);
+        this.backtrack(idx + 1, selected, currentPoints + p.dynamicValue, currentCost + playerCost, posCounts, clubCounts);
 
         selected.pop();
         posCounts[p.position]--;
-        clubCounts[p.club_name]--;
+        clubCounts[p.club]--;
       }
     }
 
@@ -146,12 +183,18 @@ export class FPLKnapsackEngine {
     this.backtrack(0, [], 0, 0, posCounts, clubCounts);
 
     const execTime = Date.now() - this.startTime;
+    
+    // Fallback if we didn't find enough solutions to reach targetK
+    const finalSolutionIndex = Math.min(this.targetK - 1, this.bestSolutions.length - 1);
+    const finalSolution = finalSolutionIndex >= 0 
+      ? this.bestSolutions[finalSolutionIndex] 
+      : { squad: [], points: 0 };
 
     return {
-      squad: this.bestSquad,
+      squad: finalSolution.squad,
       summary: {
-        total_cost: this.bestSquad.reduce((sum, p) => sum + Number(p.cost_millions), 0),
-        total_points: this.bestPoints,
+        total_cost: finalSolution.squad.reduce((sum, p) => sum + Number(p.cost_millions), 0),
+        total_dynamic_value: finalSolution.points,
       },
       telemetry: {
         branches_evaluated: this.branchesEvaluated,
