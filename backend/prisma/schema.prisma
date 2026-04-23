@@ -8,36 +8,47 @@ datasource db {
 }
 
 model Team {
-  id           String   @id @default(uuid()) @db.VarChar(36)
-  name         String   @unique @db.VarChar(100)
-  country_code String   @db.VarChar(3)
-  group_id     String   @db.Char(1)
-  is_seeded    Boolean
-  created_at   DateTime @default(now())
-  updated_at   DateTime @updatedAt
+  id                String   @id @default(uuid()) @db.VarChar(36)
+  name              String   @unique @db.VarChar(100)
+  league            String   @db.VarChar(50)
+  country_code      String   @db.VarChar(3)
+  city              String   @db.VarChar(100)
+  stadium           String   @db.VarChar(150)
+  biggest_rival     String?  @db.VarChar(100)
+  other_rivals      String?  @db.VarChar(255)
+  policing_conflict String?  @db.VarChar(100)
+  sheet_source      String   @db.VarChar(50)
+  // UCL-specific fields
+  uefa_pot          String?  @db.VarChar(10)
+  home_advantage    Float?
+  geographic_zone   String?  @db.VarChar(50)
+  winter_restricted Boolean  @default(false)
+  // Legacy fields for backward compat
+  group_id          String   @default("X") @db.Char(1)
+  is_seeded         Boolean  @default(false)
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
 
+  @@index([league])
+  @@index([sheet_source])
   @@index([is_seeded])
   @@map("teams")
 }
 
 model Player {
-  id            String   @id @default(uuid()) @db.VarChar(36)
-  name          String   @db.VarChar(100)
-  club_name     String   @db.VarChar(50)
-  position      Position
-  cost_millions Decimal  @db.Decimal(4, 1)
-  points        Int
-  created_at    DateTime @default(now())
-  updated_at    DateTime @updatedAt
+  id                        String   @id @db.VarChar(36)
+  name                      String   @db.VarChar(100)
+  club                      String   @db.VarChar(50)
+  position                  String   @db.VarChar(10)
+  cost_millions             Float
+  overall_ability           Int
+  expectation_status        String   @db.VarChar(50)
+  expectation_multiplier    Float
+  base_form                 Float
+  home_stadium_multiplier   Float
+  last_3_vs_opponent_pts    Float
+  created_at                DateTime @default(now())
+  updated_at                DateTime @updatedAt
 
-  @@index([position])
-  @@index([club_name])
   @@map("players")
-}
-
-enum Position {
-  GK
-  DEF
-  MID
-  FWD
 }
