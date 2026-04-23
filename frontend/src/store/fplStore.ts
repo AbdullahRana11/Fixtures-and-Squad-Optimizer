@@ -18,7 +18,10 @@ interface FPLState {
   isLoading: boolean;
   error: string | null;
   gameweek: number;
+  seasonalFixtures: any | null;
+  fixtureContext: Record<string, string>; // Team -> Opponent Name
   
+  fetchSeasonPool: () => Promise<void>;
   optimize: (shuffle?: boolean) => Promise<void>;
   swapPlayer: (oldId: string, newPlayer: Player) => void;
   setBudget: (budget: number) => void;
@@ -35,33 +38,87 @@ export const useFplStore = create<FPLState>((set, get) => ({
   isLoading: false,
   error: null,
   gameweek: 1,
+  seasonalFixtures: null,
+  fixtureContext: {},
+
+  fetchSeasonPool: async () => {
+    try {
+      const { data } = await axios.get('http://localhost:3000/api/fixtures/pl/season');
+      set({ seasonalFixtures: data });
+    } catch (err) {
+      console.error("Failed to fetch seasonal pool", err);
+    }
+  },
 
   optimize: async (shuffle = false) => {
-    const { budget, gameweek, kIndex } = get();
+    const { budget, gameweek, kIndex, seasonalFixtures } = get();
     const nextKIndex = shuffle ? kIndex + 1 : 1;
 
     set({ isLoading: true, error: null });
 
     try {
-      const response = await axios.post('http://localhost:3000/api/fpl/optimize', {
-        budget,
-        gameweek,
-        k_index: nextKIndex
+      // Extract fixtures for the current gameweek from the flat array
+      let fixtures: any[] = [];
+      if (seasonalFixtures && seasonalFixtures.fixtures) {
+        fixtures = seasonalFixtures.fixtures
+          .filter((f: any) => Number(f.matchweek) === Number(gameweek))
+          .map((f: any) => ({ home: f.home, away: f.away }));
+      }
+
+      // If we have fixtures, use the specialized optimize-matchweek endpoint
+      const endpoint = fixtures.length > 0 
+        ? 'http://localhost:3000/api/fpl/optimize-matchweek' 
+        : 'http://localhost:3000/api/fpl/optimize';
+      
+      const payload = fixtures.length > 0
+        ? { budget, matchweek: gameweek, fixtures, k_index: nextKIndex }
+        : { budget, gameweek, k_index: nextKIndex };
+
+      const response = await axios.post(endpoint, payload);
+      const { squad, summary } = response.data;
+
+      // Mapping Full Team Name -> FPL Short Code (Robust Variations)
+      const TEAM_CODE_MAP: Record<string, string> = {
+        'Arsenal': 'ARS', 'Aston Villa': 'AVL', 'Bournemouth': 'BOU', 'Brentford': 'BRE',
+        'Brighton': 'BHA', 'Brighton & Hove Albion': 'BHA', 'Chelsea': 'CHE', 'Crystal Palace': 'CRY',
+        'Everton': 'EVE', 'Fulham': 'FUL', 'Ipswich Town': 'IPS', 'Ipswich': 'IPS', 'Leicester City': 'LEI', 
+        'Leicester': 'LEI', 'Liverpool': 'LIV', 'Manchester City': 'MCI', 'Man City': 'MCI',
+        'Manchester United': 'MUN', 'Man Utd': 'MUN', 'Newcastle United': 'NEW', 'Newcastle': 'NEW',
+        'Nottingham Forest': 'NFO', 'Southampton': 'SOU', 'Tottenham Hotspur': 'TOT', 'Tottenham': 'TOT', 'Spurs': 'TOT',
+        'West Ham United': 'WHU', 'West Ham': 'WHU', 'Wolverhampton Wanderers': 'WOL', 'Wolves': 'WOL'
+      };
+
+      // Build fixture context ONLY for the current gameweek (Double-Keyed)
+      const fixtureContext: Record<string, string> = {};
+      
+      // Strict filtering with type normalization
+      const currentWeekFixtures = fixtures.filter(f => 
+        String(f.matchweek) === String(gameweek)
+      );
+
+      currentWeekFixtures.forEach(f => {
+        const homeCode = TEAM_CODE_MAP[f.home] || f.home;
+        const awayCode = TEAM_CODE_MAP[f.away] || f.away;
+        
+        // Store under codes
+        fixtureContext[homeCode] = awayCode;
+        fixtureContext[awayCode] = homeCode;
+        
+        // Store under original names for safety
+        fixtureContext[f.home] = awayCode;
+        fixtureContext[f.away] = homeCode;
       });
 
-      const { squad, summary } = response.data;
-      
       set({ 
         squad, 
         projectedPoints: summary.total_dynamic_value,
         kIndex: nextKIndex,
+        fixtureContext,
         isLoading: false
       });
       
     } catch (err: any) {
       const msg = err.response?.data?.error?.message || "Failed to optimize squad mathematically.";
-      
-      // If we shuffled and hit a dead end, we could revert to 1, but let's show the error
       set({ 
         error: msg, 
         isLoading: false,
@@ -100,6 +157,7 @@ export const useFplStore = create<FPLState>((set, get) => ({
     squad: data.squad,
     projectedPoints: data.summary.total_dynamic_value,
     gameweek: data.matchweek || get().gameweek,
+    fixtureContext: data.fixture_context || {},
     isLoading: false,
     error: null,
   })
