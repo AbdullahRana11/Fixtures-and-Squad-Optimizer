@@ -1,11 +1,42 @@
-import React from 'react';
-import DummyPlayerCard from "../components/DummyPlayerCard";
-import { players } from "../data/mockData";
+import React, { useState, useMemo } from 'react';
+import PlayerCard from "../components/PlayerCard";
+import { useFplStore } from '../store/fplStore';
+import eplBackground from "../assets/pics/PSL-Background.png";
+import logo from "../assets/pics/PSL-logo.png";
+import { Search, Filter } from 'lucide-react';
+
+import arsLogo from "../assets/pics/EPL Logos/arsenal.football-logos.cc.png";
+import avlLogo from "../assets/pics/EPL Logos/aston-villa.football-logos.cc.png";
+import bhaLogo from "../assets/pics/EPL Logos/brighton.football-logos.cc.png";
+import cheLogo from "../assets/pics/EPL Logos/chelsea.football-logos.cc.png";
+import eveLogo from "../assets/pics/EPL Logos/everton.football-logos.cc.png";
+import livLogo from "../assets/pics/EPL Logos/liverpool.football-logos.cc.png";
+import mciLogo from "../assets/pics/EPL Logos/manchester-city.football-logos.cc.png";
+import munLogo from "../assets/pics/EPL Logos/manchester-united.football-logos.cc.png";
+import newLogo from "../assets/pics/EPL Logos/newcastle.football-logos.cc.png";
+import totLogo from "../assets/pics/EPL Logos/tottenham.football-logos.cc.png";
+import whuLogo from "../assets/pics/EPL Logos/west-ham.football-logos.cc.png";
+import wolLogo from "../assets/pics/EPL Logos/wolves.football-logos.cc.png";
+
+const teamFilters = [
+  { id: "ARS", logo: arsLogo, name: "Arsenal" },
+  { id: "AVL", logo: avlLogo, name: "Aston Villa" },
+  { id: "BHA", logo: bhaLogo, name: "Brighton" },
+  { id: "CHE", logo: cheLogo, name: "Chelsea" },
+  { id: "EVE", logo: eveLogo, name: "Everton" },
+  { id: "LIV", logo: livLogo, name: "Liverpool" },
+  { id: "MCI", logo: mciLogo, name: "Man City" },
+  { id: "MUN", logo: munLogo, name: "Man Utd" },
+  { id: "NEW", logo: newLogo, name: "Newcastle" },
+  { id: "TOT", logo: totLogo, name: "Tottenham" },
+  { id: "WHU", logo: whuLogo, name: "West Ham" },
+  { id: "WOL", logo: wolLogo, name: "Wolves" },
+];
 
 function FilterPanel({ title, children }: { title: string, children: React.ReactNode }) {
   return (
-    <section className="rounded-xl border border-white/10 bg-black/20 p-4 backdrop-blur-md shadow-lg">
-      <h3 className="mb-4 inline-block bg-gradient-to-r from-emerald-300 via-teal-200 to-lime-200 bg-clip-text text-xs font-extrabold uppercase tracking-[0.2em] text-transparent drop-shadow-md md:text-sm">
+    <section className="rounded-[32px] border border-white/5 bg-black/40 p-8 backdrop-blur-2xl shadow-3xl mb-8">
+      <h3 className="mb-6 inline-block bg-gradient-to-r from-emerald-300 via-teal-200 to-lime-200 bg-clip-text text-[10px] font-black uppercase tracking-[0.4em] text-transparent">
         {title}
       </h3>
       {children}
@@ -13,75 +44,96 @@ function FilterPanel({ title, children }: { title: string, children: React.React
   );
 }
 
-import lqLogo from "../assets/pics/Lahore-Qalandars-PSL-Team-.png";
-import kkLogo from "../assets/pics/Karachi-Kings-PSL-Team-.png";
-import iuLogo from "../assets/pics/Islamabad-United-PSL-Team-.png";
-import msLogo from "../assets/pics/Multan-Sultans-PSL-Team-.png";
-import pzLogo from "../assets/pics/Peshawar-Zalmi-PSL-Team-.png";
-import qgLogo from "../assets/pics/Quetta-Gladiators-PSL-Team-.png";
-
-const teamFilters = [
-  { id: "LQ", logo: lqLogo },
-  { id: "KK", logo: kkLogo },
-  { id: "IU", logo: iuLogo },
-  { id: "MS", logo: msLogo },
-  { id: "PZ", logo: pzLogo },
-  { id: "QG", logo: qgLogo },
-];
-
-import pslBackground from "../assets/pics/PSL-Background.png";
-
 export default function FantasyDashboard() {
+  const { allPlayers } = useFplStore();
+  const [filterTeam, setFilterTeam] = useState<string | null>(null);
+  const [filterPos, setFilterPos] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredPlayers = useMemo(() => {
+    if (!allPlayers) return [];
+    let list = [...allPlayers];
+    if (filterTeam) list = list.filter(p => p.club === filterTeam || (p.club && p.club.includes(filterTeam)));
+    if (filterPos) list = list.filter(p => p.position === filterPos);
+    if (searchQuery) list = list.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()));
+    return list.slice(0, 40); 
+  }, [allPlayers, filterTeam, filterPos, searchQuery]);
+
   return (
     <>
       <div
         className="fixed inset-0 z-0 pointer-events-none"
         style={{
-          backgroundImage: `linear-gradient(to bottom, rgba(5, 10, 6, 0.3), rgba(7, 11, 8, 0.62), rgba(10, 14, 8, 0.85)), url(${pslBackground})`,
+          backgroundImage: `linear-gradient(to bottom, rgba(5, 10, 6, 0.4), rgba(7, 11, 8, 0.7), rgba(10, 14, 8, 0.9)), url(${eplBackground})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
         }}
       />
-      <div className="relative z-10 grid gap-6 lg:grid-cols-[280px_1fr]">
+      
+      <div className="relative z-10 grid gap-12 lg:grid-cols-[340px_1fr] max-w-[2400px] mx-auto p-8 md:p-16 lg:p-20">
         <aside className="space-y-4">
-          <FilterPanel title="Filter by Club">
-            <div className="grid grid-cols-3 gap-3">
-              {teamFilters.map((team) => (
-                <div
-                  key={team.id}
-                  className="ui-hover-chip flex h-14 w-full cursor-pointer items-center justify-center rounded-xl border border-lime-300/20 bg-gradient-to-br from-emerald-900/40 to-[#0a140a]/80 p-2 shadow-[0_0_10px_rgba(163,230,53,0.1)] transition-all hover:scale-105 hover:border-lime-300 hover:shadow-[0_0_15px_rgba(163,230,53,0.4)]"
+          <FilterPanel title="SCOUT BY CLUB">
+             <div className="grid grid-cols-3 gap-4">
+               {teamFilters.map(team => (
+                 <button 
+                   key={team.id}
+                   onClick={() => setFilterTeam(filterTeam === team.id ? null : team.id)}
+                   className={`flex h-16 items-center justify-center rounded-2xl border transition-all hover:scale-110 active:scale-95 ${filterTeam === team.id ? 'border-emerald-400 bg-emerald-400/20 shadow-glow' : 'border-white/10 bg-black/60 p-3'}`}
+                 >
+                   <img src={team.logo} alt={team.id} className="h-full w-full object-contain" />
+                 </button>
+               ))}
+             </div>
+          </FilterPanel>
+
+          <FilterPanel title="ROLE FILTER">
+            <div className="grid grid-cols-2 gap-3">
+              {['FWD', 'MID', 'DEF', 'GK'].map(pos => (
+                <button
+                  key={pos}
+                  onClick={() => setFilterPos(filterPos === pos ? null : pos)}
+                  className={`py-4 rounded-xl text-[10px] font-black tracking-[0.2em] transition-all border ${filterPos === pos ? 'bg-emerald-500 text-black border-emerald-500' : 'bg-white/5 text-zinc-500 border-white/5 hover:text-white hover:bg-white/10'}`}
                 >
-                  <img src={team.logo} alt={team.id} className="h-full w-full object-contain drop-shadow-md" />
-                </div>
+                  {pos === 'FWD' ? 'FORWARD' : pos === 'MID' ? 'MIDFIELDER' : pos === 'DEF' ? 'DEFENDER' : 'GOALIE'}
+                </button>
               ))}
             </div>
           </FilterPanel>
-          <FilterPanel title="Filter by Position">
-            <div className="flex flex-wrap gap-2 text-xs">
-              {["Forward", "Midfielder", "Defender", "Goalkeeper"].map((role) => (
-                <span key={role} className="ui-hover-chip cursor-pointer rounded-full border border-cyan-400/30 bg-gradient-to-r from-cyan-900/30 to-blue-900/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-cyan-100 shadow-[0_0_8px_rgba(34,211,238,0.15)] transition-all hover:border-cyan-300 hover:text-cyan-300 hover:shadow-cyanGlow">
-                  {role}
-                </span>
-              ))}
-            </div>
-          </FilterPanel>
-          <FilterPanel title="Player Stats">
-            <div className="space-y-2 text-xs text-zinc-200">
-              {["Expected Goals (xG)", "Assists", "Clean Sheets", "Pass Accuracy"].map((entry) => (
-                <div key={entry} className="ui-hover-chip flex cursor-pointer items-center justify-between rounded-md border border-white/5 bg-white/5 px-3 py-2 transition-colors hover:border-emerald-400/50 hover:bg-emerald-900/20">
-                  <span className="font-bold tracking-wide text-zinc-300 group-hover:text-emerald-200">{entry}</span>
-                  <span className="h-2 w-2 rounded-full bg-cyan-300" />
-                </div>
-              ))}
-            </div>
-          </FilterPanel>
+
+          <div className="p-6 rounded-[32px] bg-black/60 border border-white/5 backdrop-blur-xl flex items-center gap-4 shadow-2xl">
+              <Search className="w-5 h-5 text-zinc-600" />
+              <input 
+                type="text" 
+                placeholder="PROBE DATABASE..." 
+                className="bg-transparent border-none text-[10px] font-black text-white placeholder:text-zinc-800 focus:ring-0 w-full tracking-widest"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+              />
+          </div>
         </aside>
 
-        <main className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-5 pt-2">
-          {players.map((player, idx) => (
-            <DummyPlayerCard key={player.id} player={player} isActive={idx === 3 || idx === 7} />
-          ))}
+        <main className="space-y-16">
+          <div className="flex items-end justify-between px-6">
+             <div className="flex items-center gap-10">
+                <img src={logo} alt="PSL" className="h-20 w-20 drop-shadow-2xl" />
+                <div className="flex flex-col">
+                   <h1 className="text-6xl font-black text-white italic uppercase tracking-tighter leading-none">FANTASY <span className="text-emerald-500">LEAGUE</span></h1>
+                   <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.5em] mt-4">Global Network Active</p>
+                </div>
+             </div>
+             <div className="bg-white/5 border border-white/10 px-10 py-6 rounded-[32px] backdrop-blur-xl text-center shadow-2xl">
+                <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mb-1">Total Assets</p>
+                <p className="text-4xl font-black text-white italic tracking-tighter">{filteredPlayers.length} SCOUTED</p>
+             </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-12 md:grid-cols-3 xl:grid-cols-4 xxl:grid-cols-5 p-4">
+            {filteredPlayers.map((player) => (
+              <div key={player.id} className="flex justify-center">
+                 <PlayerCard player={player} compact />
+              </div>
+            ))}
+          </div>
         </main>
       </div>
     </>
