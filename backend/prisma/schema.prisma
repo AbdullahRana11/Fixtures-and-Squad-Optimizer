@@ -3,28 +3,28 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model Team {
-  id                String   @id @default(uuid()) @db.VarChar(36)
-  name              String   @unique @db.VarChar(100)
-  league            String   @db.VarChar(50)
-  country_code      String   @db.VarChar(3)
-  city              String   @db.VarChar(100)
-  stadium           String   @db.VarChar(150)
-  biggest_rival     String?  @db.VarChar(100)
-  other_rivals      String?  @db.VarChar(255)
-  policing_conflict String?  @db.VarChar(100)
-  sheet_source      String   @db.VarChar(50)
+  id                String   @id @default(uuid())
+  name              String   @unique
+  league            String
+  country_code      String
+  city              String
+  stadium           String
+  biggest_rival     String?
+  other_rivals      String?
+  policing_conflict String?
+  sheet_source      String
   // UCL-specific fields
-  uefa_pot          String?  @db.VarChar(10)
+  uefa_pot          String?
   home_advantage    Float?
-  geographic_zone   String?  @db.VarChar(50)
+  geographic_zone   String?
   winter_restricted Boolean  @default(false)
   // Legacy fields for backward compat
-  group_id          String   @default("X") @db.Char(1)
+  group_id          String   @default("X")
   is_seeded         Boolean  @default(false)
   created_at        DateTime @default(now())
   updated_at        DateTime @updatedAt
@@ -32,23 +32,20 @@ model Team {
   @@index([league])
   @@index([sheet_source])
   @@index([is_seeded])
-  @@map("teams")
 }
 
 model Player {
-  id                        String   @id @db.VarChar(36)
-  name                      String   @db.VarChar(100)
-  club                      String   @db.VarChar(50)
-  position                  String   @db.VarChar(10)
+  id                        String   @id
+  name                      String
+  club                      String
+  position                  String
   cost_millions             Float
   overall_ability           Int
-  expectation_status        String   @db.VarChar(50)
+  expectation_status        String
   expectation_multiplier    Float
   base_form                 Float
   home_stadium_multiplier   Float
   last_3_vs_opponent_pts    Float
   created_at                DateTime @default(now())
   updated_at                DateTime @updatedAt
-
-  @@map("players")
 }

@@ -21,6 +21,7 @@ app.post('/api/ucl/draw-match', uclController.drawMatch);
 // --- FPL Optimizer Routes ---
 app.post('/api/fpl/optimize', fplController.optimizeSquad);
 app.post('/api/fpl/swap-node', fplController.constrainedSwap);
+app.get('/api/fpl/players', fplController.getAllPlayers);
 app.post('/api/fpl/optimize-matchweek', fixturesController.optimizeMatchweek);
 
 // --- Fixture Generation Routes ---
