@@ -1,0 +1,48 @@
+# IDEs
+.vscode/
+.idea/
+
+# Dependencies
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# Build outputs
+dist/
+dist-ssr/
+frontend/dist/
+backend/dist/
+*.local
+
+# Environment
+.env
+.env.*
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Vite
+frontend/.vite/
+.vite/
+
+# Database
+backend/prisma/*.db
+backend/prisma/*.db-journal
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Stitch & Agent Internals
+.stitch/
+_agent/
+
+# Agent Documentation
+APP_FLOW.md
+FRONTEND_GUIDELINES.md
+PRD.md
+IMPLEMENTATION_PLAN
+BACKEND_STRUCTURE.md
+TECH_STACK.md
