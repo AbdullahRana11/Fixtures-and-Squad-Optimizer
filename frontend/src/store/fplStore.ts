@@ -12,6 +12,7 @@ export interface Player {
 
 interface FPLState {
   squad: Player[];
+  allPlayers: Player[]; // Full database pool
   budget: number;
   projectedPoints: number;
   kIndex: number;
@@ -22,6 +23,7 @@ interface FPLState {
   fixtureContext: Record<string, string>; // Team -> Opponent Name
   
   fetchSeasonPool: () => Promise<void>;
+  fetchAllPlayers: () => Promise<void>;
   optimize: (shuffle?: boolean) => Promise<void>;
   swapPlayer: (oldId: string, newPlayer: Player) => void;
   setBudget: (budget: number) => void;
@@ -32,6 +34,7 @@ interface FPLState {
 
 export const useFplStore = create<FPLState>((set, get) => ({
   squad: [],
+  allPlayers: [],
   budget: 100.0,
   projectedPoints: 0,
   kIndex: 1,
@@ -47,6 +50,15 @@ export const useFplStore = create<FPLState>((set, get) => ({
       set({ seasonalFixtures: data });
     } catch (err) {
       console.error("Failed to fetch seasonal pool", err);
+    }
+  },
+
+  fetchAllPlayers: async () => {
+    try {
+      const { data } = await axios.get('http://localhost:3000/api/fpl/players');
+      set({ allPlayers: data });
+    } catch (err) {
+      console.error("Failed to fetch all players", err);
     }
   },
 
@@ -70,14 +82,11 @@ export const useFplStore = create<FPLState>((set, get) => ({
         ? 'http://localhost:3000/api/fpl/optimize-matchweek' 
         : 'http://localhost:3000/api/fpl/optimize';
       
-      const payload = fixtures.length > 0
-        ? { budget, matchweek: gameweek, fixtures, k_index: nextKIndex }
-        : { budget, gameweek, k_index: nextKIndex };
+      const payload = { budget: 100.0, matchweek: gameweek, fixtures, k_index: nextKIndex };
 
       const response = await axios.post(endpoint, payload);
       const { squad, summary } = response.data;
 
-      // Mapping Full Team Name -> FPL Short Code (Robust Variations)
       const TEAM_CODE_MAP: Record<string, string> = {
         'Arsenal': 'ARS', 'Aston Villa': 'AVL', 'Bournemouth': 'BOU', 'Brentford': 'BRE',
         'Brighton': 'BHA', 'Brighton & Hove Albion': 'BHA', 'Chelsea': 'CHE', 'Crystal Palace': 'CRY',
@@ -88,30 +97,23 @@ export const useFplStore = create<FPLState>((set, get) => ({
         'West Ham United': 'WHU', 'West Ham': 'WHU', 'Wolverhampton Wanderers': 'WOL', 'Wolves': 'WOL'
       };
 
-      // Build fixture context ONLY for the current gameweek (Double-Keyed)
+      // Build fixture context for the current gameweek
       const fixtureContext: Record<string, string> = {};
       
-      // Strict filtering with type normalization
-      const currentWeekFixtures = fixtures.filter(f => 
-        String(f.matchweek) === String(gameweek)
-      );
-
-      currentWeekFixtures.forEach(f => {
+      // Use the filtered 'fixtures' array directly
+      fixtures.forEach(f => {
         const homeCode = TEAM_CODE_MAP[f.home] || f.home;
         const awayCode = TEAM_CODE_MAP[f.away] || f.away;
         
-        // Store under codes
         fixtureContext[homeCode] = awayCode;
         fixtureContext[awayCode] = homeCode;
-        
-        // Store under original names for safety
         fixtureContext[f.home] = awayCode;
         fixtureContext[f.away] = homeCode;
       });
 
       set({ 
-        squad, 
-        projectedPoints: summary.total_dynamic_value,
+        squad: squad || [], 
+        projectedPoints: summary?.total_dynamic_value || 0,
         kIndex: nextKIndex,
         fixtureContext,
         isLoading: false
@@ -153,12 +155,16 @@ export const useFplStore = create<FPLState>((set, get) => ({
   setBudget: (budget) => set({ budget }),
   setGameweek: (gameweek) => set({ gameweek }),
   clearError: () => set({ error: null }),
-  setOptimizationResult: (data) => set({
-    squad: data.squad,
-    projectedPoints: data.summary.total_dynamic_value,
-    gameweek: data.matchweek || get().gameweek,
-    fixtureContext: data.fixture_context || {},
-    isLoading: false,
-    error: null,
-  })
+  setOptimizationResult: (data) => {
+    if (!data) return;
+    const currentPoints = data.summary?.total_dynamic_value ?? data.points ?? 0;
+    set({
+      squad: data.squad || [],
+      projectedPoints: Number(currentPoints),
+      gameweek: data.matchweek || get().gameweek,
+      fixtureContext: data.fixtureContext || data.fixture_context || {},
+      isLoading: false,
+      error: null,
+    });
+  }
 }));

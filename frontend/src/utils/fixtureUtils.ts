@@ -1,4 +1,4 @@
-const prng = (seed: number) => {
+export const prng = (seed: number) => {
   let s = seed;
   return () => {
     s = (s * 16807) % 2147483647;
@@ -6,61 +6,67 @@ const prng = (seed: number) => {
   };
 };
 
+export const shuffle = <T>(array: T[], rng?: () => number): T[] => {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = rng ? Math.floor(rng() * (i + 1)) : Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[arr[j] ? j : 0]] = [arr[j], arr[i]];
+  }
+  return arr;
+};
+
+export const fictionalNames = [
+  "Aero United", "Blaze City", "Crystal Palace", "Delta Force",
+  "Echo Warriors", "Frost Giants", "Gale Force", "Horizon XI",
+  "Iron Legion", "Jade Dragons", "Kestrel Athletic", "Lunar Star",
+  "Meteor Strikers", "Nova Rangers", "Oceanic FC", "Pulse Athletic",
+  "Quartz County", "Rift Valley", "Solaris United", "Titan FC",
+  "Ultra Velocity", "Vortex City", "Wildfire FC", "Zenith Rovers"
+];
+
+const neutralStadiums = [
+  'Wembley Stadium', 'Old Trafford', 'Anfield', 'Emirates Stadium',
+  'Etihad Stadium', 'Tottenham Hotspur Stadium', 'Stamford Bridge', 'Villa Park'
+];
+
 export interface HistoryEntry {
   id: string;
   name: string;
-  date: string;          // Formatted date string
-  dateGenerated: number; // Timestamp for sorting
+  date: string;
+  dateGenerated: number;
   fixtures: any[];
   source: string;
   teams: string[];
   format: string;
+  seed?: number;
 }
 
-const neutralStadiums = [
-  'Wembley Stadium',
-  'Old Trafford',
-  'Anfield',
-  'Emirates Stadium',
-  'Etihad Stadium',
-  'Tottenham Hotspur Stadium',
-  'Stamford Bridge',
-  'Villa Park'
-];
-
-const simulateConditions = (rng: () => number) => {
-  const weathers = ['Sunny', 'Cloudy', 'Rainy', 'Windy'];
-  return {
-    weather: weathers[Math.floor(rng() * weathers.length)],
-    temperature: Math.floor(rng() * 25) + 5,
-    pitchQuality: Math.floor(rng() * 40) + 60
-  };
-};
-
-// --- Storage Utils ---
 const STORAGE_KEY = 'fixture_optimizer_history';
-
-export const saveToHistory = (name: string, source: string, format: string, teams: string[], fixtures: any[]) => {
-  const history = getHistory();
-  const entry: HistoryEntry = {
-    id: Date.now().toString(),
-    name,
-    source,
-    format,
-    teams,
-    fixtures,
-    date: new Date().toLocaleDateString(),
-    dateGenerated: Date.now()
-  };
-  
-  const updatedHistory = [entry, ...history].slice(0, 50); // Keep last 50
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedHistory));
-  return entry;
-};
 
 export const getHistory = (): HistoryEntry[] => {
   const data = localStorage.getItem(STORAGE_KEY);
   return data ? JSON.parse(data) : [];
+};
+
+export const saveToHistory = (data: { 
+  name: string, 
+  source: string, 
+  format: string, 
+  teams: string[], 
+  fixtures: any[],
+  seed?: number 
+}) => {
+  const history = getHistory();
+  const entry: HistoryEntry = {
+    id: Date.now().toString(),
+    ...data,
+    date: new Date().toLocaleDateString(),
+    dateGenerated: Date.now()
+  };
+  
+  const updatedHistory = [entry, ...history].slice(0, 50);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedHistory));
+  return entry;
 };
 
 export const deleteHistoryEntry = (id: string) => {
@@ -73,23 +79,22 @@ export const clearAllHistory = () => {
   localStorage.removeItem(STORAGE_KEY);
 };
 
-// --- Generation Utils ---
-export const generateRoundRobin = (teams: string[], legs: number = 2) => {
-  // 0. Randomly shuffle the team list to ensure unique pairings/sequences
-  const shuffledInputTeams = [...teams].sort(() => Math.random() - 0.5);
-  const n = shuffledInputTeams.length % 2 === 0 ? shuffledInputTeams.length : shuffledInputTeams.length + 1;
-  const teamList = [...shuffledInputTeams];
-  if (shuffledInputTeams.length % 2 !== 0) teamList.push('BYE');
+// --- Core Generation Engines ---
+
+export const generateRoundRobin = (teams: string[], legs: number = 1, seed: number = 123) => {
+  const rng = prng(seed);
+  const pool = shuffle(teams, rng);
+  const n = pool.length % 2 === 0 ? pool.length : pool.length + 1;
+  const teamList = [...pool];
+  if (pool.length % 2 !== 0) teamList.push('BYE');
 
   const fixtures: any[] = [];
-  
   for (let leg = 0; leg < legs; leg++) {
     for (let round = 0; round < n - 1; round++) {
       const matchweek = leg * (n - 1) + round + 1;
       for (let i = 0; i < n / 2; i++) {
         const home = teamList[i];
         const away = teamList[n - 1 - i];
-
         if (home !== 'BYE' && away !== 'BYE') {
           fixtures.push({
             id: crypto.randomUUID(),
@@ -102,103 +107,88 @@ export const generateRoundRobin = (teams: string[], legs: number = 2) => {
       teamList.splice(1, 0, teamList.pop()!);
     }
   }
-
   return fixtures;
 };
 
-export const assignAdvancedSchedule = (fixtures: any[], teams: string[], startDate: string, frequencyDays: number, neutral: boolean, seed: number) => {
+export const generateKnockout = (teams: string[], seed: number = 123) => {
+  const rng = prng(seed);
+  const pool = shuffle(teams, rng);
+  const matches: any[] = [];
+  
+  // Create first round (Round of X)
+  for (let i = 0; i < pool.length; i += 2) {
+    if (pool[i + 1]) {
+      matches.push({
+        id: crypto.randomUUID(),
+        matchweek: 1,
+        home: pool[i],
+        away: pool[i + 1],
+      });
+    }
+  }
+  return { matches };
+};
+
+export const assignAdvancedSchedule = (
+  fixtures: any[], 
+  startDate: string, 
+  frequencyDays: number, 
+  neutral: boolean, 
+  seed: number
+) => {
   const rng = prng(seed);
   const start = new Date(startDate);
-  const schedule: any[] = [];
   const times = ['16:00', '20:30'];
+  const weatherTypes = ['Clear', 'Overcast', 'Light Rain', 'Stormy'];
   
-  const byMW: Record<number, any[]> = {};
-  fixtures.forEach(f => {
-    if (!byMW[f.matchweek]) byMW[f.matchweek] = [];
-    byMW[f.matchweek].push(f);
-  });
+  return fixtures.map((f, i) => {
+    const mwOffset = (f.matchweek - 1) * frequencyDays;
+    const matchDate = new Date(start);
+    matchDate.setDate(matchDate.getDate() + mwOffset + Math.floor(i / 2));
 
-  let currentDay = new Date(start);
-  Object.keys(byMW).sort((a, b) => Number(a) - Number(b)).forEach(mw => {
-    const mwFixtures = byMW[Number(mw)];
-    let slotIdx = 0;
+    const slotIdx = i % 2;
+    const stadium = neutral 
+      ? neutralStadiums[Math.floor(rng() * neutralStadiums.length)]
+      : `${f.home} Stadium`;
 
-    mwFixtures.forEach(f => {
-      if (slotIdx >= 2) {
-        currentDay.setDate(currentDay.getDate() + 1);
-        slotIdx = 0;
+    return {
+      ...f,
+      date: matchDate.toISOString().split('T')[0],
+      time: times[slotIdx],
+      stadium,
+      isNightMatch: slotIdx === 1,
+      conditions: {
+        type: weatherTypes[Math.floor(rng() * weatherTypes.length)],
+        temp: Math.floor(rng() * 25) + 5
       }
-
-      const stadium = neutral 
-        ? neutralStadiums[Math.floor(rng() * neutralStadiums.length)]
-        : `${f.home} Stadium`;
-
-      schedule.push({
-        ...f,
-        date: currentDay.toISOString().split('T')[0],
-        time: times[slotIdx],
-        stadium,
-        conditions: simulateConditions(rng),
-        isNightMatch: slotIdx === 1
-      });
-
-      slotIdx++;
-    });
-    currentDay.setDate(currentDay.getDate() + frequencyDays);
+    };
   });
+};
 
-  // --- CHRONOLOGICAL H/A SOLVER ---
-  const teamHistory: Record<string, ('H' | 'A')[]> = {};
-  const teamHomeCount: Record<string, number> = {};
-  teams.forEach(t => {
-    teamHistory[t] = [];
-    teamHomeCount[t] = 0;
-  });
+// --- Export Utils ---
 
-  const sortedSchedule = [...schedule].sort((a, b) => a.date.localeCompare(b.date));
-  const maxHomeLimit = Math.ceil(schedule.length / (teams.length / 2) / 2) + 1;
+export const exportToCSV = (fixtures: any[], name: string) => {
+  const headers = "Matchweek,Date,Time,Home,Away,Stadium\n";
+  const rows = fixtures.map(f => `${f.matchweek},${f.date},${f.time},"${f.home}","${f.away}","${f.stadium}"`).join("\n");
+  const blob = new Blob([headers + rows], { type: 'text/csv' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.setAttribute('hidden', '');
+  a.setAttribute('href', url);
+  a.setAttribute('download', `${name.replace(/\s+/g, '_')}_fixtures.csv`);
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+};
 
-  function canAssign(team: string, venue: 'H' | 'A') {
-    const hist = teamHistory[team];
-    if (hist.length >= 2 && hist[hist.length - 1] === venue && hist[hist.length - 2] === venue) return false;
-    if (venue === 'H' && teamHomeCount[team] >= maxHomeLimit) return false;
-    return true;
-  }
-
-  function solve(idx: number): boolean {
-    if (idx === sortedSchedule.length) return true;
-    const f = sortedSchedule[idx];
-    const A = f.home;
-    const B = f.away;
-
-    if (canAssign(A, 'H') && canAssign(B, 'A')) {
-      teamHistory[A].push('H');
-      teamHistory[B].push('A');
-      teamHomeCount[A]++;
-      if (solve(idx + 1)) return true;
-      teamHistory[A].pop();
-      teamHistory[B].pop();
-      teamHomeCount[A]--;
-    }
-
-    if (canAssign(A, 'A') && canAssign(B, 'H')) {
-      teamHistory[A].push('A');
-      teamHistory[B].push('H');
-      teamHomeCount[B]++;
-      const temp = f.home;
-      f.home = f.away;
-      f.away = temp;
-      if (solve(idx + 1)) return true;
-      const t2 = f.home;
-      f.home = f.away;
-      f.away = t2;
-      teamHistory[A].pop();
-      teamHistory[B].pop();
-      teamHomeCount[B]--;
-    }
-    return false;
-  }
-
-  solve(0);
-  return schedule;
+export const exportToJSON = (data: any, name: string) => {
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.setAttribute('hidden', '');
+  a.setAttribute('href', url);
+  a.setAttribute('download', `${name.replace(/\s+/g, '_')}_fixtures.json`);
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 };

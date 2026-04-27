@@ -39,7 +39,10 @@ const rarityUI = {
 };
 
 function initialsFromName(name: string) {
-  return name.split(" ").map((p) => p[0]).join("").slice(0, 2).toUpperCase();
+  if (!name || typeof name !== 'string') return "??";
+  const parts = name.split(" ").filter(Boolean);
+  if (parts.length === 0) return "??";
+  return parts.map((p) => p[0]).join("").slice(0, 2).toUpperCase();
 }
 
 function getRarity(cost: number) {
@@ -63,18 +66,25 @@ export default function PlayerCard({ player, isActive = false, compact = false, 
   const cardRef = useRef<HTMLElement>(null);
   const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0, scale: 1, glareX: 50, glareY: 50 });
   const maxTilt = 15;
-  const dynPoints = (player as any).dynamicValue || player.points;
 
-  const cost = Number(player.cost_millions || 0);
-  const rarity = rarityUI[getRarity(cost) as keyof typeof rarityUI];
+  // -- EXTREME SAFETY CODES --
+  const dynPoints = Number((player as any)?.dynamicValue || player?.points || 0);
+  const cost = Number(player?.cost_millions || 0);
+  const safeName = player?.name || "Unknown Player";
+  const safeClub = player?.club || "Unattached";
+  const safePos = player?.position || "ANY";
+  const safeId = player?.id || "000";
+
+  const rarityKey = getRarity(cost);
+  const rarity = rarityUI[rarityKey as keyof typeof rarityUI] || rarityUI.common;
 
   function handleMouseMove(event: React.MouseEvent) {
     if (!cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
-    const percentX = x / rect.width;
-    const percentY = y / rect.height;
+    const percentX = x / (rect.width || 1);
+    const percentY = y / (rect.height || 1);
     const offsetX = percentX - 0.5;
     const offsetY = percentY - 0.5;
 
@@ -124,7 +134,7 @@ export default function PlayerCard({ player, isActive = false, compact = false, 
              {rarity.label}
            </span>
            <span className="text-[8px] lg:text-[10px] text-zinc-500 font-mono tracking-wider bg-[#0a0a0c]/80 px-1 rounded backdrop-blur">
-             #{String(player.id).padStart(3, '0')}
+             #{String(safeId).padStart(3, '0')}
            </span>
         </div>
         
@@ -132,13 +142,13 @@ export default function PlayerCard({ player, isActive = false, compact = false, 
           className={`flex items-center justify-center rounded-full border bg-[#0a0a0c]/50 backdrop-blur-sm ${rarity.border} ${rarity.color} ${compact ? "h-10 w-10 text-sm mt-4 lg:h-14 lg:w-14 lg:text-lg lg:mt-6" : "h-[75px] w-[75px] text-2xl mt-8"}`}
           style={{ transform: "translateZ(45px)", transformStyle: "preserve-3d" }}
         >
-          {initialsFromName(player.name)}
+          {initialsFromName(safeName)}
         </div>
         
         <div className="text-center mt-3 lg:mt-5" style={{ transform: "translateZ(35px)" }}>
-           <h2 className={`font-bold uppercase tracking-[0.1em] ${rarity.color} ${compact ? "text-[10px] lg:text-xs" : "text-sm"} line-clamp-1 px-1`}>{player.name}</h2>
+           <h2 className={`font-bold uppercase tracking-[0.1em] ${rarity.color} ${compact ? "text-[10px] lg:text-xs" : "text-sm"} line-clamp-1 px-1`}>{safeName}</h2>
            <p className={`mt-1 font-semibold uppercase tracking-[0.15em] opacity-80 ${rarity.color} ${compact ? "text-[6px] lg:text-[8px]" : "text-[9px]"}`}>
-             {(player as any).expectation_status || 'Projected'}
+             {(player as any)?.expectation_status || 'Projected'}
            </p>
            
            <div className="flex flex-col items-center gap-[3px] mt-2 lg:mt-3 opacity-40">
@@ -148,19 +158,18 @@ export default function PlayerCard({ player, isActive = false, compact = false, 
         </div>
       </div>
 
-      <div className="relative flex-1 bg-[#121316] p-3 lg:p-4 flex flex-col justify-between border-t border-white/5">
+      <div className="relative-1 bg-[#121316] p-3 lg:p-4 flex flex-col justify-between border-t border-white/5">
         <div className="flex flex-col space-y-2 lg:space-y-3" style={{ transform: "translateZ(30px)", transformStyle: "preserve-3d" }}>
            <div>
-             <h3 className={`font-bold text-white leading-tight ${compact ? "text-xs lg:text-[15px]" : "text-[17px]"} line-clamp-1`}>{player.name}</h3>
-             <p className="text-zinc-500 text-[9px] lg:text-[11px] font-medium tracking-wide line-clamp-1">{player.club}</p>
-             <p className={`text-[9px] lg:text-[11px] mt-0.5 tracking-wide ${rarity.color}`}>{player.position}</p>
+             <h3 className={`font-bold text-white leading-tight ${compact ? "text-xs lg:text-[15px]" : "text-[17px]"} line-clamp-1`}>{safeName}</h3>
+             <p className="text-zinc-500 text-[9px] lg:text-[11px] font-medium tracking-wide line-clamp-1">{safeClub}</p>
+             <p className={`text-[9px] lg:text-[11px] mt-0.5 tracking-wide ${rarity.color}`}>{safePos}</p>
            </div>
            
            <div className="bg-[#18181a] border border-white/5 rounded p-1.5 lg:p-2.5 font-light italic text-zinc-400 text-[9px] lg:text-[11px] hidden lg:block">
-             Ability Base: {(player as any).overall_ability || 'N/A'}
+             Ability Base: {(player as any)?.overall_ability || 'N/A'}
            </div>
 
-           {/* Opponent Badge - Enhanced visibility */}
            <AnimatePresence>
              {opponent && (
                <motion.div 

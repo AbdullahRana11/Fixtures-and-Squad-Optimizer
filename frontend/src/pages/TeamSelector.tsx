@@ -56,6 +56,7 @@ const TeamSelector: React.FC = () => {
   const [search, setSearch] = useState('');
   const [filterLeague, setFilterLeague] = useState<string>('all');
   const [error, setError] = useState<string | null>(null);
+  const [showStageModal, setShowStageModal] = useState(false);
 
   // Fetch teams from API
   useEffect(() => {
@@ -66,12 +67,14 @@ const TeamSelector: React.FC = () => {
           `http://localhost:3000/api/fixtures/teams/${leagueId}`
         );
         setTeams(data.teams);
-        setRequiredCount(data.requiredCount);
+        
+        // Custom logic for UCL: standard is 36, but we allow 24 for knockout
+        const count = leagueId === 'ucl' ? 36 : data.requiredCount;
+        setRequiredCount(count);
 
-        // Auto-select top-league teams if they match required count
         if (data.topLeague) {
           const topTeams = data.teams.filter(t => t.league === data.topLeague);
-          if (topTeams.length === data.requiredCount) {
+          if (topTeams.length === count) {
             setSelected(new Set(topTeams.map(t => t.name)));
           }
         }
@@ -123,21 +126,39 @@ const TeamSelector: React.FC = () => {
     });
   };
 
+  const autoSelectTop = (n: number) => {
+    const topTeams = teams.slice(0, n).map(t => t.name);
+    setSelected(new Set(topTeams));
+  };
+
   const clearSelection = () => setSelected(new Set());
 
-  const handleGenerate = async () => {
-    if (selected.size !== requiredCount) return;
+  const handleGenerate = async (forceMode?: string) => {
+    // For UCL, we first show the modal if no mode is forced
+    if (leagueId === 'ucl' && !forceMode) {
+      if (selected.size === 36 || selected.size === 24) {
+        setShowStageModal(true);
+        return;
+      }
+      return;
+    }
+
+    if (leagueId !== 'ucl' && selected.size !== requiredCount) return;
+    
     setGenerating(true);
     try {
-      const mode = leagueId === 'facup' ? 'auto' : undefined;
+      const mode = leagueId === 'facup' ? 'auto' : (forceMode || undefined);
       const { data } = await axios.post('http://localhost:3000/api/fixtures/generate', {
         league: leagueId,
         teamNames: Array.from(selected),
         mode,
       });
 
-      // FA Cup → bracket page, everything else → fixture display
-      const targetRoute = leagueId === 'facup' ? '/fixtures/bracket' : '/fixtures/display';
+      // Navigation target
+      let targetRoute = '/fixtures/display';
+      if (leagueId === 'facup') targetRoute = '/fixtures/bracket';
+      if (forceMode === 'ucl-knockout') targetRoute = '/fixtures/ucl-bracket';
+
       navigate(targetRoute, {
         state: { schedule: data, leagueId },
       });
@@ -146,6 +167,11 @@ const TeamSelector: React.FC = () => {
       setGenerating(false);
     }
   };
+
+  const canGenerate = useMemo(() => {
+    if (leagueId === 'ucl') return selected.size === 36 || selected.size === 24;
+    return selected.size === requiredCount;
+  }, [leagueId, selected.size, requiredCount]);
 
   if (loading) {
     return (
@@ -178,20 +204,20 @@ const TeamSelector: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-4">
-            <div className={`px-4 py-2 rounded-xl border ${selected.size === requiredCount ? 'border-emerald-500/50 bg-emerald-500/10' : 'border-white/10'} transition-colors`}>
-              <span className={`text-lg font-bold ${selected.size === requiredCount ? 'text-emerald-400' : 'text-white/50'}`}>
+            <div className={`px-4 py-2 rounded-xl border ${canGenerate ? 'border-emerald-500/50 bg-emerald-500/10' : 'border-white/10'} transition-colors`}>
+              <span className={`text-lg font-bold ${canGenerate ? 'text-emerald-400' : 'text-white/50'}`}>
                 {selected.size}
               </span>
-              <span className="text-xs text-white/30 ml-1">/ {requiredCount}</span>
+              <span className="text-xs text-white/30 ml-1">/ {leagueId === 'ucl' ? '24 or 36' : requiredCount}</span>
             </div>
 
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              onClick={handleGenerate}
-              disabled={selected.size !== requiredCount || generating}
+              onClick={() => handleGenerate()}
+              disabled={!canGenerate || generating}
               className={`px-6 py-2.5 rounded-xl font-bold text-sm uppercase tracking-wider flex items-center gap-2 transition-all ${
-                selected.size === requiredCount
+                canGenerate
                   ? 'bg-emerald-500 text-black hover:bg-emerald-400 shadow-lg shadow-emerald-500/30'
                   : 'bg-white/5 text-white/20 cursor-not-allowed'
               }`}
@@ -201,7 +227,7 @@ const TeamSelector: React.FC = () => {
               ) : (
                 <Zap className="w-4 h-4" />
               )}
-              Generate Fixtures
+              {leagueId === 'ucl' ? 'Next Step' : 'Generate Fixtures'}
             </motion.button>
           </div>
         </div>
@@ -274,6 +300,25 @@ const TeamSelector: React.FC = () => {
             Clear
           </button>
         </div>
+
+        {leagueId === 'ucl' && (
+          <div className="flex items-center gap-2 border-l border-white/5 pl-4">
+            <button
+              onClick={() => autoSelectTop(24)}
+              className="px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest bg-blue-500/20 text-blue-400 border border-blue-500/30 hover:bg-blue-500/30 transition-all flex items-center gap-2"
+            >
+              <Zap className="w-3 h-3 fill-current" />
+              Auto Select 24
+            </button>
+            <button
+              onClick={() => autoSelectTop(36)}
+              className="px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/30 transition-all flex items-center gap-2"
+            >
+              <Check className="w-3 h-3" />
+              Auto Select 36
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Team Grid */}
@@ -328,6 +373,68 @@ const TeamSelector: React.FC = () => {
           })}
         </motion.div>
       </div>
+
+      {/* UCL Stage Modal */}
+      <AnimatePresence>
+        {showStageModal && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-md">
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="w-full max-w-lg bg-[#0D0F16] border border-white/10 rounded-2xl p-8 overflow-hidden relative shadow-2xl"
+            >
+              <div className="absolute top-0 right-0 p-4">
+                <button onClick={() => setShowStageModal(false)} className="text-white/20 hover:text-white transition-colors">✕</button>
+              </div>
+
+              <div className="text-center mb-8">
+                <div className="w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-blue-500/20">
+                  <Zap className="w-8 h-8 text-blue-400" />
+                </div>
+                <h2 className="text-2xl font-black">Champions League</h2>
+                <p className="text-white/40 text-sm mt-1">Select your desired competition format</p>
+              </div>
+
+              <div className="grid grid-cols-1 gap-4">
+                <button
+                  onClick={() => handleGenerate('ucl-league')}
+                  disabled={selected.size !== 36}
+                  className={`p-6 rounded-xl border text-left transition-all group ${
+                    selected.size === 36 ? 'border-white/10 hover:border-blue-500/50 hover:bg-blue-500/5' : 'opacity-30 cursor-not-allowed border-white/5 bg-white/[0.02]'
+                  }`}
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="font-bold text-lg text-white group-hover:text-blue-400 transition-colors">League Stage</h3>
+                    {selected.size === 36 && <Check className="w-4 h-4 text-emerald-400" />}
+                  </div>
+                  <p className="text-xs text-white/40 leading-relaxed">Generate the full 36-team Swiss system schedule. All 36 teams must be selected.</p>
+                </button>
+
+                <button
+                  onClick={() => handleGenerate('ucl-knockout')}
+                  disabled={selected.size !== 24}
+                  className={`p-6 rounded-xl border text-left transition-all group ${
+                    selected.size === 24 ? 'border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5' : 'opacity-30 cursor-not-allowed border-white/5 bg-white/[0.02]'
+                  }`}
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="font-bold text-lg text-white group-hover:text-emerald-400 transition-colors">Knockout Path</h3>
+                    {selected.size === 24 && <Check className="w-4 h-4 text-emerald-400" />}
+                  </div>
+                  <p className="text-xs text-white/40 leading-relaxed">Start from the Play-offs toward the Round of 16. Requires exactly 24 teams.</p>
+                </button>
+              </div>
+
+              {selected.size !== 36 && selected.size !== 24 && (
+                <p className="text-center text-[10px] text-red-400/50 mt-6 uppercase tracking-widest font-bold">
+                  Select 24 or 36 teams to proceed
+                </p>
+              )}
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

@@ -1,110 +1,104 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Trophy, LayoutGrid, ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
+import fixtureBg from '../assets/pics/Fixture_Generation.png';
+import squadBg from '../assets/pics/Squad_Optimization.png';
 
 const Home: React.FC = () => {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
-  };
+  const [hoveredSide, setHoveredSide] = useState<'left' | 'right' | null>(null);
+  const navigate = useNavigate();
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
+  const getFilter = (side: 'left' | 'right') => {
+    if (hoveredSide === null) return 'grayscale(30%) brightness(80%)';
+    if (hoveredSide === side) return 'grayscale(0%) brightness(120%)';
+    return 'grayscale(100%) brightness(40%)';
   };
 
   return (
-    <motion.div 
-      className="flex-1 flex flex-col p-8 lg:p-16"
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
-    >
-      {/* Hero Section */}
-      <motion.div className="mb-20 space-y-6" variants={itemVariants}>
-        <div className="flex items-center gap-3">
-          <div className="h-[2px] w-12 bg-mint-sentinel" />
-          <span className="font-space text-xs uppercase tracking-widest text-mint-sentinel">
-            Dual-Engine Orchestrator
-          </span>
+    <div className="relative w-full h-screen overflow-hidden flex bg-void text-left">
+      {/* Left Half - Fixture Generator (Blue Theme) */}
+      <div
+        className="h-full relative cursor-pointer group flex flex-col justify-center items-center text-center px-12 border-r border-cyan-500/20 w-1/2 overflow-hidden"
+        onMouseEnter={() => setHoveredSide('left')}
+        onMouseLeave={() => setHoveredSide(null)}
+        onClick={() => navigate('/fixtures')}
+      >
+        <div 
+          className="absolute inset-0 z-0 bg-cover bg-center transition-all duration-700"
+          style={{ 
+            backgroundImage: `url(${fixtureBg})`,
+            filter: hoveredSide === 'right' ? 'grayscale(80%) brightness(0.3)' : 'none'
+          }}
+        />
+        {/* Dark overlay block */}
+        <div className="absolute inset-0 bg-[#090A0F]/60 z-0 group-hover:bg-[#090A0F]/20 transition-colors duration-500" />
+        
+        {/* Blue Accent Overlay - Lightful & Best */}
+        <div className="absolute inset-0 bg-gradient-to-t from-cyan-900/40 via-cyan-500/10 to-transparent mix-blend-screen z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        
+        <div className="relative z-10 flex flex-col items-center">
+          <motion.div 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            className="w-16 h-16 rounded-2xl bg-cyan-500/20 flex items-center justify-center border border-cyan-400/50 mb-8 shadow-[0_0_20px_rgba(34,211,238,0.5)] group-hover:shadow-[0_0_40px_rgba(34,211,238,0.8)] transition-shadow duration-500"
+          >
+             <span className="text-2xl text-cyan-300 font-bold">01</span>
+          </motion.div>
+          <h2 className="text-5xl md:text-7xl font-extrabold text-white mb-6 uppercase tracking-[0.1em] drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]">
+            Fixture<br/><span className="text-cyan-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.6)]">Generator</span>
+          </h2>
+          <p className="font-sans font-medium text-cyan-50 max-w-md text-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 bg-black/50 p-6 rounded-2xl backdrop-blur-md border border-cyan-500/30">
+            Navigate temporal conflicts. Generate a perfect multi-competition season with the CSP Master Scheduler.
+          </p>
+
+          <button className="mt-8 px-10 py-4 rounded-full bg-cyan-500 text-black font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all duration-500 delay-150 hover:bg-cyan-400 hover:shadow-[0_0_30px_rgba(34,211,238,0.7)] hover:scale-105 active:scale-95">
+            Launch Engine
+          </button>
         </div>
-        <h1 className="text-5xl lg:text-7xl font-clash leading-tight max-w-[900px]">
-          The Dual-Engine <br /> 
-          <span className="text-mint-sentinel">Football Orchestrator</span>
-        </h1>
-        <p className="font-outfit text-xl text-white/50 max-w-[700px] leading-relaxed">
-          Constraint Satisfaction meets Knapsack Optimization. Two algorithmic engines, one mathematical stage. Built for high-stakes football decision architecture.
-        </p>
-      </motion.div>
-
-      {/* Engine Gateways */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-20">
-        {/* UCL Engine Card */}
-        <motion.div 
-          className="glass-card group p-8 flex flex-col justify-between min-h-[400px] hover:border-neon-aqua/30 transition-all duration-500"
-          variants={itemVariants}
-          whileHover={{ y: -5 }}
-        >
-          <div className="space-y-6">
-            <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10 group-hover:border-neon-aqua/50 transition-colors">
-              <Trophy className="w-8 h-8 text-neon-aqua" />
-            </div>
-            <h2 className="text-3xl font-clash">UCL Draw Engine</h2>
-            <p className="font-outfit text-white/40 leading-relaxed">
-              A Constraint Satisfaction Problem engine that guarantees a valid Round of 16 draw without dead-ends. 
-              Forward-checking and bipartite matching prevent illegal matchups in real-time.
-            </p>
-          </div>
-          <Link to="/ucl-draw" className="action-button self-start flex items-center gap-2 group/btn">
-            Launch Engine
-            <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
-          </Link>
-        </motion.div>
-
-        {/* FPL Engine Card */}
-        <motion.div 
-          className="glass-card group p-8 flex flex-col justify-between min-h-[400px] hover:border-mint-sentinel/30 transition-all duration-500"
-          variants={itemVariants}
-          whileHover={{ y: -5 }}
-        >
-          <div className="space-y-6">
-            <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10 group-hover:border-mint-sentinel/50 transition-colors">
-              <LayoutGrid className="w-8 h-8 text-mint-sentinel" />
-            </div>
-            <h2 className="text-3xl font-clash">FPL Squad Optimizer</h2>
-            <p className="font-outfit text-white/40 leading-relaxed">
-              A multi-dimensional 0/1 Knapsack solver using Branch and Bound. 
-              Finds the mathematically optimal 15-man squad under complex budget, position, and club constraints.
-            </p>
-          </div>
-          <Link to="/fpl-optimizer" className="action-button self-start flex items-center gap-2 group/btn">
-            Launch Engine
-            <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
-          </Link>
-        </motion.div>
       </div>
 
-      {/* Tech Stack Bar */}
-      <motion.div 
-        className="mt-auto pt-16 flex flex-wrap gap-8 items-center border-t border-white/5"
-        variants={itemVariants}
+      {/* Right Half - Squad Optimizer (Green Theme) */}
+      <div
+        className="h-full relative cursor-pointer group flex flex-col justify-center items-center text-center px-12 w-1/2 overflow-hidden"
+        onMouseEnter={() => setHoveredSide('right')}
+        onMouseLeave={() => setHoveredSide(null)}
+        onClick={() => navigate('/fpl')}
       >
-        <span className="telemetry-label">Architecture:</span>
-        <div className="flex gap-4">
-          {['React 18', 'Vite 5', 'Tailwind CSS', 'Framer Motion', 'TypeScript 5', 'Prisma', 'MySQL'].map(tech => (
-            <div key={tech} className="px-3 py-1 rounded border border-white/5 bg-white/5 font-space text-[10px] text-white/40 uppercase tracking-widest">
-              {tech}
-            </div>
-          ))}
+        <div 
+          className="absolute inset-0 z-0 bg-cover bg-center transition-all duration-700"
+          style={{ 
+            backgroundImage: `url(${squadBg})`,
+            filter: hoveredSide === 'left' ? 'grayscale(80%) brightness(0.3)' : 'none'
+          }}
+        />
+        {/* Dark overlay block */}
+        <div className="absolute inset-0 bg-[#090A0F]/60 z-0 group-hover:bg-[#090A0F]/20 transition-colors duration-500" />
+        
+        {/* Green Accent Overlay - Lightful & Best */}
+        <div className="absolute inset-0 bg-gradient-to-t from-emerald-900/40 via-emerald-500/10 to-transparent mix-blend-screen z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+        <div className="relative z-10 flex flex-col items-center">
+          <motion.div 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            className="w-16 h-16 rounded-2xl bg-emerald-500/20 flex items-center justify-center border border-emerald-400/50 mb-8 shadow-[0_0_20px_rgba(52,211,153,0.5)] group-hover:shadow-[0_0_40px_rgba(52,211,153,0.8)] transition-shadow duration-500"
+          >
+             <span className="text-2xl text-emerald-400 font-bold">02</span>
+          </motion.div>
+          <h2 className="text-5xl md:text-7xl font-extrabold text-white mb-6 uppercase tracking-[0.1em] drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]">
+            Squad<br/><span className="text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.6)]">Optimizer</span>
+          </h2>
+          <p className="font-sans font-medium text-emerald-50 max-w-md text-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 bg-black/50 p-6 rounded-2xl backdrop-blur-md border border-emerald-500/30">
+            Leverage dynamic knapsack metrics. Build the mathematically optimal 15-man squad constrained by logic.
+          </p>
+          
+          <button className="mt-8 px-10 py-4 rounded-full bg-emerald-500 text-black font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all duration-500 delay-150 hover:bg-emerald-400 hover:shadow-[0_0_30px_rgba(52,211,153,0.7)] hover:scale-105 active:scale-95">
+            Launch Engine
+          </button>
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
