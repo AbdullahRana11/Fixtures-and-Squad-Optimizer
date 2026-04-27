@@ -3,9 +3,6 @@
 **Fixtures and Squad Optimizer** is a full-stack web application designed to handle complex sports tournament scheduling and Fantasy Premier League (FPL) squad optimization. It generates realistic fixtures for various major football leagues and tournaments, predicts match outcomes, and uses dynamic programming to optimize fantasy football squads.
 
 ## Developed By
-<<<<<<< HEAD
-Muhammad Abdullah Rana
-=======
 - Muhammad Abdullah Rana
 - Huzaifa Sohail
 - Danyal Aqeel
@@ -100,4 +97,3 @@ The magic of this application lies in its algorithmic backend located in `backen
 
 ## 🤝 Contributing
 Contributions, issues, and feature requests are welcome! Feel free to check the issues page if you want to contribute.
->>>>>>> d8bad024dbe54ddf97ec4e1b201fed68dd495dfe
