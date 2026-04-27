@@ -1,99 +1,89 @@
-# Fixtures and Squad Optimizer
+# ⚡ PSL FANTASY // Tactical Command Center
 
-**Fixtures and Squad Optimizer** is a full-stack web application designed to handle complex sports tournament scheduling and Fantasy Premier League (FPL) squad optimization. It generates realistic fixtures for various major football leagues and tournaments, predicts match outcomes, and uses dynamic programming to optimize fantasy football squads.
+> **Fixtures and Squad Optimizer** is a high-fidelity, tactical HUD suite for professional sports tournament scheduling and Fantasy Premier League (FPL) optimization.
 
-## Developed By
-- Muhammad Abdullah Rana
-- Huzaifa Sohail
-- Danyal Aqeel
-
-## 🌟 Key Features
-
-### 📅 Fixture Generation Engine
-- **League Scheduling:** Generates fully balanced double round-robin schedules for the Premier League, La Liga, Serie A, Bundesliga, and Custom leagues utilizing the **Circle Method (Polygon Method)**.
-- **Tournament Support:** 
-  - **FA Cup:** Simulates knock-out rounds for 64 teams.
-  - **Champions League:** Handles both the League Phase and the Knockout bracket simulation.
-- **Constraints Handling:** Ensures fair scheduling, respecting geographic zones, winter restrictions, and rivalry/policing conflicts.
-
-### 🔮 Match Predictor
-- Uses advanced statistical modeling to predict the outcome of matches based on team strength (UEFA pots), home advantage, and derby rivalry modifiers.
-
-### 💰 FPL Squad Optimizer (Knapsack Engine)
-- Utilizes the **Knapsack 0/1 Algorithm (Dynamic Programming)** to calculate the most optimal Fantasy Premier League squad.
-- Considers a fixed budget (e.g., 100m) to maximize player points.
-- Dynamically adjusts player values based on upcoming fixture difficulty, home/away status, and opposition strength.
+[![Project Status](https://img.shields.io/badge/Status-Operational-emerald?style=for-the-badge&logo=statuspage)](https://github.com/DANYALAQEEL/FAS-DAA)
+[![Tech Stack](https://img.shields.io/badge/Stack-React_|_Node.js_|_Three.js-cyan?style=for-the-badge&logo=react)](https://github.com/DANYALAQEEL/FAS-DAA)
 
 ---
 
-## 🛠️ Tech Stack
+## 🛰️ Project Overview
 
-### Frontend
-- **Framework:** React 18 with Vite
-- **Styling:** Tailwind CSS & Framer Motion (for animations)
-- **State Management:** Zustand
-- **Icons:** Lucide React
-- **Routing:** React Router DOM
+This platform has been modernized into a **Level 100 Tactical Command Center**. It moves beyond standard spreadsheets to provide a high-density, telemetry-driven environment for generating realistic fixtures, predicting match outcomes, and solving the "Knapsack" problem for FPL budget optimization.
 
-### Backend
-- **Framework:** Node.js with Express
-- **Language:** TypeScript
-- **Database:** SQLite (managed via Prisma ORM)
-- **Architecture:** Controller-Service pattern for advanced algorithmic engines.
-
----
-
-## 🚀 How to Run Locally
-
-### Prerequisites
-Make sure you have [Node.js](https://nodejs.org/) installed (v18+ recommended).
-
-### 1. Start the Backend Server
-The backend handles API requests, fixture generation algorithms, and database queries.
-
-```bash
-# Navigate to the backend directory
-cd backend
-
-# Install dependencies
-npm install
-
-# Initialize and seed the SQLite database
-npx prisma db push
-npx prisma db seed
-
-# Start the development server (runs on http://127.0.0.1:3000)
-npm run dev
-```
-
-### 2. Start the Frontend Application
-The frontend is the user interface built with React and Vite.
-
-```bash
-# Open a new terminal and navigate to the frontend directory
-cd frontend
-
-# Install dependencies
-npm install
-
-# Start the Vite development server (runs on http://localhost:5173)
-npm run dev
-```
-
-### 3. Access the App
-Open your web browser and navigate to **`http://localhost:5173`**.
+### 🔳 The "Tactical HUD" Experience
+The UI has been completely overhauled with a futuristic, military-grade aesthetic:
+- **Hyperspeed WebGL**: Dynamic, interactive light-trail backgrounds that respond to user engagement.
+- **Glassmorphic Navigation**: Ultra-transparent, high-blur interface elements (`backdrop-blur-3xl`).
+- **Telemetry HUD**: Real-time system load and data-grid status indicators for a professional feel.
+- **Magnetic Interaction**: Physics-based hover states and "decrypted" text animations for enhanced user engagement.
 
 ---
 
 ## 🧠 Algorithmic Core
 
-The magic of this application lies in its algorithmic backend located in `backend/src/algorithms/`:
-- `fixture-generator.ts`: Implements the Circle Method for league scheduling.
-- `fpl-knapsack-engine.ts`: Solves the 0/1 Knapsack problem for Fantasy League budget optimization.
-- `match-predictor.ts`: Probability-based match outcome simulation.
-- `fa-cup-engine.ts` & `cl-knockout-engine.ts`: Bracket and single-elimination tournament generation.
+The power of this suite lies in its advanced backend engines, located in `backend/src/algorithms/`:
+
+### 📅 Fixture Generation Engine
+- **League Scheduling**: Implements the **Circle Method (Polygon Method)** for balanced double round-robin schedules.
+- **Tournament Simulation**:
+  - **FA Cup**: Full 64-team knockout bracket simulation.
+  - **Champions League**: League phase and knockout bracket generation.
+- **Constraint Solver**: Manages geographic restrictions, rivalry conflicts, and scheduling fairness.
+
+### 💰 FPL Squad Optimizer (Knapsack Engine)
+- **Mathematical Optimization**: Uses the **0/1 Knapsack Algorithm (Dynamic Programming)** to maximize squad points within a 100m budget.
+- **Dynamic Valuation**: Real-time adjustment of player value based on fixture difficulty, opposition strength, and historic performance.
+
+### 🔮 Match Predictor
+- Statistical outcome modeling based on UEFA pot strength, home/away advantage, and rivalry modifiers.
 
 ---
 
-## 🤝 Contributing
-Contributions, issues, and feature requests are welcome! Feel free to check the issues page if you want to contribute.
+## 🛠️ Tech Stack
+
+### Frontend (Tactical HUD)
+- **Core**: React 18, Vite, TypeScript
+- **Visuals**: Three.js (WebGL), Framer Motion, GSAP
+- **Components**: React Bits (Hyperspeed, GridScan, Magnet, TiltedCard)
+- **State**: Zustand
+
+### Backend (Algorithmic API)
+- **Core**: Node.js, Express, TypeScript
+- **Database**: SQLite with Prisma ORM
+- **Logic**: Custom Algorithmic Service Layer
+
+---
+
+## 🚀 Installation & Tactical Deployment
+
+### 1. Initialize Backend
+```bash
+cd backend
+npm install
+npx prisma db push
+npx prisma db seed
+npm run dev
+```
+
+### 2. Launch Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+---
+
+## 👥 Development Team
+- **Muhammad Abdullah Rana**
+- **Huzaifa Sohail**
+- **Danyal Aqeel**
+
+---
+
+## 🤝 License & Contributions
+This project is for educational and tactical research purposes. Contributions are welcome via Pull Request.
+
+---
+**OPERATIONAL STATUS: READY FOR DEPLOYMENT**

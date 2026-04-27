@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Trophy, ArrowLeft, Zap, Play, ChevronRight } from 'lucide-react';
+import { Trophy, ArrowLeft, Play, ChevronRight } from 'lucide-react';
 import axios from 'axios';
 import StatsPanel from '../components/StatsPanel';
 

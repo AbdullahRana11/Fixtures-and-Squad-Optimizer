@@ -63,7 +63,7 @@ export const useFplStore = create<FPLState>((set, get) => ({
   },
 
   optimize: async (shuffle = false) => {
-    const { budget, gameweek, kIndex, seasonalFixtures } = get();
+    const { gameweek, kIndex, seasonalFixtures } = get();
     const nextKIndex = shuffle ? kIndex + 1 : 1;
 
     set({ isLoading: true, error: null });

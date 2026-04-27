@@ -1,9 +1,14 @@
 import React, { useState, useMemo } from 'react';
 import PlayerCard from "../components/PlayerCard";
 import { useFplStore } from '../store/fplStore';
-import eplBackground from "../assets/pics/PSL-Background.png";
 import logo from "../assets/pics/PSL-logo.png";
-import { Search, Filter } from 'lucide-react';
+import { Search, Database, Zap } from 'lucide-react';
+ 
+// Tactical UI Components
+import Hyperspeed from '../components/reactbits/Hyperspeed';
+import GridScan from '../components/reactbits/GridScan';
+import DecryptedText from '../components/reactbits/DecryptedText';
+import TiltedCard from '../components/reactbits/TiltedCard';
 
 import arsLogo from "../assets/pics/EPL Logos/arsenal.football-logos.cc.png";
 import avlLogo from "../assets/pics/EPL Logos/aston-villa.football-logos.cc.png";
@@ -35,8 +40,8 @@ const teamFilters = [
 
 function FilterPanel({ title, children }: { title: string, children: React.ReactNode }) {
   return (
-    <section className="rounded-[32px] border border-white/5 bg-black/40 p-8 backdrop-blur-2xl shadow-3xl mb-8">
-      <h3 className="mb-6 inline-block bg-gradient-to-r from-emerald-300 via-teal-200 to-lime-200 bg-clip-text text-[10px] font-black uppercase tracking-[0.4em] text-transparent">
+    <section className="rounded-[32px] border border-white/5 bg-black/60 p-8 backdrop-blur-3xl shadow-2xl mb-6">
+      <h3 className="mb-6 inline-block text-[9px] font-black uppercase tracking-[0.4em] text-white/30 font-mono">
         {title}
       </h3>
       {children}
@@ -60,15 +65,30 @@ export default function FantasyDashboard() {
   }, [allPlayers, filterTeam, filterPos, searchQuery]);
 
   return (
-    <>
-      <div
-        className="fixed inset-0 z-0 pointer-events-none"
-        style={{
-          backgroundImage: `linear-gradient(to bottom, rgba(5, 10, 6, 0.4), rgba(7, 11, 8, 0.7), rgba(10, 14, 8, 0.9)), url(${eplBackground})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      />
+    <div className="min-h-screen bg-[#030408] text-white relative overflow-hidden">
+      {/* Immersive Background */}
+      <div className="fixed inset-0 z-0">
+        <Hyperspeed 
+          effectOptions={{
+            distortion: 'turbulentDistortion',
+            speedUp: 2,
+            colors: {
+              roadColor: 0x080808,
+              islandColor: 0x0a0a0a,
+              background: 0x000000,
+              shoulderLines: 0xffffff,
+              brokenLines: 0xffffff,
+              leftCars: [0x10b981, 0x059669, 0x047857],
+              rightCars: [0x10b981, 0x059669, 0x047857],
+              sticks: 0x10b981
+            }
+          }} 
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#030408]/80 via-[#030408]/40 to-[#030408]/90 pointer-events-none" />
+        <GridScan 
+          color="#10b981" 
+        />
+      </div>
       
       <div className="relative z-10 grid gap-12 lg:grid-cols-[340px_1fr] max-w-[2400px] mx-auto p-8 md:p-16 lg:p-20">
         <aside className="space-y-4">
@@ -115,27 +135,42 @@ export default function FantasyDashboard() {
         <main className="space-y-16">
           <div className="flex items-end justify-between px-6">
              <div className="flex items-center gap-10">
-                <img src={logo} alt="PSL" className="h-20 w-20 drop-shadow-2xl" />
+                <img src={logo} alt="PSL" className="h-24 w-24 drop-shadow-2xl filter grayscale invert brightness-200" />
                 <div className="flex flex-col">
-                   <h1 className="text-6xl font-black text-white italic uppercase tracking-tighter leading-none">FANTASY <span className="text-emerald-500">LEAGUE</span></h1>
-                   <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.5em] mt-4">Global Network Active</p>
+                   <DecryptedText
+                     text="FANTASY COMMAND"
+                     className="text-6xl font-black text-white italic uppercase tracking-tighter leading-none"
+                     animateOn="view"
+                     revealDirection="center"
+                   />
+                   <p className="text-white/20 text-[9px] font-mono uppercase tracking-[0.5em] mt-4 flex items-center gap-2">
+                     <Zap className="w-3 h-3 text-emerald-500" /> BIOMETRIC SCANNER: ENGAGED // NETWORK: SECURE
+                   </p>
                 </div>
              </div>
-             <div className="bg-white/5 border border-white/10 px-10 py-6 rounded-[32px] backdrop-blur-xl text-center shadow-2xl">
-                <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mb-1">Total Assets</p>
-                <p className="text-4xl font-black text-white italic tracking-tighter">{filteredPlayers.length} SCOUTED</p>
+             <div className="bg-black/60 border border-white/10 px-10 py-6 rounded-[32px] backdrop-blur-xl text-center shadow-2xl">
+                <p className="text-[9px] font-black text-white/30 uppercase tracking-[0.3em] mb-2 font-mono">Total Assets</p>
+                <div className="flex items-center gap-3">
+                   <Database className="w-5 h-5 text-emerald-500" />
+                   <p className="text-4xl font-black text-white italic tracking-tighter">{filteredPlayers.length}</p>
+                </div>
              </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-12 md:grid-cols-3 xl:grid-cols-4 xxl:grid-cols-5 p-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xxl:grid-cols-5 gap-12 p-4">
             {filteredPlayers.map((player) => (
               <div key={player.id} className="flex justify-center">
-                 <PlayerCard player={player} compact />
+                 <TiltedCard
+                    glareColor="rgba(16, 185, 129, 0.3)"
+                    maxTilt={8}
+                 >
+                    <PlayerCard player={player} compact className="!border-none !shadow-none !bg-transparent" />
+                 </TiltedCard>
               </div>
             ))}
           </div>
         </main>
       </div>
-    </>
+    </div>
   );
 }

@@ -1,9 +1,14 @@
 import React, { useState, useMemo } from 'react';
 import PlayerCard from "../components/PlayerCard";
 import { useFplStore } from '../store/fplStore';
-import marketBg from "../assets/pics/Market_Place.png";
 import logo from "../assets/pics/PSL-logo.png";
-import { Search, Filter, TrendingUp, ShoppingCart, Zap } from 'lucide-react';
+import { Search, ShoppingCart, Zap } from 'lucide-react';
+
+// Tactical UI Components
+import Hyperspeed from '../components/reactbits/Hyperspeed';
+import GridScan from '../components/reactbits/GridScan';
+import DecryptedText from '../components/reactbits/DecryptedText';
+import TiltedCard from '../components/reactbits/TiltedCard';
 
 import arsLogo from "../assets/pics/EPL Logos/arsenal.football-logos.cc.png";
 import avlLogo from "../assets/pics/EPL Logos/aston-villa.football-logos.cc.png";
@@ -35,8 +40,8 @@ const teamFilters = [
 
 function FilterPanel({ title, children }: { title: string, children: React.ReactNode }) {
   return (
-    <section className="rounded-[40px] border border-white/5 bg-black/40 p-10 backdrop-blur-3xl shadow-3xl mb-10">
-      <h3 className="mb-8 inline-block bg-gradient-to-r from-amber-300 via-yellow-200 to-orange-200 bg-clip-text text-[10px] font-black uppercase tracking-[0.5em] text-transparent">
+    <section className="rounded-[32px] border border-white/5 bg-black/60 p-8 backdrop-blur-3xl shadow-2xl mb-6">
+      <h3 className="mb-6 inline-block text-[9px] font-black uppercase tracking-[0.4em] text-white/30 font-mono">
         {title}
       </h3>
       {children}
@@ -48,7 +53,7 @@ export default function Marketplace() {
   const { allPlayers } = useFplStore();
   const [filterTeam, setFilterTeam] = useState<string | null>(null);
   const [filterPos, setFilterPos] = useState<string | null>(null);
-  const [sortBy, setSortBy] = useState<'value' | 'cost' | 'points' | null>('value');
+  const [sortBy] = useState<'value' | 'cost' | 'points' | null>('value');
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredPlayers = useMemo(() => {
@@ -66,15 +71,30 @@ export default function Marketplace() {
   }, [allPlayers, filterTeam, filterPos, sortBy, searchQuery]);
 
   return (
-    <>
-      <div
-        className="fixed inset-0 z-0 pointer-events-none"
-        style={{
-          backgroundImage: `linear-gradient(to bottom, rgba(5, 10, 6, 0.4), rgba(7, 11, 8, 0.7), rgba(10, 14, 8, 0.9)), url(${marketBg})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      />
+    <div className="min-h-screen bg-[#030408] text-white relative overflow-hidden">
+      {/* Immersive Background */}
+      <div className="fixed inset-0 z-0">
+        <Hyperspeed 
+          effectOptions={{
+            distortion: 'turbulentDistortion',
+            speedUp: 2,
+            colors: {
+              roadColor: 0x080808,
+              islandColor: 0x0a0a0a,
+              background: 0x000000,
+              shoulderLines: 0xffffff,
+              brokenLines: 0xffffff,
+              leftCars: [0xf59e0b, 0xd97706, 0xb45309],
+              rightCars: [0xf59e0b, 0xd97706, 0xb45309],
+              sticks: 0xf59e0b
+            }
+          }} 
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#030408]/80 via-[#030408]/40 to-[#030408]/90 pointer-events-none" />
+        <GridScan 
+          color="#f59e0b" 
+        />
+      </div>
       
       <div className="relative z-10 grid gap-12 lg:grid-cols-[340px_1fr] max-w-[2400px] mx-auto p-8 md:p-16 lg:p-20">
         <aside className="space-y-6">
@@ -130,24 +150,36 @@ export default function Marketplace() {
           <div className="flex flex-col md:flex-row items-end justify-between px-10 gap-8">
              <div className="flex-1">
                 <div className="flex items-center gap-6 mb-4">
-                   <img src={logo} alt="PSL" className="h-16 w-16 drop-shadow-glow" />
-                   <h1 className="text-6xl md:text-8xl font-black text-white italic uppercase tracking-tighter leading-none">TRANSFER <span className="text-amber-500">MARKET</span></h1>
+                   <img src={logo} alt="PSL" className="h-20 w-20 drop-shadow-glow filter grayscale invert brightness-200" />
+                   <div>
+                      <DecryptedText
+                        text="TRANSFER MARKET"
+                        className="text-6xl md:text-8xl font-black text-white italic uppercase tracking-tighter leading-none"
+                        animateOn="view"
+                        revealDirection="center"
+                      />
+                   </div>
                 </div>
-                <p className="text-zinc-600 font-black uppercase tracking-[0.6em] text-[10px] ml-2 flex items-center gap-4">
-                  <Zap className="w-4 h-4 text-emerald-500" /> Authorized Player Exchange Network
+                <p className="text-white/20 font-mono uppercase tracking-[0.6em] text-[9px] ml-2 flex items-center gap-4">
+                  <Zap className="w-3.5 h-3.5 text-amber-500" /> Authorized Player Exchange Network // LIVE_STATUS: ACTIVE
                 </p>
              </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-16 lg:grid-cols-3 xl:grid-cols-4 xxl:grid-cols-5 p-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xxl:grid-cols-5 gap-12 p-6">
             {filteredPlayers.map((player) => (
-              <div key={player.id} className="flex justify-center scale-105">
-                 <PlayerCard player={player} compact trading />
+              <div key={player.id} className="flex justify-center">
+                 <TiltedCard
+                    glareColor="rgba(245, 158, 11, 0.3)"
+                    maxTilt={8}
+                 >
+                    <PlayerCard player={player} compact trading className="!border-none !shadow-none !bg-transparent" />
+                 </TiltedCard>
               </div>
             ))}
           </div>
         </main>
       </div>
-    </>
+    </div>
   );
 }

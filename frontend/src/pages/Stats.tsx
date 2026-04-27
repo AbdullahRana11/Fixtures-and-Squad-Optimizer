@@ -1,4 +1,4 @@
-import React from "react";
+
 import { topBatsmen, topBowlers } from "../data/mockData";
 import batsBg from "../assets/pics/Top_Batsmen.png";
 import bowlBg from "../assets/pics/Top_Bowlers.png";

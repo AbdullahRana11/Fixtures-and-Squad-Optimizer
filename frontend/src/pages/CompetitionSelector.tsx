@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { History as HistoryIcon } from 'lucide-react';
+import { History as HistoryIcon, ArrowLeft } from 'lucide-react';
 import HistoryDrawer from '../components/HistoryDrawer';
 import { HistoryEntry } from '../utils/fixtureUtils';
+ 
+// Tactical UI Components
+import GridScan from '../components/reactbits/GridScan';
+import DecryptedText from '../components/reactbits/DecryptedText';
 
 // Asset Imports
 import plBg from '../assets/pics/Premier-League.png';
@@ -100,7 +104,31 @@ const CompetitionSelector: React.FC = () => {
               )}
             </AnimatePresence>
 
-            {/* Text Removed As Requested */}
+            {/* Tactical League Title Overlay */}
+            <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none p-12">
+              <AnimatePresence>
+                {isHovered && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                    className="text-center"
+                  >
+                    <DecryptedText
+                      text={comp.name.toUpperCase()}
+                      className="text-5xl md:text-7xl font-black text-white italic tracking-tighter drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]"
+                      animateOn="view"
+                      revealDirection="center"
+                    />
+                    <div className="mt-4 flex items-center justify-center gap-3">
+                      <div className="h-[1px] w-12 bg-white/20" />
+                      <span className="text-[10px] font-mono tracking-[0.5em] text-white/40">SELECT COMPETITION</span>
+                      <div className="h-[1px] w-12 bg-white/20" />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
             {/* Bottom Glow Bar */}
             {isHovered && (
@@ -114,21 +142,27 @@ const CompetitionSelector: React.FC = () => {
         );
       })}
       
+      {/* Tactical Background Overlay */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-40">
+        <GridScan color="#10b981" />
+      </div>
+
       {/* History Button Shortcut */}
       <button 
         onClick={() => setHistoryOpen(true)}
-        className="absolute top-8 right-8 z-50 flex items-center gap-3 px-6 py-2 rounded-full border border-white/10 bg-black/40 backdrop-blur-xl text-white/50 hover:text-white hover:border-white/30 transition-all uppercase text-[10px] tracking-[0.3em] font-bold"
+        className="absolute top-8 right-8 z-50 flex items-center gap-3 px-8 py-3 rounded-full border border-white/10 bg-black/60 backdrop-blur-2xl text-white/40 hover:text-white hover:border-emerald-500/50 hover:bg-emerald-500/10 transition-all uppercase text-[9px] tracking-[0.3em] font-black font-mono shadow-2xl group"
       >
-        <HistoryIcon className="w-4 h-4" />
-        View History
+        <HistoryIcon className="w-4 h-4 text-emerald-500 transition-transform group-hover:rotate-12" />
+        Archive Data
       </button>
       
       {/* Home Button Shortcut */}
       <button 
         onClick={() => navigate('/')}
-        className="absolute top-8 left-8 z-50 px-6 py-2 rounded-full border border-white/10 bg-black/40 backdrop-blur-xl text-white/50 hover:text-white hover:border-white/30 transition-all uppercase text-[10px] tracking-[0.3em] font-bold"
+        className="absolute top-8 left-8 z-50 flex items-center gap-3 px-8 py-3 rounded-full border border-white/10 bg-black/60 backdrop-blur-2xl text-white/40 hover:text-white hover:border-emerald-500/50 hover:bg-emerald-500/10 transition-all uppercase text-[9px] tracking-[0.3em] font-black font-mono shadow-2xl group"
       >
-        ← Return Home
+        <ArrowLeft className="w-4 h-4 text-emerald-500 transition-transform group-hover:-translate-x-1" />
+        Return Home
       </button>
 
       {/* History Drawer */}

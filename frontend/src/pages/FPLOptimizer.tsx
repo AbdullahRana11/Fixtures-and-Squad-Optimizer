@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import PlayerCard from '../components/PlayerCard';
-import teamPitchBackground from "../assets/pics/background_pic.png";
 import logo from "../assets/pics/PSL-logo.png";
 import { useFplStore, Player } from '../store/fplStore';
-import { RefreshCw, X, Loader2, AlertTriangle, ChevronLeft, ChevronRight, TrendingUp, DollarSign, Target, Repeat, Search } from 'lucide-react';
+import { RefreshCw, X, Loader2, ChevronLeft, ChevronRight, TrendingUp, DollarSign, Target, Repeat, Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useLocation } from 'react-router-dom';
+
+// Import futuristic ReactBits components
+import GridScan from '../components/reactbits/GridScan';
+import TiltedCard from '../components/reactbits/TiltedCard';
+import DecryptedText from '../components/reactbits/DecryptedText';
 
 import arsLogo from "../assets/pics/EPL Logos/arsenal.football-logos.cc.png";
 import avlLogo from "../assets/pics/EPL Logos/aston-villa.football-logos.cc.png";
@@ -61,14 +64,13 @@ function initialsFromName(name: string) {
 
 export default function FPLOptimizer() {
   const { 
-    squad, allPlayers, gameweek, projectedPoints, isLoading, error, 
-    optimize, clearError, setGameweek, fetchSeasonPool, fetchAllPlayers, fixtureContext, swapPlayer 
+    squad, allPlayers, gameweek, projectedPoints, isLoading,  
+    optimize, setGameweek, fetchSeasonPool, fetchAllPlayers, fixtureContext, swapPlayer 
   } = useFplStore();
 
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
   const [isSwapping, setIsSwapping] = useState(false);
   const [swapSearch, setSwapSearch] = useState("");
-  const location = useLocation();
 
   const totalSquadCost = (squad || []).reduce((sum, p) => sum + Number(p?.cost_millions || 0), 0);
   const realRemainingBudget = 100.0 - totalSquadCost;
@@ -120,8 +122,13 @@ export default function FPLOptimizer() {
 
   return (
     <>
-      <div className="fixed inset-0 z-0 pointer-events-none" style={{ backgroundImage: `linear-gradient(to bottom, rgba(5, 10, 6, 0.3), rgba(7, 11, 8, 0.4), rgba(10, 14, 8, 0.4)), url(${teamPitchBackground})`, backgroundSize: "cover", backgroundPosition: "center" }} />
+      <div className="fixed inset-0 z-0 bg-[#050608]" />
       
+      {/* Tactical Grid Scan Overlay */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-20 mix-blend-screen">
+        <GridScan color="#10b981" scanSpeed={0.8} />
+      </div>
+
       <div className="relative z-10 grid gap-12 lg:grid-cols-[320px_1fr] max-w-[2400px] mx-auto p-8 md:p-16">
         
         <aside className="space-y-6">
@@ -137,14 +144,18 @@ export default function FPLOptimizer() {
 
           <FilterPanel title="SQUAD ECONOMY">
              <div className="space-y-6">
-                <div className="p-6 rounded-[32px] bg-black/60 border border-white/5 shadow-xl">
-                   <p className="text-[10px] font-black text-zinc-500 uppercase mb-3 tracking-[0.2em]">Total Value</p>
-                   <span className="text-4xl font-black text-white italic tracking-tighter leading-none">£{totalSquadCost.toFixed(1)}M</span>
-                </div>
-                <div className="p-6 rounded-[32px] bg-black/60 border border-white/5 shadow-xl">
-                   <p className="text-[10px] font-black text-zinc-500 uppercase mb-3 tracking-[0.2em]">Remaining Bank</p>
-                   <span className="text-4xl font-black text-emerald-400 italic tracking-tighter leading-none font-mono">£{realRemainingBudget.toFixed(1)}M</span>
-                </div>
+                <TiltedCard maxTilt={7} glareColor="rgba(255, 255, 255, 0.1)">
+                  <div className="p-6 rounded-[32px] bg-black/60 border border-white/5 shadow-xl backdrop-blur-md">
+                     <p className="text-[10px] font-black text-zinc-500 uppercase mb-3 tracking-[0.2em]">Total Value</p>
+                     <span className="text-4xl font-black text-white italic tracking-tighter leading-none">£{totalSquadCost.toFixed(1)}M</span>
+                  </div>
+                </TiltedCard>
+                <TiltedCard maxTilt={7} glareColor="rgba(16, 185, 129, 0.2)">
+                  <div className="p-6 rounded-[32px] bg-black/60 border border-white/5 shadow-xl backdrop-blur-md">
+                     <p className="text-[10px] font-black text-zinc-500 uppercase mb-3 tracking-[0.2em]">Remaining Bank</p>
+                     <span className="text-4xl font-black text-emerald-400 italic tracking-tighter leading-none font-mono">£{realRemainingBudget.toFixed(1)}M</span>
+                  </div>
+                </TiltedCard>
              </div>
           </FilterPanel>
         </aside>
@@ -156,7 +167,7 @@ export default function FPLOptimizer() {
                <img src={logo} alt="Logo" className="h-24 w-24 object-contain drop-shadow-4xl" />
                <div className="flex flex-col">
                   <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter italic uppercase leading-none">
-                    SQUAD <span className="text-emerald-500">OPTIMIZER</span>
+                    <DecryptedText text="SQUAD" animateOn="view" speed={80} className="text-white" encryptedClassName="text-emerald-500" /> <span className="text-emerald-500"><DecryptedText text="OPTIMIZER" animateOn="view" speed={80} className="text-emerald-500" encryptedClassName="text-white" /></span>
                   </h1>
                   
                   <div className="mt-6 flex items-center gap-6 bg-black/20 border border-white/10 px-6 py-3 rounded-2xl w-fit shadow-xl">
@@ -174,10 +185,12 @@ export default function FPLOptimizer() {
             </div>
 
             <div className="flex gap-6">
-               <div className="p-6 rounded-[32px] bg-black/40 border border-white/10 flex flex-col items-center min-w-[180px] shadow-2xl">
-                  <span className="text-[10px] font-black text-zinc-400 mb-2 tracking-[0.3em] uppercase">Expected Yield</span>
-                  <span className="text-5xl font-black text-emerald-400 font-mono tracking-tighter italic drop-shadow-glow">{safeProjectedPoints.toFixed(1)}</span>
-               </div>
+               <TiltedCard maxTilt={10} glareColor="rgba(16, 185, 129, 0.3)">
+                 <div className="p-6 rounded-[32px] bg-black/40 border border-white/10 flex flex-col items-center min-w-[180px] shadow-2xl backdrop-blur-md">
+                    <span className="text-[10px] font-black text-zinc-400 mb-2 tracking-[0.3em] uppercase">Expected Yield</span>
+                    <span className="text-5xl font-black text-emerald-400 font-mono tracking-tighter italic drop-shadow-glow">{safeProjectedPoints.toFixed(1)}</span>
+                 </div>
+               </TiltedCard>
                
                <button 
                 onClick={() => optimize(true)}

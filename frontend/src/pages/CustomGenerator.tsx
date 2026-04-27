@@ -3,11 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { 
-  ArrowLeft, ArrowRight, Dices, Shuffle, Calendar, 
-  Clock, MapPin, Shield, Check, Info, Download, 
-  Copy, RefreshCw, Zap, Trophy, Users, Layout,
-  Settings2, FileType, FileJson, Sun, Moon, Cloud, Droplets, Thermometer,
-  Star, Swords, Landmark, Wind
+  ArrowLeft, ArrowRight, Calendar, 
+  Check, 
+  RefreshCw, Zap, Trophy, Users, Layout,
+  FileType, FileJson, Sun, Moon, Thermometer,
+  Star, Swords, Landmark
 } from 'lucide-react';
 import { 
   fictionalNames, prng, shuffle, 
@@ -15,6 +15,11 @@ import {
   saveToHistory, exportToCSV, exportToJSON,
   assignAdvancedSchedule
 } from '../utils/fixtureUtils';
+
+// Tactical UI Components
+import Hyperspeed from '../components/reactbits/Hyperspeed';
+import GridScan from '../components/reactbits/GridScan';
+
 
 type Format = 'round_robin' | 'knockout' | 'double_elim' | 'groups';
 
@@ -380,8 +385,33 @@ const CustomGenerator: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-void flex items-center justify-center p-6">
-      <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-5xl bg-[#0a0b10] border border-white/10 rounded-[3rem] shadow-[0_60px_150px_rgba(0,0,0,0.9)] overflow-hidden flex flex-col md:flex-row min-h-[750px]">
+    <div className="min-h-screen bg-[#030408] relative overflow-hidden flex items-center justify-center p-6">
+      {/* Immersive Background */}
+      <div className="fixed inset-0 z-0">
+        <Hyperspeed 
+          effectOptions={{
+            distortion: 'turbulentDistortion',
+            speedUp: 2,
+            colors: {
+              roadColor: 0x080808,
+              islandColor: 0x0a0a0a,
+              background: 0x000000,
+              shoulderLines: 0xffffff,
+              brokenLines: 0xffffff,
+              leftCars: [0x10b981, 0x059669],
+              rightCars: [0x10b981, 0x065f46],
+              sticks: 0x10b981
+            }
+          }} 
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#030408]/80 via-[#030408]/40 to-[#030408]/90 pointer-events-none" />
+        {/* Tactical Grid Scan Overlay */}
+        <div className="absolute inset-0 z-0 pointer-events-none opacity-40 mix-blend-screen">
+          <GridScan color="#10b981" scanSpeed={1.2} />
+        </div>
+      </div>
+
+      <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} className="relative z-10 w-full max-w-5xl bg-[#0a0b10]/90 backdrop-blur-3xl border border-white/10 rounded-[3rem] shadow-[0_60px_150px_rgba(0,0,0,0.9)] overflow-hidden flex flex-col md:flex-row min-h-[750px]">
         {/* Progress Sidebar */}
         <div className="w-full md:w-80 bg-black/50 border-r border-white/5 p-12 flex flex-col">
           <div className="flex items-center gap-4 mb-20">

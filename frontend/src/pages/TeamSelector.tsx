@@ -4,6 +4,12 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Check, Loader2, Search, ArrowLeft, Zap } from 'lucide-react';
 import axios from 'axios';
 
+// Tactical UI Components
+import Hyperspeed from '../components/reactbits/Hyperspeed';
+import GridScan from '../components/reactbits/GridScan';
+import DecryptedText from '../components/reactbits/DecryptedText';
+import TiltedCard from '../components/reactbits/TiltedCard';
+
 interface TeamData {
   id: string;
   name: string;
@@ -182,7 +188,32 @@ const TeamSelector: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#090A0F] text-white">
+    <div className="min-h-screen bg-[#030408] text-white relative overflow-hidden">
+      {/* Immersive Background */}
+      <div className="fixed inset-0 z-0">
+        <Hyperspeed 
+          effectOptions={{
+            distortion: 'turbulentDistortion',
+            speedUp: 2,
+            colors: {
+              roadColor: 0x080808,
+              islandColor: 0x0a0a0a,
+              background: 0x000000,
+              shoulderLines: 0xffffff,
+              brokenLines: 0xffffff,
+              leftCars: [0x0ea5e9, 0x0284c7, 0x0369a1],
+              rightCars: [0x0ea5e9, 0x0284c7, 0x0369a1],
+              sticks: 0x0ea5e9
+            }
+          }} 
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#030408]/80 via-[#030408]/40 to-[#030408]/90 pointer-events-none" />
+        <GridScan 
+          color="#0ea5e9" 
+        />
+      </div>
+
+      <div className="relative z-10">
       {/* Header */}
       <div className="border-b border-white/5 bg-black/30 backdrop-blur-xl sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -194,11 +225,14 @@ const TeamSelector: React.FC = () => {
               <ArrowLeft className="w-5 h-5 text-white/50" />
             </button>
             <div>
-              <h1 className={`text-2xl font-bold ${theme.accent}`}>
-                {LEAGUE_NAMES[leagueId]} — Team Selection
-              </h1>
-              <p className="text-xs text-white/40 mt-1">
-                Select {requiredCount} teams from {teams.length} available
+              <DecryptedText
+                text={`${LEAGUE_NAMES[leagueId]} — Deployment`}
+                className={`text-2xl font-black tracking-tighter uppercase italic ${theme.accent}`}
+                animateOn="view"
+                revealDirection="center"
+              />
+              <p className="text-[10px] text-white/25 mt-1 font-mono tracking-widest uppercase">
+                OBJECTIVE: SELECT {requiredCount} UNITS · {teams.length} AVAILABLE
               </p>
             </div>
           </div>
@@ -335,39 +369,53 @@ const TeamSelector: React.FC = () => {
               <motion.div
                 key={team.id}
                 variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}
-                onClick={() => toggleTeam(team.name)}
-                className={`relative p-4 rounded-xl border cursor-pointer transition-all group overflow-hidden ${
-                  isSelected
-                    ? `${theme.border} ${theme.bg} shadow-lg ${theme.glow}`
-                    : 'border-white/5 bg-white/[0.02] hover:border-white/15 hover:bg-white/5'
-                }`}
+                className="relative"
               >
-                {/* Selection Badge */}
-                <div className={`absolute top-3 right-3 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
-                  isSelected ? 'border-emerald-400 bg-emerald-500' : 'border-white/15'
-                }`}>
-                  {isSelected && <Check className="w-3.5 h-3.5 text-black" strokeWidth={3} />}
-                </div>
+                <TiltedCard
+                  glareColor="rgba(14, 165, 233, 0.3)"
+                  maxTilt={10}
+                >
+                  <div 
+                    onClick={() => toggleTeam(team.name)}
+                    className={`h-full p-5 rounded-xl border cursor-pointer transition-all flex flex-col justify-between backdrop-blur-md ${
+                      isSelected
+                        ? `bg-emerald-500/10 border-emerald-500/50 shadow-lg shadow-emerald-500/10`
+                        : 'border-white/5 bg-black/40 hover:border-white/20'
+                    }`}
+                  >
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className={`font-black text-sm uppercase tracking-tight ${isSelected ? 'text-white' : 'text-white/70'}`}>
+                          {team.name}
+                        </h3>
+                        <p className="text-[9px] text-white/20 mt-0.5 uppercase font-mono tracking-widest">{team.league}</p>
+                      </div>
+                      <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all ${
+                        isSelected ? 'border-emerald-400 bg-emerald-500' : 'border-white/10 bg-white/5'
+                      }`}>
+                        {isSelected && <Check className="w-3 h-3 text-black" strokeWidth={4} />}
+                      </div>
+                    </div>
 
-                <h3 className={`font-bold text-sm pr-8 ${isSelected ? 'text-white' : 'text-white/70'}`}>
-                  {team.name}
-                </h3>
-                <p className="text-[10px] text-white/25 mt-1 uppercase tracking-wider">{team.league}</p>
+                    <div className="space-y-1.5">
+                      <div className="flex items-center gap-2 text-[9px] text-white/30 font-mono">
+                        <span className="shrink-0">LOCATION:</span>
+                        <span className="truncate uppercase">{team.city}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-[9px] text-white/30 font-mono">
+                        <span className="shrink-0">STADIUM:</span>
+                        <span className="truncate uppercase">{team.stadium}</span>
+                      </div>
+                    </div>
 
-                <div className="flex items-center gap-3 mt-3">
-                  <span className="text-[10px] text-white/30">
-                    📍 {team.city}
-                  </span>
-                  <span className="text-[10px] text-white/20">
-                    🏟 {team.stadium}
-                  </span>
-                </div>
-
-                {team.biggest_rival && (
-                  <p className="text-[9px] text-red-400/40 mt-2">
-                    ⚔ Rival: {team.biggest_rival}
-                  </p>
-                )}
+                    {team.biggest_rival && (
+                      <div className="mt-2 pt-2 border-t border-white/5 flex items-center gap-1.5">
+                         <Zap className="w-2.5 h-2.5 text-red-500/50" />
+                         <span className="text-[8px] text-red-500/40 font-black uppercase tracking-tighter">Rival: {team.biggest_rival}</span>
+                      </div>
+                    )}
+                  </div>
+                </TiltedCard>
               </motion.div>
             );
           })}
@@ -435,6 +483,7 @@ const TeamSelector: React.FC = () => {
           </div>
         )}
       </AnimatePresence>
+    </div>
     </div>
   );
 };

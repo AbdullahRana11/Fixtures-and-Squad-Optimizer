@@ -1,10 +1,16 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Calendar, Clock, MapPin, Shield, Star, ArrowLeft, Settings2, Cpu, Sparkles, Filter, RefreshCw, Save, Shuffle, Zap, Trophy } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calendar, Clock, MapPin, Shield, ArrowLeft, Settings2, Cpu, Filter, RefreshCw, Save, Shuffle, Zap } from 'lucide-react';
 import axios from 'axios';
 import StatsPanel from '../components/StatsPanel';
 import { getHistory, saveToHistory } from '../utils/fixtureUtils';
+
+// Tactical UI Components
+import Hyperspeed from '../components/reactbits/Hyperspeed';
+import GridScan from '../components/reactbits/GridScan';
+import DecryptedText from '../components/reactbits/DecryptedText';
+import TiltedCard from '../components/reactbits/TiltedCard';
 
 interface FixtureMatch {
   id: string;
@@ -55,7 +61,7 @@ const FixtureDisplay: React.FC = () => {
   const [currentMW, setCurrentMW] = useState(1);
   const [selectedFixture, setSelectedFixture] = useState<string | null>(null);
   const [modifySuggestions, setModifySuggestions] = useState<any[] | null>(null);
-  const [loadingModify, setLoadingModify] = useState(false);
+  const [loadingModify] = useState(false);
   const [statsPanelOpen, setStatsPanelOpen] = useState(false);
   const [prediction, setPrediction] = useState<any | null>(null);
   const [optimizing, setOptimizing] = useState(false);
@@ -65,70 +71,66 @@ const FixtureDisplay: React.FC = () => {
 
   const MatchCard: React.FC<{ match: FixtureMatch; index: number; colors: any; onClick: () => void }> = ({ match, index, colors, onClick }) => (
     <motion.div
-      initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30, scale: 0.97 }}
-      animate={{ opacity: 1, x: 0, scale: 1 }}
-      transition={{ delay: index * 0.06, type: 'spring', stiffness: 250, damping: 25 }}
-      onClick={onClick}
-      className="relative p-5 rounded-xl border cursor-pointer transition-all group overflow-hidden hover:bg-white/[0.04]"
-      style={{
-        borderColor: match.is_derby ? `${colors.primary}30` : 'rgba(255,255,255,0.04)',
-        backgroundColor: match.is_derby ? `${colors.primary}05` : 'rgba(255,255,255,0.01)',
-      }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.05 }}
+      className="relative"
     >
-      {match.is_derby && (
-        <motion.div
-          animate={{ opacity: [0.05, 0.15, 0.05] }}
-          transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
-          className="absolute inset-0 rounded-xl"
-          style={{ boxShadow: `inset 0 0 40px ${colors.primary}15` }}
-        />
-      )}
-  
-      {match.is_derby && (
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: index * 0.06 + 0.3, type: 'spring' }}
-          className="absolute top-3 right-3 flex items-center gap-1 px-2 py-0.5 rounded-full"
-          style={{ backgroundColor: `${colors.primary}15`, border: `1px solid ${colors.primary}25` }}
+      <TiltedCard 
+        className="w-full"
+        maxTilt={5}
+      >
+        <div 
+          onClick={onClick}
+          className="p-5 rounded-xl border cursor-pointer transition-all group overflow-hidden bg-black/60 backdrop-blur-md"
+          style={{
+            borderColor: match.is_derby ? `${colors.primary}50` : 'rgba(255,255,255,0.05)',
+            boxShadow: match.is_derby ? `0 0 20px ${colors.primary}10` : 'none'
+          }}
         >
-          <Star className="w-3 h-3" style={{ color: colors.primary }} fill="currentColor" />
-          <span className="text-[8px] font-black uppercase tracking-wider" style={{ color: colors.primary }}>Derby</span>
-        </motion.div>
-      )}
-  
-      <div className="flex items-center justify-between relative z-10">
-        <div className="flex-1">
-          <div className="flex items-center gap-2.5">
-            <Shield className="w-4 h-4 shrink-0" style={{ color: colors.primary }} />
-            <span className="text-sm font-bold text-white group-hover:text-white transition-colors">{match.home}</span>
+          {match.is_derby && (
+            <motion.div
+              initial={{ x: 20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              className="absolute top-0 right-0 p-2"
+            >
+              <Zap className="w-4 h-4 text-emerald-400 fill-emerald-400/20" />
+            </motion.div>
+          )}
+
+          <div className="flex items-center justify-between gap-6">
+            {/* Home Team */}
+            <div className="flex-1 text-right">
+              <span className="text-white font-medium tracking-tight group-hover:text-emerald-400 transition-colors">
+                {match.home}
+              </span>
+            </div>
+
+            {/* Match Info Central HUD */}
+            <div className="flex flex-col items-center gap-1 min-w-[80px]">
+              <div className="text-[10px] font-bold text-white/40 tracking-[0.2em] uppercase">
+                {match.time}
+              </div>
+              <div className="h-px w-8 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+              <div className="text-[9px] text-white/30 font-mono">
+                {match.date}
+              </div>
+            </div>
+
+            {/* Away Team */}
+            <div className="flex-1 text-left">
+              <span className="text-white font-medium tracking-tight group-hover:text-emerald-400 transition-colors">
+                {match.away}
+              </span>
+            </div>
+          </div>
+
+          <div className="mt-4 flex items-center justify-center gap-2 text-[10px] text-white/20 font-mono">
+            <MapPin className="w-3 h-3" />
+            <span className="truncate">{match.stadium}</span>
           </div>
         </div>
-  
-        <div className="flex items-center gap-3 mx-6 shrink-0">
-          <div className="h-[1px] w-5" style={{ backgroundColor: `${colors.primary}30` }} />
-          <div className="w-8 h-8 rounded-full border flex items-center justify-center" style={{ borderColor: `${colors.primary}20` }}>
-            <span className="text-[8px] text-white/20 font-black">VS</span>
-          </div>
-          <div className="h-[1px] w-5" style={{ backgroundColor: `${colors.primary}30` }} />
-        </div>
-  
-        <div className="flex-1 text-right">
-          <div className="flex items-center gap-2.5 justify-end">
-            <span className="text-sm font-bold text-white">{match.away}</span>
-            <Shield className="w-4 h-4 text-white/15 shrink-0" />
-          </div>
-        </div>
-      </div>
-  
-      <div className="flex items-center gap-4 mt-3.5 text-[10px] text-white/15 relative z-10">
-        <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {match.time}</span>
-        <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> {match.stadium}</span>
-        <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {match.date}</span>
-        <span className="ml-auto text-[8px] text-white/8 group-hover:text-white/20 transition-colors uppercase tracking-widest font-bold">
-          Match Intelligence ›
-        </span>
-      </div>
+      </TiltedCard>
     </motion.div>
   );
 
@@ -232,16 +234,7 @@ const FixtureDisplay: React.FC = () => {
     }
   }, []);
 
-  const handleModify = useCallback(async (fixtureId: string) => {
-    if (!schedule) return;
-    setSelectedFixture(fixtureId);
-    setLoadingModify(true);
-    try {
-      const { data } = await axios.post('http://localhost:3000/api/fixtures/modify', { schedule, fixtureId });
-      setModifySuggestions(data.alternatives || []);
-    } catch (err) { console.error(err); }
-    finally { setLoadingModify(false); }
-  }, [schedule]);
+  // handleModify removed as it was unused
 
   const handleOptimizeSquad = useCallback(async () => {
     if (!schedule || leagueId !== 'pl') return;
@@ -276,7 +269,32 @@ const FixtureDisplay: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#090A0F] text-white">
+    <div className="min-h-screen bg-[#030408] text-white relative overflow-hidden">
+      {/* Immersive Background */}
+      <div className="fixed inset-0 z-0">
+        <Hyperspeed 
+          effectOptions={{
+            distortion: 'turbulentDistortion',
+            speedUp: 2,
+            colors: {
+              roadColor: 0x080808,
+              islandColor: 0x0a0a0a,
+              background: 0x000000,
+              shoulderLines: 0xffffff,
+              brokenLines: 0xffffff,
+              leftCars: [0x10b981, 0x059669, 0x047857],
+              rightCars: [0x10b981, 0x059669, 0x047857],
+              sticks: 0x10b981
+            }
+          }} 
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#030408]/80 via-[#030408]/40 to-[#030408]/90 pointer-events-none" />
+        <GridScan 
+          color={colors.primary} 
+        />
+      </div>
+
+      <div className="relative z-10">
       {/* Header */}
       <motion.div
         initial={{ y: -60, opacity: 0 }}
@@ -295,10 +313,19 @@ const FixtureDisplay: React.FC = () => {
               <ArrowLeft className="w-5 h-5 text-white/50" />
             </motion.button>
             <div>
-              <h1 className="text-2xl font-black tracking-tight" style={{ color: colors.primary }}>
-                {LEAGUE_NAMES[leagueId]} {schedule.season}
-              </h1>
-              <p className="text-[10px] text-white/25 mt-0.5 font-mono tracking-wider">
+              <div className="flex items-center gap-2">
+                <DecryptedText
+                  text={`${LEAGUE_NAMES[leagueId]} ${schedule.season}`}
+                  className="text-2xl font-black tracking-tighter uppercase italic"
+                  animateOn="view"
+                  revealDirection="center"
+                  speed={80}
+                />
+                <div className="px-2 py-0.5 rounded bg-white/5 border border-white/10">
+                  <span className="text-[10px] font-mono text-white/40 uppercase">Live Ops</span>
+                </div>
+              </div>
+              <p className="text-[10px] text-white/25 mt-1 font-mono tracking-[0.2em] uppercase">
                 {schedule.totalMatches} MATCHES · {schedule.totalMatchweeks} MW · {schedule.telemetry.generation_time_ms}ms · {schedule.telemetry.constraint_violations_fixed} FIXES
               </p>
             </div>
@@ -460,7 +487,7 @@ const FixtureDisplay: React.FC = () => {
               </div>
 
               <div className="space-y-4 relative pl-8 border-l border-white/5">
-                {teamFixturesTimeline.map((match, i) => (
+                {teamFixturesTimeline.map((match) => (
                   <div key={match.id} className="relative">
                     {/* Timeline Node */}
                     <div className="absolute -left-[41px] top-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-2 border-[#090A0F] bg-zinc-800 z-10" 
@@ -548,7 +575,8 @@ const FixtureDisplay: React.FC = () => {
         leagueColor={colors.primary}
       />
     </div>
-  );
+  </div>
+);
 };
 
 export default FixtureDisplay;
