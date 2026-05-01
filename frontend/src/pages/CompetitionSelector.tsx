@@ -230,10 +230,19 @@ const CompetitionSelector: React.FC = () => {
     if (entry.source === 'Custom') {
       alert(`Viewing: ${entry.name}. Matches: ${entry.fixtures.length}`);
     } else {
+      let leagueId = 'pl';
+      const sourceLow = entry.source.toLowerCase();
+      const nameLow = entry.name.toLowerCase();
+      if (sourceLow.includes('champions') || nameLow.includes('champions')) leagueId = 'ucl';
+      else if (sourceLow.includes('bundesliga') || nameLow.includes('bundesliga')) leagueId = 'bundesliga';
+      else if (sourceLow.includes('cup') || nameLow.includes('cup')) leagueId = 'facup';
+      else if (sourceLow.includes('serie') || nameLow.includes('serie')) leagueId = 'seriea';
+      else if (sourceLow.includes('liga') || nameLow.includes('liga')) leagueId = 'laliga';
+
       navigate('/fixtures/display', {
         state: {
           schedule: { fixtures: entry.fixtures, league: entry.name, teams: entry.teams },
-          leagueId: entry.source.toLowerCase().includes('premier') ? 'pl' : 'ucl',
+          leagueId: leagueId,
         },
       });
     }
