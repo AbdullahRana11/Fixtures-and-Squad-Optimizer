@@ -353,7 +353,7 @@ const TEAM_CODE_MAP: Record<string, string> = {
  */
 export const optimizeMatchweek = async (req: Request, res: Response) => {
   try {
-    const { budget = 100, matchweek, fixtures, k_index = 1 } = req.body;
+    const { budget = 100, matchweek, fixtures, k_index = 1, customPlayers = [] } = req.body;
 
     if (!matchweek || !fixtures || !Array.isArray(fixtures)) {
       return res.status(400).json({ error: { message: 'Missing matchweek or fixtures' } });
@@ -372,8 +372,30 @@ export const optimizeMatchweek = async (req: Request, res: Response) => {
 
     const players = await prisma.player.findMany();
 
+    // Build custom hypothetical player records (never saved to DB)
+    const EXPECTATION_MAP: Record<string, number> = {
+      'Hot_Streak': 1.3, 'Overperforming': 1.15, 'Expected': 1.0, 'Underperforming': 0.85
+    };
+    const customRecords = (customPlayers as any[]).map((cp: any) => ({
+      id: cp.id,
+      name: cp.name,
+      club: cp.club,
+      position: cp.position,
+      cost_millions: Number(cp.cost_millions),
+      overall_ability: Number(cp.overall_ability || 75),
+      base_form: Number(cp.base_form || 5.0),
+      last_3_vs_opponent_pts: Number(cp.base_form || 5.0),
+      home_stadium_multiplier: 1.0,
+      expectation_multiplier: EXPECTATION_MAP[cp.expectation_status] || 1.0,
+      expectation_status: cp.expectation_status || 'Expected',
+      goals: 0, assists: 0, clean_sheets: 0, points: 0,
+      matches_played: 0, created_at: new Date(), updated_at: new Date(),
+    }));
+
+    const fullPool = [...players, ...customRecords];
+
     // Adjust player values based on fixture context
-    const adjustedPlayers = players.map(p => {
+    const adjustedPlayers = fullPool.map(p => {
       const matchup = opponentMap.get(p.club);
       if (!matchup) return p; 
 

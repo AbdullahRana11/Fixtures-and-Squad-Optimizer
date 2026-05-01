@@ -4,9 +4,36 @@ import { FPLKnapsackEngine } from '../algorithms/fpl-knapsack-engine';
 
 const prisma = new PrismaClient();
 
+// Build a Prisma-compatible player shape from a custom player payload
+function buildCustomPlayerRecord(cp: any): any {
+  const EXPECTATION_MAP: Record<string, number> = {
+    'Hot_Streak': 1.3, 'Overperforming': 1.15, 'Expected': 1.0, 'Underperforming': 0.85
+  };
+  return {
+    id: cp.id,
+    name: cp.name,
+    club: cp.club,
+    position: cp.position,
+    cost_millions: Number(cp.cost_millions),
+    overall_ability: Number(cp.overall_ability || 75),
+    base_form: Number(cp.base_form || 5.0),
+    last_3_vs_opponent_pts: Number(cp.base_form || 5.0), // Safe default: mirror form
+    home_stadium_multiplier: 1.0,
+    expectation_multiplier: EXPECTATION_MAP[cp.expectation_status] || 1.0,
+    expectation_status: cp.expectation_status || 'Expected',
+    goals: 0,
+    assists: 0,
+    clean_sheets: 0,
+    points: 0,
+    matches_played: 0,
+    created_at: new Date(),
+    updated_at: new Date(),
+  };
+}
+
 export const optimizeSquad = async (req: Request, res: Response) => {
   try {
-    const { budget, gameweek, k_index = 1 } = req.body;
+    const { budget, gameweek, k_index = 1, customPlayers = [] } = req.body;
 
     if (!budget || budget < 38.0) {
       return res.status(400).json({ 
@@ -16,7 +43,11 @@ export const optimizeSquad = async (req: Request, res: Response) => {
 
     const players = await prisma.player.findMany();
 
-    const engine = new FPLKnapsackEngine(players, budget, k_index);
+    // Concat custom hypothetical players into the evaluation pool (never saved to DB)
+    const customRecords = (customPlayers as any[]).map(buildCustomPlayerRecord);
+    const fullPool = [...players, ...customRecords];
+
+    const engine = new FPLKnapsackEngine(fullPool, budget, k_index);
     const result = engine.optimize();
 
     if (result.squad.length !== 15) {
