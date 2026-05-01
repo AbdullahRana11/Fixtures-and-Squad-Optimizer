@@ -7,20 +7,33 @@ export default {
   theme: {
     extend: {
       colors: {
-        void: "#09090b", // Deep slate background
-        obsidian: "#18181b", // Lighter slate for panels
+        // --- Core Layout ---
+        void: "#09090b", 
+        obsidian: "#18181b", 
         "glass-base": "rgba(255, 255, 255, 0.05)",
         "glass-border": "rgba(255, 255, 255, 0.1)",
-        "mint-sentinel": "#0f766e", // Deep teal
-        "neon-aqua": "#0ea5e9", // Muted blue
-        "cyber-purple": "#52525b", // Slate gray instead of purple
-        "mint-valid": "#2563eb", // Royal blue
-        "crimson-danger": "#e11d48", // Rose red
-        "editorial-gold": "#b45309", // Muted gold/amber
+
+        // --- HUD / Original Style (Neon) ---
+        "neon-mint": "#00F260",
+        "neon-aqua": "#05D5FF",
+        "neon-purple": "#B026FF",
+        "neon-rose": "#FF2A55",
+        
+        // --- Editorial Style (Muted) ---
+        "ed-teal": "#0f766e",
+        "ed-blue": "#2563eb",
+        "ed-gold": "#b45309",
+        "ed-rose": "#e11d48",
+        "ed-zinc": "#52525b",
       },
       fontFamily: {
-        clash: ["'Merriweather'", "serif"], // Replacing clash with Merriweather
-        outfit: ["'Open Sans'", "sans-serif"], // Replacing outfit with Open Sans
+        // HUD / Original
+        clash: ["'Clash Display'", "sans-serif"],
+        outfit: ["Outfit", "sans-serif"],
+        // Editorial
+        serif: ["'Merriweather'", "serif"],
+        sans: ["'Open Sans'", "sans-serif"],
+        // Utility
         space: ["'Space Mono'", "monospace"],
       },
       backdropBlur: {

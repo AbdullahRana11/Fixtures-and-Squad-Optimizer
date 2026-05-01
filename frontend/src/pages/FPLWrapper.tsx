@@ -1,10 +1,10 @@
-import { useState, Component, ErrorInfo, ReactNode } from "react";
+import React, { useState, Component, ErrorInfo, ReactNode } from "react";
 import TopNav from "../components/TopNav";
 import FantasyDashboard from "./FantasyDashboard";
 import Marketplace from "./Marketplace";
 import FPLOptimizer from "./FPLOptimizer";
 import Stats from "./Stats";
-import { AlertCircle } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 
 class GlobalErrorBoundary extends Component<{children: ReactNode}, {hasError: boolean, error: Error | null}> {
   constructor(props: any) {
@@ -16,19 +16,19 @@ class GlobalErrorBoundary extends Component<{children: ReactNode}, {hasError: bo
   render() {
     if (this.state.hasError) {
       return (
-        <div className="flex h-screen w-full items-center justify-center bg-void p-8 font-open">
-          <div className="max-w-xl w-full p-12 rounded-xl border border-zinc-800 bg-zinc-900/50 text-center shadow-lg">
-             <AlertCircle className="w-16 h-16 text-rose-600 mx-auto mb-6" />
-             <h1 className="text-2xl font-merriweather font-bold text-white mb-4">Application Error</h1>
-             <p className="text-zinc-400 mb-8">
-               An unexpected error occurred while loading this module.<br/>
-               <span className="text-rose-400 mt-2 block font-mono text-sm">{this.state.error?.message}</span>
+        <div className="flex h-screen w-full items-center justify-center bg-[#090A0F] p-8">
+          <div className="max-w-xl w-full p-12 rounded-[40px] border border-red-500/30 bg-red-950/10 backdrop-blur-3xl text-center shadow-4xl">
+             <AlertTriangle className="w-16 h-16 text-red-500 mx-auto mb-6 animate-pulse" />
+             <h1 className="text-3xl font-black text-white italic uppercase mb-4">SYSTEM BREACH: COMPONENT CRASH</h1>
+             <p className="text-zinc-500 font-mono mb-8 opacity-70">
+               A runtime exception occurred in the squad management module.<br/>
+               <span className="text-red-400 mt-2 block">{this.state.error?.message}</span>
              </p>
              <button 
                onClick={() => window.location.reload()} 
-               className="w-full py-4 bg-zinc-800 hover:bg-zinc-700 text-white font-semibold rounded-lg transition-colors duration-200"
+               className="w-full py-4 bg-red-600 hover:bg-red-500 text-white font-black rounded-2xl shadow-glow transition-all active:scale-95"
              >
-               Reload Application
+               REBOOT CORE SYSTEM
              </button>
           </div>
         </div>
@@ -43,7 +43,7 @@ export default function FPLWrapper() {
 
   return (
     <GlobalErrorBoundary>
-      <div className="min-h-screen relative overflow-hidden bg-void">
+      <div className="min-h-screen relative overflow-hidden">
         <TopNav activeView={activeView} onChange={setActiveView} />
         <main className="mx-auto w-full px-4 py-8 max-w-[2000px] md:px-12 xl:px-20 relative z-10">
           {activeView === "fantasy" && <FantasyDashboard />}

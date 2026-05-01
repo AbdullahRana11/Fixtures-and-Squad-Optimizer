@@ -35,9 +35,8 @@ export const players = rawPlayers.map((p, index) => {
     momentText: p.momentText,
     momentQuote: p.momentQuote,
     rating: 90 + (index % 10),
-    goals: index % 3 === 0 ? 15 + index : 2 + (index % 5),
-    assists: index % 2 === 0 ? 8 + index : 1 + (index % 4),
-    cleanSheets: p.role === "Defender" || p.role === "Goalkeeper" ? 5 + (index % 8) : 0,
+    strikeRate: 115 + index,
+    economy: (6 + (index % 5) * 0.45).toFixed(2),
     points: 70 + index * 3,
     rarity,
     currentBid: `${(25000 + index * 3500).toLocaleString()}`,
@@ -46,18 +45,16 @@ export const players = rawPlayers.map((p, index) => {
   };
 });
 
-export const topBatsmen = players.slice(0, 6).map((player, _idx) => ({
+export const topBatsmen = players.slice(0, 6).map((player, idx) => ({
   name: player.name,
-  goals: player.goals,
-  assists: player.assists,
+  runs: 15 + idx * 4,
+  avg: (35 + idx * 2.1).toFixed(1),
   points: player.points + 20,
 }));
 
-export const topBowlers = players.slice(6, 12).map((player, _idx) => ({
+export const topBowlers = players.slice(6, 12).map((player, idx) => ({
   name: player.name,
-  cleanSheets: player.cleanSheets,
-  rating: player.rating,
+  wickets: 8 + idx * 2,
+  economy: (5.7 + idx * 0.3).toFixed(2),
   points: player.points + 16,
 }));
-
-

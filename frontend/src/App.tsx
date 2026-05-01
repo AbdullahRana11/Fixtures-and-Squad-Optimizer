@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import RootLayout from './layouts/RootLayout';
 import { PageTransition } from './components/PageTransition';
 import { LoadingScreen } from './components/LoadingScreen';
@@ -25,15 +25,21 @@ const AppContent: React.FC = () => {
         <Suspense fallback={<LoadingScreen />}>
           <PageTransition>
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/fixtures" element={<CompetitionSelector />} />
-              <Route path="/fixtures/select" element={<TeamSelector />} />
-              <Route path="/fixtures/display" element={<FixtureDisplay />} />
-              <Route path="/fixtures/bracket" element={<FACupBracket />} />
-              <Route path="/fixtures/ucl-bracket" element={<UCLBracket />} />
-              <Route path="/fixtures/generate" element={<UCLDraw />} />
-              <Route path="/fixtures/custom" element={<CustomGenerator />} />
-              <Route path="/fpl" element={<FPLWrapper />} />
+              {/* --- Editorial Section (Fixture Generator) --- */}
+              <Route element={<div className="font-merriweather flex-1 flex flex-col"><Outlet /></div>}>
+                <Route path="/" element={<Home />} />
+                <Route path="/fixtures" element={<CompetitionSelector />} />
+                <Route path="/fixtures/select" element={<TeamSelector />} />
+                <Route path="/fixtures/display" element={<FixtureDisplay />} />
+                <Route path="/fixtures/bracket" element={<FACupBracket />} />
+                <Route path="/fixtures/ucl-bracket" element={<UCLBracket />} />
+                <Route path="/fixtures/generate" element={<UCLDraw />} />
+                <Route path="/fixtures/custom" element={<CustomGenerator />} />
+              </Route>
+
+              {/* --- HUD Section (Squad Optimizer) --- */}
+              <Route path="/fpl" element={<div className="font-outfit flex-1 flex flex-col"><FPLWrapper /></div>} />
+              
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </PageTransition>
