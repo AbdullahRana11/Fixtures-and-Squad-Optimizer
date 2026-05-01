@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Check, Loader2, Search, ArrowLeft, Zap, Database } from 'lucide-react';
 import axios from 'axios';
+import { getHistory } from '../utils/fixtureUtils';
 
 // Tactical UI Components
 import Hyperspeed from '../components/reactbits/Hyperspeed';
@@ -70,11 +71,30 @@ const TeamSelector: React.FC = () => {
   // Fetch active tournaments
   useEffect(() => {
     const fetchTournaments = async () => {
+      let localHistory = [];
+      try {
+        localHistory = getHistory().filter(h => {
+          if (leagueId === 'ucl') return h.format === 'knockout' || h.format === 'tournament';
+          if (leagueId === 'facup') return h.format === 'knockout';
+          return h.format === 'league' || h.source === LEAGUE_NAMES[leagueId] || h.source === leagueId;
+        }).map(h => ({
+          id: h.id,
+          name: h.name + ' (Local Auto-Save)',
+          type: leagueId,
+          status: 'active',
+          bracket: { fixtures: h.fixtures, league: h.name, teams: h.teams },
+          updated_at: new Date(h.dateGenerated).toISOString()
+        }));
+      } catch (err) {
+        console.error('Failed to parse local history:', err);
+      }
+
       try {
         const { data } = await axios.get(`http://localhost:3000/api/tournaments/type/${leagueId === 'ucl' ? 'ucl' : (leagueId === 'facup' ? 'facup' : 'league')}`);
-        setActiveTournaments(data.filter((t: any) => t.status === 'active'));
+        setActiveTournaments([...data.filter((t: any) => t.status === 'active'), ...localHistory]);
       } catch (err) {
         console.error('Failed to fetch tournaments:', err);
+        setActiveTournaments(localHistory);
       }
     };
     fetchTournaments();

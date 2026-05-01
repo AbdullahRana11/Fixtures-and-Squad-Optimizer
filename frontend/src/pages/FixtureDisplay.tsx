@@ -63,6 +63,25 @@ const FixtureDisplay: React.FC = () => {
   const [isRegenerating, setIsRegenerating] = useState(false);
   const [viewMode, setViewMode] = useState<'matchweek' | 'team'>('matchweek');
 
+  React.useEffect(() => {
+    if (schedule && schedule.fixtures.length > 0) {
+      const history = getHistory();
+      const latest = history[0];
+      const isSameAsLatest = latest && latest.name === (LEAGUE_NAMES[leagueId] || 'League') && latest.fixtures.length === schedule.fixtures.length;
+      
+      if (!isSameAsLatest) {
+        saveToHistory({
+          name: LEAGUE_NAMES[leagueId] || 'League',
+          format: leagueId === 'ucl' ? 'tournament' : 'league',
+          seed: 0,
+          teams: schedule.teams,
+          fixtures: schedule.fixtures,
+          source: LEAGUE_NAMES[leagueId] || leagueId
+        });
+      }
+    }
+  }, [schedule, leagueId]);
+
   const MatchCard: React.FC<{ match: FixtureMatch; index: number; colors: any; onClick: () => void }> = ({ match, index, colors, onClick }) => (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -136,8 +155,14 @@ const FixtureDisplay: React.FC = () => {
 
     history.forEach(entry => {
       // Avoid duplicating current competition if it's already in history
-      // Usually, we'd check by ID or unique name
-      if (entry.name === schedule.league) return; 
+      // Check by source or name
+      const isCurrentLeague = 
+        entry.name === schedule.league || 
+        entry.name === LEAGUE_NAMES[leagueId] ||
+        entry.source === leagueId ||
+        entry.source === LEAGUE_NAMES[leagueId];
+
+      if (isCurrentLeague) return; 
 
       entry.fixtures.forEach((f: any) => {
         if (f.home === selectedTeam || f.away === selectedTeam) {
@@ -271,7 +296,7 @@ const FixtureDisplay: React.FC = () => {
             <div className="flex items-center gap-4 text-xs font-semibold text-zinc-500 uppercase tracking-wider">
               <span className="flex items-center gap-1">
                 <Cpu className="w-3 h-3 text-emerald-500" />
-                {schedule.telemetry.total_rounds} Rounds
+                {schedule.telemetry?.total_rounds || [...new Set(schedule.fixtures.map(f => f.matchweek))].length} Rounds
               </span>
             </div>
           </div>
