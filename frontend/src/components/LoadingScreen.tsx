@@ -29,7 +29,7 @@ export const LoadingScreen: React.FC = () => {
   }, []);
 
   return (
-    <div className="fixed inset-0 z-[200] bg-void flex flex-col items-center justify-center overflow-hidden">
+    <div className="fixed inset-0 z-[200] bg-[#000000] flex flex-col items-center justify-center overflow-hidden">
       {/* Background Texture */}
       <div className="absolute inset-0 z-0 opacity-5 bg-[url('/noise.svg')]" />
       
