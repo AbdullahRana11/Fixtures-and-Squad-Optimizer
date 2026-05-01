@@ -85,8 +85,8 @@ const HistoryDrawer: React.FC<HistoryDrawerProps> = ({ isOpen, onClose, onView }
             {/* Header */}
             <div className="p-6 border-b border-white/5 bg-black/20 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-                  <History className="w-5 h-5 text-emerald-400" />
+                <div className="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center">
+                  <History className="w-5 h-5 text-indigo-400" />
                 </div>
                 <div>
                   <h2 className="text-xl font-black uppercase tracking-tight">Fixture History</h2>
@@ -103,18 +103,18 @@ const HistoryDrawer: React.FC<HistoryDrawerProps> = ({ isOpen, onClose, onView }
             {/* Filters */}
             <div className="p-4 space-y-4 border-b border-white/5">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+                <Search className="absolute left-3 top-1/2 -tranzinc-y-1/2 w-4 h-4 text-white/20" />
                 <input
                   type="text"
                   placeholder="Filter by name or team..."
                   value={searchTerm}
                   onChange={e => setSearchTerm(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-sm focus:border-emerald-500/50 outline-none transition-all"
+                  className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-sm focus:border-indigo-500/50 outline-none transition-all"
                 />
               </div>
               <div className="flex gap-2">
                 <div className="flex-1 relative">
-                  <Filter className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 text-white/20" />
+                  <Filter className="absolute left-2.5 top-1/2 -tranzinc-y-1/2 w-3 h-3 text-white/20" />
                   <select
                     value={sourceFilter}
                     onChange={e => setSourceFilter(e.target.value)}
@@ -162,7 +162,7 @@ const HistoryDrawer: React.FC<HistoryDrawerProps> = ({ isOpen, onClose, onView }
                         {new Date(item.dateGenerated).toLocaleDateString()}
                       </span>
                     </div>
-                    <h3 className="font-bold text-white mb-1 group-hover:text-emerald-400 transition-colors">
+                    <h3 className="font-bold text-white mb-1 group-hover:text-indigo-400 transition-colors">
                       {item.name}
                     </h3>
                     <p className="text-[10px] text-white/30 uppercase tracking-wider mb-4">
@@ -172,7 +172,7 @@ const HistoryDrawer: React.FC<HistoryDrawerProps> = ({ isOpen, onClose, onView }
                     <div className="flex gap-2">
                       <button
                         onClick={() => onView(item)}
-                        className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-black uppercase tracking-widest hover:bg-emerald-500 hover:text-black transition-all"
+                        className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[10px] font-black uppercase tracking-widest hover:bg-indigo-500 hover:text-black transition-all"
                       >
                         <Eye className="w-3 h-3" /> View
                       </button>

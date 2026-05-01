@@ -1,108 +1,86 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-
-// Import futuristic ReactBits components
-import Hyperspeed from '../components/reactbits/Hyperspeed';
-import GridScan from '../components/reactbits/GridScan';
-import TiltedCard from '../components/reactbits/TiltedCard';
-import DecryptedText from '../components/reactbits/DecryptedText';
+import { Calendar, Users, ArrowRight } from 'lucide-react';
 
 const Home: React.FC = () => {
-  const [hoveredSide, setHoveredSide] = useState<'left' | 'right' | null>(null);
   const navigate = useNavigate();
 
   return (
-    <div className="relative w-full h-screen overflow-hidden flex bg-black text-left">
-      {/* Dynamic 3D Background Layer */}
-      <div className="absolute inset-0 z-0">
-        <Hyperspeed />
-      </div>
+    <div className="w-full min-h-screen flex flex-col lg:flex-row bg-void text-zinc-200">
       
-      {/* Tactical Grid Scan Overlay */}
-      <div className="absolute inset-0 z-0 pointer-events-none opacity-40 mix-blend-screen">
-        <GridScan color={hoveredSide === 'right' ? "#10b981" : "#0ea5e9"} scanSpeed={1.2} />
-      </div>
-      
-      {/* Left Half - Fixture Generator (Blue/Cyan Theme) */}
-      <div
-        className="h-full relative cursor-pointer group flex flex-col justify-center items-center text-center px-12 border-r border-cyan-500/20 w-1/2 overflow-hidden z-10"
-        onMouseEnter={() => setHoveredSide('left')}
-        onMouseLeave={() => setHoveredSide(null)}
+      {/* Left Area - 60% Width - Fixtures */}
+      <motion.div 
+        className="lg:w-[60%] relative flex flex-col justify-center p-12 lg:p-24 border-b lg:border-b-0 cursor-pointer group transition-colors duration-500 overflow-hidden"
         onClick={() => navigate('/fixtures')}
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.6 }}
       >
-        <div className="absolute inset-0 bg-[#090A0F]/70 z-0 group-hover:bg-[#090A0F]/40 transition-colors duration-500 backdrop-blur-sm" />
+        <div className="absolute inset-0 bg-[url('/fixtures_bg.png')] bg-cover bg-center opacity-10 mix-blend-screen group-hover:opacity-25 group-hover:scale-105 transition-all duration-700" />
+        <div className="absolute inset-0 bg-gradient-to-t from-void to-transparent opacity-90 group-hover:opacity-80 transition-opacity duration-700" />
         
-        <div className="absolute inset-0 bg-gradient-to-t from-cyan-900/40 via-cyan-500/10 to-transparent mix-blend-screen z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-        
-        <TiltedCard maxTilt={10} glareColor="rgba(34, 211, 238, 0.4)" className="w-full max-w-lg z-10">
-          <div className="relative flex flex-col items-center bg-black/40 p-10 rounded-3xl border border-cyan-500/30 backdrop-blur-md shadow-2xl group-hover:border-cyan-400/60 transition-colors duration-500">
-            <motion.div 
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              className="w-16 h-16 rounded-2xl bg-cyan-500/20 flex items-center justify-center border border-cyan-400/50 mb-8 shadow-[0_0_20px_rgba(34,211,238,0.5)] group-hover:shadow-[0_0_40px_rgba(34,211,238,0.8)] transition-shadow duration-500"
-            >
-               <span className="text-2xl text-cyan-300 font-bold">01</span>
-            </motion.div>
-            
-            <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-6 uppercase tracking-[0.1em] drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)] leading-tight">
-              <DecryptedText text="Fixture" animateOn="hover" speed={60} maxIterations={15} className="text-white" encryptedClassName="text-cyan-500" />
-              <br/>
-              <span className="text-cyan-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.6)]">
-                <DecryptedText text="Generator" animateOn="hover" speed={60} maxIterations={15} className="text-cyan-400" encryptedClassName="text-white" />
-              </span>
-            </h2>
-            
-            <p className="font-sans font-medium text-cyan-50 text-lg bg-black/50 p-6 rounded-2xl border border-cyan-500/20">
-              Navigate temporal conflicts. Generate a perfect multi-competition season with the CSP Master Scheduler.
-            </p>
-
-            <button className="mt-8 px-10 py-4 rounded-full bg-cyan-500 text-black font-bold uppercase tracking-widest hover:bg-cyan-400 hover:shadow-[0_0_30px_rgba(34,211,238,0.7)] transition-all duration-300">
-              Launch Engine
-            </button>
+        <div className="relative z-10 max-w-2xl">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center text-teal-600 group-hover:bg-teal-600 group-hover:text-white transition-colors duration-500">
+              <Calendar className="w-6 h-6" />
+            </div>
+            <span className="text-sm font-semibold tracking-widest uppercase text-zinc-500">Scheduling Engine</span>
           </div>
-        </TiltedCard>
-      </div>
 
-      {/* Right Half - Squad Optimizer (Green Theme) */}
-      <div
-        className="h-full relative cursor-pointer group flex flex-col justify-center items-center text-center px-12 w-1/2 overflow-hidden z-10"
-        onMouseEnter={() => setHoveredSide('right')}
-        onMouseLeave={() => setHoveredSide(null)}
+          <h2 className="text-5xl lg:text-7xl font-merriweather font-bold text-white mb-6 leading-tight">
+            Fixture &<br />
+            Tournament Intelligence
+          </h2>
+
+          <p className="text-lg font-open text-zinc-400 mb-12 max-w-lg leading-relaxed">
+            Plan, schedule, and optimize matchdays with precision. Our advanced engine handles complex constraints to deliver perfectly balanced tournament structures.
+          </p>
+
+          <div className="flex items-center gap-4 text-teal-500 font-semibold group-hover:gap-6 transition-all duration-300">
+            <span>Explore Fixtures</span>
+            <ArrowRight className="w-5 h-5" />
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Right Area - 40% Width - Squads */}
+      <motion.div 
+        className="lg:w-[40%] relative flex flex-col justify-center p-12 lg:p-20 cursor-pointer group transition-colors duration-500 bg-zinc-950/30 overflow-hidden"
         onClick={() => navigate('/fpl')}
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
       >
-        <div className="absolute inset-0 bg-[#090A0F]/70 z-0 group-hover:bg-[#090A0F]/40 transition-colors duration-500 backdrop-blur-sm" />
+        <div className="absolute inset-0 bg-[url('/squad_bg.png')] bg-cover bg-center opacity-10 mix-blend-screen group-hover:opacity-20 group-hover:scale-105 transition-all duration-700" />
+        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 to-transparent opacity-90 group-hover:opacity-80 transition-opacity duration-700" />
         
-        <div className="absolute inset-0 bg-gradient-to-t from-emerald-900/40 via-emerald-500/10 to-transparent mix-blend-screen z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+        {/* Soft edge blend for desktop */}
+        <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-void to-transparent z-10 pointer-events-none hidden lg:block" />
 
-        <TiltedCard maxTilt={10} glareColor="rgba(52, 211, 153, 0.4)" className="w-full max-w-lg z-10">
-          <div className="relative flex flex-col items-center bg-black/40 p-10 rounded-3xl border border-emerald-500/30 backdrop-blur-md shadow-2xl group-hover:border-emerald-400/60 transition-colors duration-500">
-            <motion.div 
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              className="w-16 h-16 rounded-2xl bg-emerald-500/20 flex items-center justify-center border border-emerald-400/50 mb-8 shadow-[0_0_20px_rgba(52,211,153,0.5)] group-hover:shadow-[0_0_40px_rgba(52,211,153,0.8)] transition-shadow duration-500"
-            >
-               <span className="text-2xl text-emerald-400 font-bold">02</span>
-            </motion.div>
-            
-            <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-6 uppercase tracking-[0.1em] drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)] leading-tight">
-              <DecryptedText text="Squad" animateOn="hover" speed={60} maxIterations={15} className="text-white" encryptedClassName="text-emerald-500" />
-              <br/>
-              <span className="text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.6)]">
-                <DecryptedText text="Optimizer" animateOn="hover" speed={60} maxIterations={15} className="text-emerald-400" encryptedClassName="text-white" />
-              </span>
-            </h2>
-            
-            <p className="font-sans font-medium text-emerald-50 text-lg bg-black/50 p-6 rounded-2xl border border-emerald-500/20">
-              Leverage dynamic knapsack metrics. Build the mathematically optimal 15-man squad constrained by logic.
-            </p>
-            
-            <button className="mt-8 px-10 py-4 rounded-full bg-emerald-500 text-black font-bold uppercase tracking-widest hover:bg-emerald-400 hover:shadow-[0_0_30px_rgba(52,211,153,0.7)] transition-all duration-300">
-              Launch Engine
-            </button>
+        <div className="relative z-20 max-w-xl">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center text-amber-600 group-hover:bg-amber-600 group-hover:text-white transition-colors duration-500">
+              <Users className="w-6 h-6" />
+            </div>
+            <span className="text-sm font-semibold tracking-widest uppercase text-zinc-500">Squad Builder</span>
           </div>
-        </TiltedCard>
-      </div>
+
+          <h2 className="text-4xl lg:text-5xl font-merriweather font-bold text-white mb-6 leading-tight">
+            Fantasy Squad Optimizer
+          </h2>
+
+          <p className="text-base font-open text-zinc-400 mb-12 max-w-md leading-relaxed">
+            Construct the ultimate 15-man roster. Utilize deep statistical analysis and budget constraints to maximize your squad's potential.
+          </p>
+
+          <div className="flex items-center gap-4 text-amber-500 font-semibold group-hover:gap-6 transition-all duration-300">
+            <span>Build Your Squad</span>
+            <ArrowRight className="w-5 h-5" />
+          </div>
+        </div>
+      </motion.div>
+
     </div>
   );
 };

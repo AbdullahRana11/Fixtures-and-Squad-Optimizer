@@ -1,16 +1,10 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Calendar, Clock, MapPin, Shield, ArrowLeft, Settings2, Cpu, Filter, RefreshCw, Save, Shuffle, Zap } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calendar, Clock, MapPin, Shield, ArrowLeft, Settings2, Cpu, Filter, RefreshCw, Save, Zap } from 'lucide-react';
 import axios from 'axios';
 import StatsPanel from '../components/StatsPanel';
 import { getHistory, saveToHistory } from '../utils/fixtureUtils';
-
-// Tactical UI Components
-import Hyperspeed from '../components/reactbits/Hyperspeed';
-import GridScan from '../components/reactbits/GridScan';
-import DecryptedText from '../components/reactbits/DecryptedText';
-import TiltedCard from '../components/reactbits/TiltedCard';
 
 interface FixtureMatch {
   id: string;
@@ -37,14 +31,14 @@ interface SeasonSchedule {
   };
 }
 
-const LEAGUE_COLORS: Record<string, { primary: string; bg: string; border: string; glow: string }> = {
-  pl: { primary: '#A020F0', bg: 'rgba(160,32,240,0.08)', border: 'rgba(160,32,240,0.3)', glow: '0 0 20px rgba(160,32,240,0.15)' },
-  ucl: { primary: '#0052FF', bg: 'rgba(0,82,255,0.08)', border: 'rgba(0,82,255,0.3)', glow: '0 0 20px rgba(0,82,255,0.15)' },
-  bundesliga: { primary: '#D3010C', bg: 'rgba(211,1,12,0.08)', border: 'rgba(211,1,12,0.3)', glow: '0 0 20px rgba(211,1,12,0.15)' },
-  facup: { primary: '#7B0000', bg: 'rgba(123,0,0,0.08)', border: 'rgba(123,0,0,0.3)', glow: '0 0 20px rgba(123,0,0,0.15)' },
-  seriea: { primary: '#008FD7', bg: 'rgba(0,143,215,0.08)', border: 'rgba(0,143,215,0.3)', glow: '0 0 20px rgba(0,143,215,0.15)' },
-  laliga: { primary: '#FF4B00', bg: 'rgba(255,75,0,0.08)', border: 'rgba(255,75,0,0.3)', glow: '0 0 20px rgba(255,75,0,0.15)' },
-  custom: { primary: '#10b981', bg: 'rgba(16,185,129,0.08)', border: 'rgba(16,185,129,0.3)', glow: '0 0 20px rgba(16,185,129,0.15)' },
+const LEAGUE_COLORS: Record<string, { primary: string; bg: string; border: string }> = {
+  pl: { primary: '#A020F0', bg: 'rgba(160,32,240,0.05)', border: 'rgba(160,32,240,0.2)' },
+  ucl: { primary: '#0052FF', bg: 'rgba(0,82,255,0.05)', border: 'rgba(0,82,255,0.2)' },
+  bundesliga: { primary: '#D3010C', bg: 'rgba(211,1,12,0.05)', border: 'rgba(211,1,12,0.2)' },
+  facup: { primary: '#7B0000', bg: 'rgba(123,0,0,0.05)', border: 'rgba(123,0,0,0.2)' },
+  seriea: { primary: '#008FD7', bg: 'rgba(0,143,215,0.05)', border: 'rgba(0,143,215,0.2)' },
+  laliga: { primary: '#FF4B00', bg: 'rgba(255,75,0,0.05)', border: 'rgba(255,75,0,0.2)' },
+  custom: { primary: '#10b981', bg: 'rgba(16,185,129,0.05)', border: 'rgba(16,185,129,0.2)' },
 };
 
 const LEAGUE_NAMES: Record<string, string> = {
@@ -76,61 +70,52 @@ const FixtureDisplay: React.FC = () => {
       transition={{ delay: index * 0.05 }}
       className="relative"
     >
-      <TiltedCard 
-        className="w-full"
-        maxTilt={5}
+      <div 
+        onClick={onClick}
+        className="p-5 rounded-xl border border-zinc-800 bg-zinc-900/50 hover:bg-zinc-800 cursor-pointer transition-all group overflow-hidden relative shadow-sm hover:shadow-md"
+        style={{
+          borderTopColor: match.is_derby ? colors.primary : '',
+          borderTopWidth: match.is_derby ? '2px' : '1px'
+        }}
       >
-        <div 
-          onClick={onClick}
-          className="p-5 rounded-xl border cursor-pointer transition-all group overflow-hidden bg-black/60 backdrop-blur-md"
-          style={{
-            borderColor: match.is_derby ? `${colors.primary}50` : 'rgba(255,255,255,0.05)',
-            boxShadow: match.is_derby ? `0 0 20px ${colors.primary}10` : 'none'
-          }}
-        >
-          {match.is_derby && (
-            <motion.div
-              initial={{ x: 20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              className="absolute top-0 right-0 p-2"
-            >
-              <Zap className="w-4 h-4 text-emerald-400 fill-emerald-400/20" />
-            </motion.div>
-          )}
+        {match.is_derby && (
+          <div className="absolute top-0 right-0 p-2 z-20">
+            <Zap className="w-4 h-4 text-amber-500" />
+          </div>
+        )}
 
-          <div className="flex items-center justify-between gap-6">
-            {/* Home Team */}
-            <div className="flex-1 text-right">
-              <span className="text-white font-medium tracking-tight group-hover:text-emerald-400 transition-colors">
-                {match.home}
-              </span>
+        <div className="flex items-center justify-between gap-6 relative z-10">
+          {/* Home Team */}
+          <div className="flex-1 text-right">
+            <span className="text-white font-bold tracking-tight text-lg group-hover:text-teal-400 transition-colors">
+              {match.home}
+            </span>
+          </div>
+
+          {/* Match Info Central HUD */}
+          <div className="flex flex-col items-center gap-1 min-w-[80px]">
+            <div className="text-xs font-semibold text-zinc-400 tracking-wider">
+              {match.time}
             </div>
-
-            {/* Match Info Central HUD */}
-            <div className="flex flex-col items-center gap-1 min-w-[80px]">
-              <div className="text-[10px] font-bold text-white/40 tracking-[0.2em] uppercase">
-                {match.time}
-              </div>
-              <div className="h-px w-8 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-              <div className="text-[9px] text-white/30 font-mono">
-                {match.date}
-              </div>
-            </div>
-
-            {/* Away Team */}
-            <div className="flex-1 text-left">
-              <span className="text-white font-medium tracking-tight group-hover:text-emerald-400 transition-colors">
-                {match.away}
-              </span>
+            <div className="h-px w-8 bg-zinc-700 my-1" />
+            <div className="text-xs text-zinc-500 font-open">
+              {match.date}
             </div>
           </div>
 
-          <div className="mt-4 flex items-center justify-center gap-2 text-[10px] text-white/20 font-mono">
-            <MapPin className="w-3 h-3" />
-            <span className="truncate">{match.stadium}</span>
+          {/* Away Team */}
+          <div className="flex-1 text-left">
+            <span className="text-white font-bold tracking-tight text-lg group-hover:text-teal-400 transition-colors">
+              {match.away}
+            </span>
           </div>
         </div>
-      </TiltedCard>
+
+        <div className="mt-4 flex items-center justify-center gap-2 text-xs text-zinc-500 font-open relative z-10">
+          <MapPin className="w-3 h-3" />
+          <span className="truncate">{match.stadium}</span>
+        </div>
+      </div>
     </motion.div>
   );
 
@@ -182,7 +167,6 @@ const FixtureDisplay: React.FC = () => {
         league: leagueId,
         teamNames: schedule.teams,
       });
-      // Update local state by forcing a refresh or navigating again
       navigate(location.pathname, { state: { schedule: data, leagueId }, replace: true });
     } catch (err) {
       console.error('Regeneration failed:', err);
@@ -191,33 +175,29 @@ const FixtureDisplay: React.FC = () => {
     }
   };
 
-  const handleShuffle = () => {
-    // Client-side quick shuffle of dates within the schedule (keeping matchweeks)
-    // or just trigger re-render with a shuffle. 
-    // Usually "shuffling" in a fixture app means a new generation.
-    handleRegenerate();
-  };
-
-  const handleSaveToHistory = () => {
-    saveToHistory({
-      name: LEAGUE_NAMES[leagueId] || 'League',
-      format: 'league',
-      seed: 0,
-      teams: schedule.teams,
-      fixtures: schedule.fixtures,
-      source: LEAGUE_NAMES[leagueId]
-    });
-    alert('Fixtures saved to global history!');
-  };
-
-  const matchweekDates = useMemo(() => {
-    if (!schedule) return new Map<number, string>();
-    const map = new Map<number, string>();
-    for (const f of schedule.fixtures) {
-      if (!map.has(f.matchweek)) map.set(f.matchweek, f.date);
+  const handleSaveToHistory = async () => {
+    try {
+      await axios.post('http://localhost:3000/api/tournaments/save', {
+        type: leagueId === 'ucl' ? 'ucl' : 'league',
+        name: LEAGUE_NAMES[leagueId] || 'League',
+        status: 'active',
+        bracket: schedule,
+      });
+      alert('Fixtures synced to tactical database!');
+    } catch (err) {
+      console.error('Save failed:', err);
+      // Fallback to local storage
+      saveToHistory({
+        name: LEAGUE_NAMES[leagueId] || 'League',
+        format: 'league',
+        seed: 0,
+        teams: schedule.teams,
+        fixtures: schedule.fixtures,
+        source: LEAGUE_NAMES[leagueId]
+      });
+      alert('Synced to local buffer (offline mode).');
     }
-    return map;
-  }, [schedule]);
+  };
 
   const handleMatchClick = useCallback(async (match: FixtureMatch) => {
     setSelectedFixture(match.id);
@@ -233,8 +213,6 @@ const FixtureDisplay: React.FC = () => {
       console.error('Prediction failed:', err);
     }
   }, []);
-
-  // handleModify removed as it was unused
 
   const handleOptimizeSquad = useCallback(async () => {
     if (!schedule || leagueId !== 'pl') return;
@@ -256,9 +234,9 @@ const FixtureDisplay: React.FC = () => {
 
   if (!schedule) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center bg-[#090A0F] text-white/50 min-h-screen">
-        <p className="text-lg">No fixture data available.</p>
-        <button onClick={() => navigate('/fixtures')} className="mt-4 text-emerald-400 underline">Back to Competitions</button>
+      <div className="flex-1 flex flex-col items-center justify-center bg-void text-zinc-500 min-h-screen">
+        <p className="text-lg font-open">No fixture data available.</p>
+        <button onClick={() => navigate('/fixtures')} className="mt-4 text-teal-600 font-semibold hover:underline">Back to Competitions</button>
       </div>
     );
   }
@@ -269,303 +247,299 @@ const FixtureDisplay: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#030408] text-white relative overflow-hidden">
-      {/* Immersive Background */}
-      <div className="fixed inset-0 z-0">
-        <Hyperspeed 
-          effectOptions={{
-            distortion: 'turbulentDistortion',
-            speedUp: 2,
-            colors: {
-              roadColor: 0x080808,
-              islandColor: 0x0a0a0a,
-              background: 0x000000,
-              shoulderLines: 0xffffff,
-              brokenLines: 0xffffff,
-              leftCars: [0x10b981, 0x059669, 0x047857],
-              rightCars: [0x10b981, 0x059669, 0x047857],
-              sticks: 0x10b981
-            }
-          }} 
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#030408]/80 via-[#030408]/40 to-[#030408]/90 pointer-events-none" />
-        <GridScan 
-          color={colors.primary} 
-        />
-      </div>
+    <div className="min-h-screen bg-void relative overflow-hidden flex flex-col font-open">
+      {/* Background Texture */}
+      <div className="absolute inset-0 z-0 opacity-5 bg-[url('/noise.svg')]" />
 
-      <div className="relative z-10">
-      {/* Header */}
-      <motion.div
-        initial={{ y: -60, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ type: 'spring', stiffness: 200, damping: 25 }}
-        className="border-b border-white/5 bg-black/40 backdrop-blur-xl sticky top-0 z-40"
-      >
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => navigate('/fixtures')}
-              className="p-2 rounded-lg border border-white/10 hover:border-white/30 transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5 text-white/50" />
-            </motion.button>
-            <div>
-              <div className="flex items-center gap-2">
-                <DecryptedText
-                  text={`${LEAGUE_NAMES[leagueId]} ${schedule.season}`}
-                  className="text-2xl font-black tracking-tighter uppercase italic"
-                  animateOn="view"
-                  revealDirection="center"
-                  speed={80}
-                />
-                <div className="px-2 py-0.5 rounded bg-white/5 border border-white/10">
-                  <span className="text-[10px] font-mono text-white/40 uppercase">Live Ops</span>
-                </div>
-              </div>
-              <p className="text-[10px] text-white/25 mt-1 font-mono tracking-[0.2em] uppercase">
-                {schedule.totalMatches} MATCHES · {schedule.totalMatchweeks} MW · {schedule.telemetry.generation_time_ms}ms · {schedule.telemetry.constraint_violations_fixed} FIXES
-              </p>
+      {/* Header Bar */}
+      <header className="relative z-20 px-8 py-6 flex flex-col md:flex-row items-start md:items-center justify-between border-b border-zinc-800 bg-zinc-900/40">
+        <div className="flex items-center gap-6 mb-4 md:mb-0">
+          <button 
+            onClick={() => navigate('/fixtures')}
+            className="p-2 rounded-full border border-zinc-700 text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+          
+          <div>
+            <div className="flex items-center gap-3 mb-1">
+              <Shield className="w-6 h-6" style={{ color: colors.primary }} />
+              <h1 className="text-2xl font-merriweather font-bold text-white tracking-wide">
+                {LEAGUE_NAMES[leagueId] || 'LEAGUE FIXTURES'}
+              </h1>
+            </div>
+            <div className="flex items-center gap-4 text-xs font-semibold text-zinc-500 uppercase tracking-wider">
+              <span className="flex items-center gap-1">
+                <Cpu className="w-3 h-3 text-teal-500" />
+                {schedule.telemetry.total_rounds} Rounds
+              </span>
             </div>
           </div>
+        </div>
 
-          <div className="flex items-center gap-3">
-             <div className="flex items-center bg-white/5 border border-white/10 rounded-xl px-2 h-10 mr-4">
-                <Filter className="w-4 h-4 text-white/20 mx-2" />
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={handleRegenerate}
+            disabled={isRegenerating}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-zinc-700 text-xs font-semibold text-zinc-300 hover:bg-zinc-800 transition-all disabled:opacity-50"
+          >
+            <RefreshCw className={`w-4 h-4 ${isRegenerating ? 'animate-spin' : ''}`} />
+            Regenerate
+          </button>
+          <button 
+            onClick={handleSaveToHistory}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold transition-all"
+          >
+            <Save className="w-4 h-4" />
+            Commit Data
+          </button>
+          
+          {leagueId === 'ucl' && (
+            <button 
+              onClick={() => navigate('/fixtures/ucl-bracket', { state: { leagueId: 'ucl' } })}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold transition-all"
+            >
+              <Zap className="w-4 h-4" />
+              Knockouts
+            </button>
+          )}
+        </div>
+      </header>
+
+      {/* Control Center */}
+      <div className="relative z-20 px-8 py-6 bg-zinc-950/20 border-b border-zinc-800">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div className="flex items-center gap-2 bg-zinc-900/60 p-1 rounded-lg border border-zinc-800">
+            <button 
+              onClick={() => setViewMode('matchweek')}
+              className={`px-4 py-2 rounded-md text-xs font-bold uppercase tracking-wider transition-all ${
+                viewMode === 'matchweek' 
+                ? 'bg-zinc-700 text-white shadow-sm' 
+                : 'text-zinc-400 hover:text-white'
+              }`}
+            >
+              Timeline View
+            </button>
+            <button 
+              onClick={() => setViewMode('team')}
+              className={`px-4 py-2 rounded-md text-xs font-bold uppercase tracking-wider transition-all ${
+                viewMode === 'team' 
+                ? 'bg-zinc-700 text-white shadow-sm' 
+                : 'text-zinc-400 hover:text-white'
+              }`}
+            >
+              Team Schedule
+            </button>
+          </div>
+
+          <div className="flex items-center gap-6">
+            {viewMode === 'matchweek' ? (
+              <div className="flex items-center gap-4 bg-zinc-900/60 rounded-lg px-4 py-1.5 border border-zinc-800">
+                <button 
+                  onClick={() => setCurrentMW(Math.max(1, currentMW - 1))}
+                  className="p-1 hover:text-teal-400 text-zinc-400 transition-colors"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <div className="flex flex-col items-center min-w-[100px]">
+                  <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Matchweek</span>
+                  <span className="text-xl font-merriweather font-bold text-white leading-none mt-1">{currentMW}</span>
+                </div>
+                <button 
+                  onClick={() => setCurrentMW(Math.min(schedule.totalMatchweeks, currentMW + 1))}
+                  className="p-1 hover:text-teal-400 text-zinc-400 transition-colors"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3">
+                <Filter className="w-4 h-4 text-zinc-500" />
                 <select 
                   value={selectedTeam}
-                  onChange={(e) => {
-                    setSelectedTeam(e.target.value);
-                    setViewMode(e.target.value === 'all' ? 'matchweek' : 'team');
-                  }}
-                  className="bg-transparent text-xs font-bold text-white outline-none pr-4 capitalize"
+                  onChange={(e) => setSelectedTeam(e.target.value)}
+                  className="bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2 text-sm font-semibold text-white focus:outline-none focus:border-teal-500 min-w-[200px]"
                 >
-                  <option value="all">View All Teams</option>
-                  {schedule.teams.sort().map(t => (
+                  <option value="all">Select Team</option>
+                  {schedule.teams.map(t => (
                     <option key={t} value={t}>{t}</option>
                   ))}
                 </select>
-             </div>
+              </div>
+            )}
 
-             <div className="flex items-center gap-2 pr-4 border-r border-white/10 mr-4">
-                <button 
-                  onClick={handleSaveToHistory}
-                  className="p-2 rounded-xl bg-white/5 border border-white/10 text-white/40 hover:text-emerald-400 hover:bg-emerald-500/10 transition-all"
-                  title="Save to Global History"
-                >
-                  <Save className="w-4 h-4" />
-                </button>
-                <button 
-                  onClick={handleShuffle}
-                  className="p-2 rounded-xl bg-white/5 border border-white/10 text-white/40 hover:text-amber-400 hover:bg-amber-500/10 transition-all"
-                  title="Shuffle Dates"
-                >
-                  <Shuffle className="w-4 h-4" />
-                </button>
-                <button 
-                  onClick={handleRegenerate}
-                  disabled={isRegenerating}
-                  className={`p-2 rounded-xl bg-white/5 border border-white/10 text-white/40 hover:text-blue-400 hover:bg-blue-500/10 transition-all ${isRegenerating ? 'animate-spin' : ''}`}
-                  title="Complete Regeneration"
-                >
-                  <RefreshCw className="w-4 h-4" />
-                </button>
-             </div>
-
-            {/* FPL Optimize Button (PL only) */}
             {leagueId === 'pl' && (
-              <motion.button
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
+              <button 
                 onClick={handleOptimizeSquad}
                 disabled={optimizing}
-                className="px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center gap-2 border transition-all"
-                style={{
-                  borderColor: `${colors.primary}50`,
-                  backgroundColor: `${colors.primary}10`,
-                  color: colors.primary,
-                }}
+                className="flex items-center gap-2 px-6 py-2.5 rounded-lg bg-teal-600/10 border border-teal-600/30 text-xs font-bold text-teal-500 hover:bg-teal-600 hover:text-white transition-all disabled:opacity-50"
               >
-                <Cpu className="w-4 h-4" />
-                {optimizing ? 'Optimizing...' : `FPL: Optimize MW${currentMW}`}
-              </motion.button>
+                <Cpu className={`w-4 h-4 ${optimizing ? 'animate-spin' : ''}`} />
+                Optimize Squad
+              </button>
             )}
           </div>
         </div>
-      </motion.div>
+      </div>
 
-      {/* Matchweek Navigator - Only shown in matchweek mode */}
-      {viewMode === 'matchweek' && (
-        <div className="border-b border-white/5 bg-black/20">
-          <div className="max-w-7xl mx-auto px-6 py-3 flex items-center gap-2">
-            <motion.button
-              whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.9 }}
-              onClick={() => setCurrentMW(Math.max(1, currentMW - 1))}
-              disabled={currentMW === 1}
-              className="p-1.5 rounded-lg border border-white/10 hover:border-white/30 disabled:opacity-20 transition-colors"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </motion.button>
-
-            <div className="flex-1 overflow-x-auto flex gap-1 scrollbar-hide">
-              {Array.from({ length: (schedule.totalMatchweeks || 38) }, (_, i) => i + 1).map(mw => (
-                <motion.button
-                  key={mw}
-                  whileHover={{ scale: 1.1, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setCurrentMW(mw)}
-                  className={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                    currentMW === mw ? 'text-white shadow-lg' : 'text-white/15 hover:text-white/40'
-                  }`}
-                  style={currentMW === mw ? { backgroundColor: colors.bg, border: `1px solid ${colors.border}`, boxShadow: colors.glow } : {}}
-                >
-                  {mw}
-                </motion.button>
-              ))}
-            </div>
-
-            <motion.button
-              whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.9 }}
-              onClick={() => setCurrentMW(Math.min((schedule.totalMatchweeks || 38), currentMW + 1))}
-              disabled={currentMW === (schedule.totalMatchweeks || 38)}
-              className="p-1.5 rounded-lg border border-white/10 hover:border-white/30 disabled:opacity-20 transition-colors"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </motion.button>
-          </div>
-        </div>
-      )}
-
-      {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-6 py-8">
+      {/* Main Content Area */}
+      <main className="flex-1 relative z-20 px-8 py-8 overflow-y-auto">
         <AnimatePresence mode="wait">
           {viewMode === 'matchweek' ? (
             <motion.div
-              key="mw-view"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
+              key="matchweek"
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 10 }}
+              className="max-w-4xl mx-auto"
             >
-              <div className="flex items-center gap-3 mb-8">
-                <Calendar className="w-5 h-5" style={{ color: colors.primary }} />
-                <div>
-                  <h2 className="text-xl font-black uppercase italic tracking-tight">Matchweek {currentMW}</h2>
-                  <p className="text-xs text-white/25 font-mono">{matchweekDates.get(currentMW) ? formatDate(matchweekDates.get(currentMW)!) : 'TBD'}</p>
-                </div>
-              </div>
-
-              <div className="space-y-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {matchweekFixtures.map((match, i) => (
-                  <MatchCard key={match.id} match={match} index={i} colors={colors} onClick={() => handleMatchClick(match)} />
+                  <MatchCard 
+                    key={match.id} 
+                    match={match} 
+                    index={i} 
+                    colors={colors} 
+                    onClick={() => handleMatchClick(match)}
+                  />
                 ))}
               </div>
+
+              {matchweekFixtures.length === 0 && (
+                <div className="text-center py-20 bg-zinc-900/30 rounded-2xl border border-dashed border-zinc-700">
+                  <Calendar className="w-12 h-12 text-zinc-600 mx-auto mb-4" />
+                  <p className="text-zinc-400 font-semibold text-sm">Scanning for fixtures...</p>
+                </div>
+              )}
             </motion.div>
           ) : (
             <motion.div
-              key="team-view"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
+              key="team"
+              initial={{ opacity: 0, x: 10 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -10 }}
+              className="max-w-3xl mx-auto"
             >
-              <div className="flex items-center justify-between mb-8">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center border-2 border-white/10 bg-white/5">
-                    <Shield className="w-7 h-7 text-white/40" />
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-black uppercase italic tracking-tighter text-white">{selectedTeam}</h2>
-                    <p className="text-[10px] text-white/25 uppercase font-bold tracking-widest">Season Roadmap • {teamFixturesTimeline.length} Fixtures</p>
-                  </div>
+              {selectedTeam === 'all' ? (
+                <div className="text-center py-32 bg-zinc-900/30 rounded-2xl border border-dashed border-zinc-700">
+                  <Filter className="w-12 h-12 text-zinc-600 mx-auto mb-4" />
+                  <p className="text-zinc-400 font-semibold text-sm">Select a team to view their schedule</p>
                 </div>
-                <div className="flex gap-2">
-                  <div className="px-3 py-1.5 rounded-xl bg-white/5 border border-white/5 text-[9px] font-black uppercase text-white/20">
-                    Cross-Competition Active
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-4 relative pl-8 border-l border-white/5">
-                {teamFixturesTimeline.map((match) => (
-                  <div key={match.id} className="relative">
-                    {/* Timeline Node */}
-                    <div className="absolute -left-[41px] top-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-2 border-[#090A0F] bg-zinc-800 z-10" 
-                         style={{ backgroundColor: match.tournament.includes('Champions') ? '#0052FF' : match.tournament.includes('Premier') ? '#A020F0' : '#333' }} />
-                    
+              ) : (
+                <div className="space-y-4 relative pl-8 border-l border-zinc-800">
+                  <div className="absolute top-0 -left-1.5 w-3 h-3 rounded-full bg-teal-500" />
+                  
+                  {teamFixturesTimeline.map((match, i) => (
                     <motion.div 
-                      className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-all"
+                      key={match.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.05 }}
+                      className="relative"
                     >
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center gap-2">
-                           <span className="text-[9px] font-black px-2 py-0.5 rounded-md bg-white/5 text-white/40 uppercase tracking-tighter">
-                             {match.tournament}
-                           </span>
-                           {match.matchweek && <span className="text-[9px] font-bold text-white/10 uppercase">MW {match.matchweek}</span>}
+                      {/* Timeline Node */}
+                      <div 
+                        className="absolute -left-[39px] top-1/2 -tranzinc-y-1/2 w-3 h-3 rounded-full border-2 border-void z-10" 
+                        style={{ 
+                          backgroundColor: match.tournament.includes('Champions') ? '#0052FF' : 
+                                          match.tournament.includes('Premier') ? '#A020F0' : 
+                                          match.tournament.includes('FA Cup') ? '#7B0000' : '#52525b' 
+                        }} 
+                      />
+                      
+                      <div 
+                        onClick={() => handleMatchClick(match)}
+                        className="p-5 rounded-xl bg-zinc-900/50 border border-zinc-800 hover:bg-zinc-800 transition-all cursor-pointer group"
+                      >
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center gap-2">
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-zinc-800 text-zinc-400 uppercase tracking-wider">
+                              {match.tournament}
+                            </span>
+                            {match.matchweek && <span className="text-[10px] font-semibold text-zinc-500 uppercase tracking-wider">Matchweek {match.matchweek}</span>}
+                          </div>
+                          <span className="text-[11px] font-semibold text-zinc-500">{formatDate(match.date)}</span>
                         </div>
-                        <span className="text-[10px] font-mono text-white/30">{formatDate(match.date)}</span>
-                      </div>
 
-                      <div className="flex items-center justify-between">
-                         <span className={`text-sm font-bold ${match.home === selectedTeam ? 'text-white' : 'text-white/40'}`}>{match.home}</span>
-                         <div className="flex items-center gap-4 mx-4">
-                            <div className="w-8 h-[1px] bg-white/10" />
-                            <span className="text-[9px] font-black text-white/10">VS</span>
-                            <div className="w-8 h-[1px] bg-white/10" />
-                         </div>
-                         <span className={`text-sm font-bold ${match.away === selectedTeam ? 'text-white' : 'text-white/40'}`}>{match.away}</span>
-                      </div>
+                        <div className="flex items-center justify-between">
+                          <span className={`text-base font-bold ${match.home === selectedTeam ? 'text-white' : 'text-zinc-400'}`}>{match.home}</span>
+                          <div className="flex items-center gap-4 mx-4">
+                            <div className="w-8 h-[1px] bg-zinc-700" />
+                            <span className="text-[10px] font-bold text-zinc-600 group-hover:text-teal-500 transition-colors">VS</span>
+                            <div className="w-8 h-[1px] bg-zinc-700" />
+                          </div>
+                          <span className={`text-base font-bold ${match.away === selectedTeam ? 'text-white' : 'text-zinc-400'}`}>{match.away}</span>
+                        </div>
 
-                      <div className="mt-3 flex items-center gap-4 text-[9px] text-white/15 uppercase font-black tracking-widest">
-                         <span className="flex items-center gap-1.5"><Clock className="w-3 h-3" /> {match.time}</span>
-                         <span className="flex items-center gap-1.5"><MapPin className="w-3 h-3" /> {match.stadium}</span>
-                         {match.is_derby && <span className="text-amber-500/50 flex items-center gap-1"><Zap className="w-3 h-3" /> Rivalry Match</span>}
+                        <div className="mt-3 flex items-center gap-4 text-xs text-zinc-500 font-semibold">
+                          <span className="flex items-center gap-1.5"><Clock className="w-3 h-3" /> {match.time}</span>
+                          <span className="flex items-center gap-1.5"><MapPin className="w-3 h-3" /> {match.stadium}</span>
+                          {match.is_derby && <span className="text-amber-500 flex items-center gap-1"><Zap className="w-3 h-3" /> Rivalry Match</span>}
+                        </div>
                       </div>
                     </motion.div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Modification Suggestions */}
-        <AnimatePresence>
-          {selectedFixture && modifySuggestions && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              className="mt-6 p-5 rounded-xl border border-emerald-500/20 bg-emerald-500/5 backdrop-blur-xl"
-            >
-              <div className="flex items-center gap-2 mb-4">
-                <Settings2 className="w-4 h-4 text-emerald-400" />
-                <h3 className="text-sm font-bold text-emerald-400 uppercase tracking-wider">Reschedule Options</h3>
-                <button onClick={() => { setSelectedFixture(null); setModifySuggestions(null); }} className="ml-auto text-xs text-white/30 hover:text-white/60">Close</button>
-              </div>
-              {loadingModify ? (
-                <p className="text-xs text-white/30 animate-pulse">Analyzing...</p>
-              ) : modifySuggestions.length === 0 ? (
-                <p className="text-xs text-white/30">No alternatives found.</p>
-              ) : (
-                <div className="space-y-2">
-                  {modifySuggestions.map((alt, i) => (
-                    <div key={i} className="p-3 rounded-lg border border-white/5 bg-white/[0.02] flex items-center justify-between hover:border-emerald-500/20 transition-colors cursor-pointer">
-                      <div>
-                        <p className="text-xs text-white/70">{alt.reason}</p>
-                        <p className="text-[10px] text-white/30 mt-1">Alternative: {formatDate(alt.date)}</p>
-                      </div>
-                      {alt.swapWith && (
-                        <span className="text-[9px] text-yellow-500/50 bg-yellow-500/10 px-2 py-0.5 rounded-full border border-yellow-500/20">SWAP</span>
-                      )}
-                    </div>
                   ))}
+                  
+                  <div className="absolute bottom-0 -left-1 w-2 h-2 rounded-full bg-zinc-700" />
                 </div>
               )}
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
+
+        {/* Reschedule Suggestions Overlay */}
+        <AnimatePresence>
+          {selectedFixture && modifySuggestions && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              className="mt-8 max-w-2xl mx-auto"
+            >
+              <div className="p-6 rounded-xl border border-zinc-700 bg-zinc-800">
+                <div className="flex items-center gap-2 mb-6">
+                  <div className="p-1.5 rounded-md bg-zinc-700 text-teal-400">
+                    <Settings2 className="w-4 h-4" />
+                  </div>
+                  <h3 className="text-sm font-bold text-white">Reschedule Optimization</h3>
+                  <button 
+                    onClick={() => { setSelectedFixture(null); setModifySuggestions(null); }} 
+                    className="ml-auto text-xs font-semibold text-zinc-400 hover:text-white"
+                  >
+                    Dismiss
+                  </button>
+                </div>
+                
+                {loadingModify ? (
+                  <div className="flex items-center gap-3 py-4">
+                    <div className="w-4 h-4 border-2 border-zinc-600 border-t-teal-500 rounded-full animate-spin" />
+                    <p className="text-xs text-zinc-400 font-semibold">Analyzing alternative timelines...</p>
+                  </div>
+                ) : modifySuggestions.length === 0 ? (
+                  <p className="text-xs text-zinc-400 py-4 text-center">No stable alternatives identified.</p>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {modifySuggestions.map((alt, i) => (
+                      <div 
+                        key={i} 
+                        className="p-4 rounded-lg border border-zinc-700 bg-zinc-900/50 hover:border-teal-500/50 transition-all cursor-pointer group"
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <p className="text-xs font-bold text-zinc-300">{alt.reason}</p>
+                          {alt.swapWith && (
+                            <span className="text-[10px] font-bold text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">SWAP</span>
+                          )}
+                        </div>
+                        <p className="text-xs text-zinc-500 font-semibold">New Date: {formatDate(alt.date)}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </main>
 
       {/* Stats Panel Overlay */}
       <StatsPanel
@@ -575,8 +549,9 @@ const FixtureDisplay: React.FC = () => {
         leagueColor={colors.primary}
       />
     </div>
-  </div>
-);
+  );
 };
 
 export default FixtureDisplay;
+
+

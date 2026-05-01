@@ -11,7 +11,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174']
+  origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175']
 }));
 app.use(express.json({ limit: '10mb' }));
 
@@ -32,6 +32,14 @@ app.post('/api/fixtures/modify', fixturesController.modifyFixture);
 app.post('/api/fixtures/fa-cup/next-round', fixturesController.advanceFACupRound);
 app.post('/api/fixtures/ucl/next-round', fixturesController.getNextUCLRound);
 app.get('/api/fixtures/pl/season', fixturesController.getSeasonFixtures);
+
+// --- Tournament Persistence Routes ---
+app.post('/api/tournaments/save', fixturesController.saveTournament);
+app.get('/api/tournaments/type/:type', fixturesController.getTournamentsByType); // must be before /:id
+app.get('/api/tournaments/:id', fixturesController.getTournament);
+
+// --- Stats Routes ---
+app.get('/api/stats/players', fixturesController.getPlayerStats);
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);

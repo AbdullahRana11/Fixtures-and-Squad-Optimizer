@@ -107,7 +107,7 @@ const SeasonStatsBox: React.FC<{ title: string; stats: TeamStats; color: string;
       </div>
       <div className="text-center">
         <p className="text-[8px] text-white/20 uppercase font-bold">CS</p>
-        <p className="text-xs font-black text-emerald-400">{stats.cs}</p>
+        <p className="text-xs font-black text-indigo-400">{stats.cs}</p>
       </div>
     </div>
   </motion.div>
