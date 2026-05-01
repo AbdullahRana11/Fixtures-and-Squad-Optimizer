@@ -32,7 +32,6 @@ model Team {
   @@index([league])
   @@index([sheet_source])
   @@index([is_seeded])
-  @@map("teams")
 }
 
 model Player {
@@ -47,26 +46,6 @@ model Player {
   base_form                 Float
   home_stadium_multiplier   Float
   last_3_vs_opponent_pts    Float
-  // Performance Stats
-  goals                     Int      @default(0)
-  assists                   Int      @default(0)
-  clean_sheets              Int      @default(0)
-  matches_played            Int      @default(0)
   created_at                DateTime @default(now())
   updated_at                DateTime @updatedAt
-
-  @@map("players")
-}
-
-model Tournament {
-  id          String   @id @default(uuid())
-  name        String
-  type        String   // 'ucl', 'facup', 'league'
-  status      String   @default("active") // 'active', 'completed'
-  bracket     String   // Store as JSON string
-  settings    String?  // Store as JSON string
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
-
-  @@map("tournaments")
 }

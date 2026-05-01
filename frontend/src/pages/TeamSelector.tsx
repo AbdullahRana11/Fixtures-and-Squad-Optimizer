@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Check, Loader2, Search, ArrowLeft, Zap, Database } from 'lucide-react';
+import { Check, Loader2, Search, ArrowLeft, Zap } from 'lucide-react';
 import axios from 'axios';
 
 // Tactical UI Components
@@ -9,7 +9,6 @@ import Hyperspeed from '../components/reactbits/Hyperspeed';
 import GridScan from '../components/reactbits/GridScan';
 import DecryptedText from '../components/reactbits/DecryptedText';
 import TiltedCard from '../components/reactbits/TiltedCard';
-import { HolographicPitch } from '../components/HolographicPitch';
 
 interface TeamData {
   id: string;
@@ -36,7 +35,7 @@ const LEAGUE_THEMES: Record<string, { accent: string; glow: string; border: stri
   facup: { accent: 'text-rose-400', glow: 'shadow-rose-900/30', border: 'border-rose-900/30', bg: 'bg-rose-900/10' },
   seriea: { accent: 'text-sky-400', glow: 'shadow-sky-500/30', border: 'border-sky-500/30', bg: 'bg-sky-500/10' },
   laliga: { accent: 'text-orange-400', glow: 'shadow-orange-500/30', border: 'border-orange-500/30', bg: 'bg-orange-500/10' },
-  custom: { accent: 'text-indigo-400', glow: 'shadow-indigo-500/30', border: 'border-indigo-500/30', bg: 'bg-indigo-500/10' },
+  custom: { accent: 'text-emerald-400', glow: 'shadow-emerald-500/30', border: 'border-emerald-500/30', bg: 'bg-emerald-500/10' },
 };
 
 const LEAGUE_NAMES: Record<string, string> = {
@@ -64,21 +63,6 @@ const TeamSelector: React.FC = () => {
   const [filterLeague, setFilterLeague] = useState<string>('all');
   const [error, setError] = useState<string | null>(null);
   const [showStageModal, setShowStageModal] = useState(false);
-  const [showResumeModal, setShowResumeModal] = useState(false);
-  const [activeTournaments, setActiveTournaments] = useState<any[]>([]);
-
-  // Fetch active tournaments
-  useEffect(() => {
-    const fetchTournaments = async () => {
-      try {
-        const { data } = await axios.get(`http://localhost:3000/api/tournaments/type/${leagueId === 'ucl' ? 'ucl' : (leagueId === 'facup' ? 'facup' : 'league')}`);
-        setActiveTournaments(data.filter((t: any) => t.status === 'active'));
-      } catch (err) {
-        console.error('Failed to fetch tournaments:', err);
-      }
-    };
-    fetchTournaments();
-  }, [leagueId]);
 
   // Fetch teams from API
   useEffect(() => {
@@ -198,7 +182,7 @@ const TeamSelector: React.FC = () => {
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center bg-[#090A0F]">
-        <Loader2 className="w-8 h-8 text-indigo-400 animate-spin" />
+        <Loader2 className="w-8 h-8 text-emerald-400 animate-spin" />
       </div>
     );
   }
@@ -223,8 +207,7 @@ const TeamSelector: React.FC = () => {
             }
           }} 
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#030408]/90 via-[#030408]/60 to-[#030408]/95 pointer-events-none" />
-        <HolographicPitch selectedCount={selected.size} totalCount={leagueId === 'ucl' ? 36 : requiredCount} />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#030408]/80 via-[#030408]/40 to-[#030408]/90 pointer-events-none" />
         <GridScan 
           color="#0ea5e9" 
         />
@@ -255,8 +238,8 @@ const TeamSelector: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-4">
-            <div className={`px-4 py-2 rounded-xl border ${canGenerate ? 'border-indigo-500/50 bg-indigo-500/10' : 'border-white/10'} transition-colors`}>
-              <span className={`text-lg font-bold ${canGenerate ? 'text-indigo-400' : 'text-white/50'}`}>
+            <div className={`px-4 py-2 rounded-xl border ${canGenerate ? 'border-emerald-500/50 bg-emerald-500/10' : 'border-white/10'} transition-colors`}>
+              <span className={`text-lg font-bold ${canGenerate ? 'text-emerald-400' : 'text-white/50'}`}>
                 {selected.size}
               </span>
               <span className="text-xs text-white/30 ml-1">/ {leagueId === 'ucl' ? '24 or 36' : requiredCount}</span>
@@ -269,7 +252,7 @@ const TeamSelector: React.FC = () => {
               disabled={!canGenerate || generating}
               className={`px-6 py-2.5 rounded-xl font-bold text-sm uppercase tracking-wider flex items-center gap-2 transition-all ${
                 canGenerate
-                  ? 'bg-indigo-500 text-black hover:bg-indigo-400 shadow-lg shadow-indigo-500/30'
+                  ? 'bg-emerald-500 text-black hover:bg-emerald-400 shadow-lg shadow-emerald-500/30'
                   : 'bg-white/5 text-white/20 cursor-not-allowed'
               }`}
             >
@@ -278,21 +261,8 @@ const TeamSelector: React.FC = () => {
               ) : (
                 <Zap className="w-4 h-4" />
               )}
-              {leagueId === 'ucl' ? 'Select Stage' : 'Generate Fixtures'}
+              {leagueId === 'ucl' ? 'Next Step' : 'Generate Fixtures'}
             </motion.button>
-
-            {activeTournaments.length > 0 && (
-              <motion.button
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                whileHover={{ scale: 1.02 }}
-                onClick={() => setShowResumeModal(true)}
-                className="px-6 py-2.5 rounded-xl bg-teal-500/10 border border-teal-500/30 text-teal-400 font-bold text-sm uppercase tracking-wider hover:bg-teal-500/20 transition-all flex items-center gap-2"
-              >
-                <Database className="w-4 h-4" />
-                Resume Active
-              </motion.button>
-            )}
           </div>
         </div>
       </div>
@@ -304,7 +274,7 @@ const TeamSelector: React.FC = () => {
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -50, opacity: 0 }}
-            className="fixed top-20 left-1/2 -tranzinc-x-1/2 z-50 px-6 py-3 bg-red-500/20 border border-red-500/50 rounded-xl text-red-400 text-sm backdrop-blur-xl"
+            className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-6 py-3 bg-red-500/20 border border-red-500/50 rounded-xl text-red-400 text-sm backdrop-blur-xl"
             onClick={() => setError(null)}
           >
             {error}
@@ -313,19 +283,19 @@ const TeamSelector: React.FC = () => {
       </AnimatePresence>
 
       {/* Filters */}
-      <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row md:items-center gap-4 flex-wrap">
-        <div className="relative flex-1 min-w-[200px] w-full md:w-auto">
-          <Search className="absolute left-3 top-1/2 -tranzinc-y-1/2 w-4 h-4 text-white/30" />
+      <div className="max-w-7xl mx-auto px-6 py-6 flex items-center gap-4 flex-wrap">
+        <div className="relative flex-1 min-w-[200px]">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
           <input
             type="text"
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search teams or cities..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-indigo-500/50 transition-colors"
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-emerald-500/50 transition-colors"
           />
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex items-center gap-2">
           <button
             onClick={() => setFilterLeague('all')}
             className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors ${
@@ -347,7 +317,7 @@ const TeamSelector: React.FC = () => {
           ))}
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex items-center gap-2">
           {uniqueLeagues.map(league => (
             <button
               key={`sel-${league}`}
@@ -376,7 +346,7 @@ const TeamSelector: React.FC = () => {
             </button>
             <button
               onClick={() => autoSelectTop(36)}
-              className="px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 hover:bg-indigo-500/30 transition-all flex items-center gap-2"
+              className="px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/30 transition-all flex items-center gap-2"
             >
               <Check className="w-3 h-3" />
               Auto Select 36
@@ -409,7 +379,7 @@ const TeamSelector: React.FC = () => {
                     onClick={() => toggleTeam(team.name)}
                     className={`h-full p-5 rounded-xl border cursor-pointer transition-all flex flex-col justify-between backdrop-blur-md ${
                       isSelected
-                        ? `bg-indigo-500/10 border-indigo-500/50 shadow-lg shadow-indigo-500/10`
+                        ? `bg-emerald-500/10 border-emerald-500/50 shadow-lg shadow-emerald-500/10`
                         : 'border-white/5 bg-black/40 hover:border-white/20'
                     }`}
                   >
@@ -421,7 +391,7 @@ const TeamSelector: React.FC = () => {
                         <p className="text-[9px] text-white/20 mt-0.5 uppercase font-mono tracking-widest">{team.league}</p>
                       </div>
                       <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all ${
-                        isSelected ? 'border-indigo-400 bg-indigo-500' : 'border-white/10 bg-white/5'
+                        isSelected ? 'border-emerald-400 bg-emerald-500' : 'border-white/10 bg-white/5'
                       }`}>
                         {isSelected && <Check className="w-3 h-3 text-black" strokeWidth={4} />}
                       </div>
@@ -484,7 +454,7 @@ const TeamSelector: React.FC = () => {
                 >
                   <div className="flex justify-between items-start mb-2">
                     <h3 className="font-bold text-lg text-white group-hover:text-blue-400 transition-colors">League Stage</h3>
-                    {selected.size === 36 && <Check className="w-4 h-4 text-indigo-400" />}
+                    {selected.size === 36 && <Check className="w-4 h-4 text-emerald-400" />}
                   </div>
                   <p className="text-xs text-white/40 leading-relaxed">Generate the full 36-team Swiss system schedule. All 36 teams must be selected.</p>
                 </button>
@@ -493,12 +463,12 @@ const TeamSelector: React.FC = () => {
                   onClick={() => handleGenerate('ucl-knockout')}
                   disabled={selected.size !== 24}
                   className={`p-6 rounded-xl border text-left transition-all group ${
-                    selected.size === 24 ? 'border-white/10 hover:border-indigo-500/50 hover:bg-indigo-500/5' : 'opacity-30 cursor-not-allowed border-white/5 bg-white/[0.02]'
+                    selected.size === 24 ? 'border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5' : 'opacity-30 cursor-not-allowed border-white/5 bg-white/[0.02]'
                   }`}
                 >
                   <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-bold text-lg text-white group-hover:text-indigo-400 transition-colors">Knockout Path</h3>
-                    {selected.size === 24 && <Check className="w-4 h-4 text-indigo-400" />}
+                    <h3 className="font-bold text-lg text-white group-hover:text-emerald-400 transition-colors">Knockout Path</h3>
+                    {selected.size === 24 && <Check className="w-4 h-4 text-emerald-400" />}
                   </div>
                   <p className="text-xs text-white/40 leading-relaxed">Start from the Play-offs toward the Round of 16. Requires exactly 24 teams.</p>
                 </button>
@@ -509,75 +479,6 @@ const TeamSelector: React.FC = () => {
                   Select 24 or 36 teams to proceed
                 </p>
               )}
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-      {/* Resume Tournament Modal */}
-      <AnimatePresence>
-        {showResumeModal && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-md">
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="w-full max-w-2xl bg-[#0D0F16] border border-teal-500/20 rounded-2xl p-8 overflow-hidden relative shadow-2xl tactical-glass"
-            >
-              <div className="neon-scanline opacity-10" />
-              <div className="absolute top-0 right-0 p-4">
-                <button onClick={() => setShowResumeModal(false)} className="text-white/20 hover:text-white transition-colors">✕</button>
-              </div>
-
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-12 h-12 bg-teal-500/10 rounded-full flex items-center justify-center border border-teal-500/20">
-                  <Database className="w-6 h-6 text-teal-400" />
-                </div>
-                <div>
-                  <h2 className="text-2xl font-black italic uppercase tracking-tighter">Active Sessions</h2>
-                  <p className="text-white/40 text-[10px] font-mono uppercase tracking-widest mt-1">Select a deployment to resume operation</p>
-                </div>
-              </div>
-
-              <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-                {activeTournaments.map((tournament) => (
-                  <button
-                    key={tournament.id}
-                    onClick={() => {
-                      let route = '/fixtures/display';
-                      if (tournament.type === 'ucl') route = '/fixtures/ucl-bracket';
-                      if (tournament.type === 'facup') route = '/fixtures/bracket';
-                      navigate(route, { 
-                        state: { 
-                          schedule: typeof tournament.bracket === 'string' ? JSON.parse(tournament.bracket) : tournament.bracket, 
-                          tournamentId: tournament.id 
-                        } 
-                      });
-                    }}
-                    className="w-full p-6 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] hover:border-teal-500/30 transition-all text-left group flex items-center justify-between"
-                  >
-                    <div>
-                      <div className="flex items-center gap-3 mb-1">
-                        <span className="font-bold text-lg text-white group-hover:text-teal-400 transition-colors">
-                          {tournament.name}
-                        </span>
-                        <span className="px-2 py-0.5 rounded text-[8px] font-black uppercase bg-white/5 text-white/40 border border-white/10">
-                          {tournament.type}
-                        </span>
-                      </div>
-                      <p className="text-[10px] text-white/30 font-mono">
-                        UPDATED: {new Date(tournament.updated_at).toLocaleString()}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-4">
-                       <div className="text-right">
-                          <p className="text-[8px] text-white/20 uppercase tracking-widest">Integrity</p>
-                          <p className="text-xs font-black text-teal-500">STABLE</p>
-                       </div>
-                       <Zap className="w-5 h-5 text-teal-500/20 group-hover:text-teal-500 transition-colors" />
-                    </div>
-                  </button>
-                ))}
-              </div>
             </motion.div>
           </div>
         )}

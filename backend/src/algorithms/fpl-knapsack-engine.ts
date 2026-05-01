@@ -58,8 +58,7 @@ export class FPLKnapsackEngine {
       const starPower = Math.pow(p.overall_ability / 10.0, 1.5) * 5.0; 
       const budgetBonus = Math.max(0, (cost - 5.0)) * 3.0; // Extra weight for players costing over 5M
       const budgetWeight = cost * 8.0; // Broad spending incentive
-      const statsPoints = (p.goals * 5) + (p.assists * 3) + (p.clean_sheets * 4);
-      const form = (p.base_form * 0.4) + (p.last_3_vs_opponent_pts * 0.3) + (statsPoints * 0.1);
+      const form = (p.base_form * 0.4) + (p.last_3_vs_opponent_pts * 0.3);
       
       const dynamicValue = (starPower + budgetBonus + budgetWeight + form + jitter) * p.home_stadium_multiplier * p.expectation_multiplier;
       
