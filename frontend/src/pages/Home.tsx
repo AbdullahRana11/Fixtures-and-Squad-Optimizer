@@ -23,8 +23,8 @@ const Home: React.FC = () => {
         }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       >
-        <div className="absolute inset-0 bg-[url('/fixtures_bg.png')] bg-cover bg-center opacity-10 mix-blend-screen group-hover:opacity-25 group-hover:scale-105 transition-all duration-700" />
-        <div className="absolute inset-0 bg-gradient-to-t from-void to-transparent opacity-90 group-hover:opacity-80 transition-opacity duration-700" />
+        <div className="absolute inset-0 bg-[url('/fixtures_bg.png')] bg-cover bg-center opacity-5 grayscale invert brightness-50 group-hover:opacity-15 transition-all duration-700" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent opacity-95 group-hover:opacity-90 transition-opacity duration-700" />
         
         <div className="relative z-10 max-w-2xl min-w-[300px]">
           <motion.div 
@@ -33,10 +33,10 @@ const Home: React.FC = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="flex items-center gap-3 mb-8"
           >
-            <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-500">
+            <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-emerald-500 group-hover:bg-emerald-500 group-hover:text-black transition-colors duration-500">
               <Calendar className="w-6 h-6" />
             </div>
-            <span className="text-sm font-semibold tracking-widest uppercase text-zinc-500">Scheduling Engine</span>
+            <span className="text-sm font-semibold tracking-widest uppercase text-zinc-600">Scheduling Engine</span>
           </motion.div>
 
           <motion.h2 
@@ -56,7 +56,7 @@ const Home: React.FC = () => {
               x: hoveredPanel === 'squad' ? -50 : 0 
             }}
             transition={{ duration: 0.4 }}
-            className="text-lg font-open text-zinc-400 mb-12 max-w-lg leading-relaxed"
+            className="text-lg font-open text-zinc-500 mb-12 max-w-lg leading-relaxed"
           >
             Plan, schedule, and optimize matchdays with precision. Our advanced engine handles complex constraints to deliver perfectly balanced tournament structures.
           </motion.p>
@@ -75,7 +75,7 @@ const Home: React.FC = () => {
 
       {/* Right Area - Squads */}
       <motion.div 
-        className="relative flex flex-col justify-center p-12 lg:p-20 cursor-pointer group transition-colors duration-500 bg-zinc-950/30 overflow-hidden"
+        className="relative flex flex-col justify-center p-12 lg:p-20 cursor-pointer group transition-colors duration-500 bg-black/50 overflow-hidden"
         onClick={() => navigate('/fpl')}
         onMouseEnter={() => setHoveredPanel('squad')}
         onMouseLeave={() => setHoveredPanel(null)}
@@ -86,11 +86,11 @@ const Home: React.FC = () => {
         }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       >
-        <div className="absolute inset-0 bg-[url('/squad_bg.png')] bg-cover bg-center opacity-10 mix-blend-screen group-hover:opacity-20 group-hover:scale-105 transition-all duration-700" />
-        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 to-transparent opacity-90 group-hover:opacity-80 transition-opacity duration-700" />
+        <div className="absolute inset-0 bg-[url('/squad_bg.png')] bg-cover bg-center opacity-5 grayscale invert brightness-50 group-hover:opacity-10 transition-all duration-700" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent opacity-95 group-hover:opacity-90 transition-opacity duration-700" />
         
         {/* Soft edge blend for desktop */}
-        <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-void to-transparent z-10 pointer-events-none hidden lg:block" />
+        <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none hidden lg:block" />
 
         <div className="relative z-20 max-w-xl min-w-[300px]">
           <motion.div 

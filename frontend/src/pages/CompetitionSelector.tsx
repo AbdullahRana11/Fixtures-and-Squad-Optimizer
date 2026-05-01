@@ -244,15 +244,15 @@ const CompetitionSelector: React.FC = () => {
       {/* ── Live Background ── */}
       <motion.div 
         initial={{ scale: 1.1, opacity: 0 }}
-        animate={{ scale: 1, opacity: 0.4 }}
+        animate={{ scale: 1, opacity: 0.15 }}
         transition={{ duration: 2, ease: "easeOut" }}
         className="absolute inset-0 z-0"
       >
         <div 
-          className="absolute inset-0 bg-cover bg-center animate-slow-drift"
+          className="absolute inset-0 bg-cover bg-center animate-slow-drift grayscale brightness-50"
           style={{ backgroundImage: "url('/arena_bg_live.png')" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-void via-transparent to-void opacity-80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black opacity-100" />
       </motion.div>
 
       <div className="absolute inset-0 z-0 opacity-5 bg-[url('/noise.svg')] pointer-events-none" />

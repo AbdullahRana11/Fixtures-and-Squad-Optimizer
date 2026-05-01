@@ -8,10 +8,10 @@ export default {
     extend: {
       colors: {
         // --- Core Layout ---
-        void: "#09090b", 
-        obsidian: "#18181b", 
-        "glass-base": "rgba(255, 255, 255, 0.05)",
-        "glass-border": "rgba(255, 255, 255, 0.1)",
+        void: "#000000", 
+        obsidian: "#050505", 
+        "glass-base": "rgba(255, 255, 255, 0.03)",
+        "glass-border": "rgba(255, 255, 255, 0.07)",
 
         // --- HUD / Original Style (Neon) ---
         "neon-mint": "#00F260",
