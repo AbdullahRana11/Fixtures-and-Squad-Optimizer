@@ -48,7 +48,7 @@ const PitchScene = ({ selectedCount, totalCount }: HolographicPitchProps) => {
   return (
     <>
       <ambientLight intensity={0.2} />
-      <pointLight position={[0, 10, 0]} intensity={1} color="#0ea5e9" />
+      <pointLight position={[0, 10, 0]} intensity={1} color="#10b981" />
       
       {/* Tactical Grid Floor */}
       <Grid 
@@ -59,8 +59,8 @@ const PitchScene = ({ selectedCount, totalCount }: HolographicPitchProps) => {
         fadeStrength={5} 
         cellSize={1} 
         sectionSize={5} 
-        sectionColor="#0ea5e9" 
-        cellColor="#0ea5e9" 
+        sectionColor="#10b981" 
+        cellColor="#10b981" 
         cellThickness={0.5} 
         sectionThickness={1} 
       />

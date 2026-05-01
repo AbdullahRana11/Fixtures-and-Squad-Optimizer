@@ -33,10 +33,10 @@ interface SeasonSchedule {
 
 const LEAGUE_COLORS: Record<string, { primary: string; bg: string; border: string }> = {
   pl: { primary: '#A020F0', bg: 'rgba(160,32,240,0.05)', border: 'rgba(160,32,240,0.2)' },
-  ucl: { primary: '#0052FF', bg: 'rgba(0,82,255,0.05)', border: 'rgba(0,82,255,0.2)' },
+  ucl: { primary: '#10b981', bg: 'rgba(0,0,0,0.8)', border: 'rgba(255,255,255,0.1)' },
   bundesliga: { primary: '#D3010C', bg: 'rgba(211,1,12,0.05)', border: 'rgba(211,1,12,0.2)' },
   facup: { primary: '#7B0000', bg: 'rgba(123,0,0,0.05)', border: 'rgba(123,0,0,0.2)' },
-  seriea: { primary: '#008FD7', bg: 'rgba(0,143,215,0.05)', border: 'rgba(0,143,215,0.2)' },
+  seriea: { primary: '#10b981', bg: 'rgba(0,143,215,0.05)', border: 'rgba(0,143,215,0.2)' },
   laliga: { primary: '#FF4B00', bg: 'rgba(255,75,0,0.05)', border: 'rgba(255,75,0,0.2)' },
   custom: { primary: '#10b981', bg: 'rgba(16,185,129,0.05)', border: 'rgba(16,185,129,0.2)' },
 };
@@ -234,7 +234,7 @@ const FixtureDisplay: React.FC = () => {
 
   if (!schedule) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center bg-void text-zinc-500 min-h-screen">
+      <div className="flex-1 flex flex-col items-center justify-center bg-black text-zinc-500 min-h-screen">
         <p className="text-lg font-open">No fixture data available.</p>
         <button onClick={() => navigate('/fixtures')} className="mt-4 text-emerald-600 font-semibold hover:underline">Back to Competitions</button>
       </div>
@@ -247,7 +247,7 @@ const FixtureDisplay: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-void relative overflow-hidden flex flex-col font-open">
+    <div className="min-h-screen bg-black relative overflow-hidden flex flex-col font-open">
       {/* Background Texture */}
       <div className="absolute inset-0 z-0 opacity-5 bg-[url('/noise.svg')]" />
 
@@ -441,7 +441,7 @@ const FixtureDisplay: React.FC = () => {
                       <div 
                         className="absolute -left-[39px] top-1/2 -tranzinc-y-1/2 w-3 h-3 rounded-full border-2 border-void z-10" 
                         style={{ 
-                          backgroundColor: match.tournament.includes('Champions') ? '#0052FF' : 
+                          backgroundColor: match.tournament.includes('Champions') ? '#10b981' : 
                                           match.tournament.includes('Premier') ? '#A020F0' : 
                                           match.tournament.includes('FA Cup') ? '#7B0000' : '#52525b' 
                         }} 

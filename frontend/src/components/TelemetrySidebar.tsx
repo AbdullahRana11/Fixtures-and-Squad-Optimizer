@@ -19,7 +19,7 @@ const TelemetrySidebar: React.FC<TelemetrySidebarProps> = ({
 }) => {
   const colors = {
     default: "text-white",
-    aqua: "text-neon-aqua",
+    aqua: "text-emerald-400",
     purple: "text-cyber-purple",
     mint: "text-mint-valid",
   };

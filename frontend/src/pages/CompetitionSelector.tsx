@@ -45,7 +45,7 @@ const competitions: Competition[] = [
     name: 'Champions League',
     shortName: 'UCL',
     bg: uclBg,
-    accent: '#0052FF',
+    accent: '#10b981',
     tag: '36 CLUBS · GROUP + KO',
     tier: 'S',
     icon: <Trophy className="w-4 h-4" />,
@@ -75,7 +75,7 @@ const competitions: Competition[] = [
     name: 'Serie A',
     shortName: 'SA',
     bg: serieABg,
-    accent: '#008FD7',
+    accent: '#10b981',
     tag: '20 CLUBS · 38 GAMEWEEKS',
     tier: 'A',
     icon: <Globe className="w-4 h-4" />,
@@ -240,7 +240,7 @@ const CompetitionSelector: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-void font-open relative overflow-hidden flex flex-col">
+    <div className="min-h-screen bg-black font-open relative overflow-hidden flex flex-col">
       {/* ── Live Background ── */}
       <motion.div 
         initial={{ scale: 1.1, opacity: 0 }}

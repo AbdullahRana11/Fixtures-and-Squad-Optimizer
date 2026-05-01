@@ -19,8 +19,8 @@ const ActionButton: React.FC<ActionButtonProps> = ({
   ...props 
 }) => {
   const variants = {
-    primary: "bg-gradient-to-r from-mint-sentinel to-neon-aqua shadow-[0_0_20px_rgba(0,242,96,0.3)] hover:shadow-[0_0_30px_rgba(0,242,96,0.4)] text-void font-bold",
-    secondary: "bg-gradient-to-r from-neon-aqua to-[#0088aa] shadow-[0_0_20px_rgba(5,213,255,0.3)] hover:shadow-[0_0_30px_rgba(5,213,255,0.4)]",
+    primary: "bg-gradient-to-r from-mint-sentinel to-emerald-400 shadow-[0_0_20px_rgba(0,242,96,0.3)] hover:shadow-[0_0_30px_rgba(0,242,96,0.4)] text-void font-bold",
+    secondary: "bg-gradient-to-r from-emerald-400 to-[#0088aa] shadow-[0_0_20px_rgba(5,213,255,0.3)] hover:shadow-[0_0_30px_rgba(5,213,255,0.4)]",
     ghost: "bg-white/5 border border-white/5 hover:bg-white/10",
   };
 

@@ -34,9 +34,9 @@ const LEAGUE_THEMES: Record<string, { accent: string; glow: string; border: stri
   ucl: { accent: 'text-green-400', glow: 'shadow-green-500/30', border: 'border-green-500/30', bg: 'bg-green-500/10' },
   bundesliga: { accent: 'text-red-400', glow: 'shadow-red-500/30', border: 'border-red-500/30', bg: 'bg-red-500/10' },
   facup: { accent: 'text-rose-400', glow: 'shadow-rose-900/30', border: 'border-rose-900/30', bg: 'bg-rose-900/10' },
-  seriea: { accent: 'text-sky-400', glow: 'shadow-sky-500/30', border: 'border-sky-500/30', bg: 'bg-sky-500/10' },
+  seriea: { accent: 'text-lime-400', glow: 'shadow-lime-500/30', border: 'border-lime-500/30', bg: 'bg-lime-500/10' },
   laliga: { accent: 'text-orange-400', glow: 'shadow-orange-500/30', border: 'border-orange-500/30', bg: 'bg-orange-500/10' },
-  custom: { accent: 'text-indigo-400', glow: 'shadow-indigo-500/30', border: 'border-indigo-500/30', bg: 'bg-indigo-500/10' },
+  custom: { accent: 'text-emerald-400', glow: 'shadow-emerald-500/30', border: 'border-emerald-500/30', bg: 'bg-emerald-500/10' },
 };
 
 const LEAGUE_NAMES: Record<string, string> = {
@@ -197,8 +197,8 @@ const TeamSelector: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-[#090A0F]">
-        <Loader2 className="w-8 h-8 text-indigo-400 animate-spin" />
+      <div className="flex-1 flex items-center justify-center bg-[#000000]">
+        <Loader2 className="w-8 h-8 text-emerald-400 animate-spin" />
       </div>
     );
   }
@@ -223,10 +223,10 @@ const TeamSelector: React.FC = () => {
             }
           }} 
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#030408]/90 via-[#030408]/60 to-[#030408]/95 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#000000]/90 via-[#000000]/60 to-[#000000]/95 pointer-events-none" />
         <HolographicPitch selectedCount={selected.size} totalCount={leagueId === 'ucl' ? 36 : requiredCount} />
         <GridScan 
-          color="#0ea5e9" 
+          color="#10b981" 
         />
       </div>
 
@@ -255,8 +255,8 @@ const TeamSelector: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-4">
-            <div className={`px-4 py-2 rounded-xl border ${canGenerate ? 'border-indigo-500/50 bg-indigo-500/10' : 'border-white/5'} transition-colors`}>
-              <span className={`text-lg font-bold ${canGenerate ? 'text-indigo-400' : 'text-white/50'}`}>
+            <div className={`px-4 py-2 rounded-xl border ${canGenerate ? 'border-emerald-500/50 bg-emerald-500/10' : 'border-white/5'} transition-colors`}>
+              <span className={`text-lg font-bold ${canGenerate ? 'text-emerald-400' : 'text-white/50'}`}>
                 {selected.size}
               </span>
               <span className="text-xs text-white/30 ml-1">/ {leagueId === 'ucl' ? '24 or 36' : requiredCount}</span>
@@ -269,7 +269,7 @@ const TeamSelector: React.FC = () => {
               disabled={!canGenerate || generating}
               className={`px-6 py-2.5 rounded-xl font-bold text-sm uppercase tracking-wider flex items-center gap-2 transition-all ${
                 canGenerate
-                  ? 'bg-indigo-500 text-black hover:bg-indigo-400 shadow-lg shadow-indigo-500/30'
+                  ? 'bg-emerald-500 text-black hover:bg-emerald-400 shadow-lg shadow-emerald-500/30'
                   : 'bg-white/5 text-white/20 cursor-not-allowed'
               }`}
             >
@@ -321,7 +321,7 @@ const TeamSelector: React.FC = () => {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search teams or cities..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/5 border border-white/5 text-white text-sm focus:outline-none focus:border-indigo-500/50 transition-colors"
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/5 border border-white/5 text-white text-sm focus:outline-none focus:border-emerald-500/50 transition-colors"
           />
         </div>
 
@@ -376,7 +376,7 @@ const TeamSelector: React.FC = () => {
             </button>
             <button
               onClick={() => autoSelectTop(36)}
-              className="px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 hover:bg-indigo-500/30 transition-all flex items-center gap-2"
+              className="px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/30 transition-all flex items-center gap-2"
             >
               <Check className="w-3 h-3" />
               Auto Select 36
@@ -402,14 +402,14 @@ const TeamSelector: React.FC = () => {
                 className="relative"
               >
                 <TiltedCard
-                  glareColor="rgba(14, 165, 233, 0.3)"
+                  glareColor="rgba(16, 185, 129, 0.3)"
                   maxTilt={10}
                 >
                   <div 
                     onClick={() => toggleTeam(team.name)}
                     className={`h-full p-5 rounded-xl border cursor-pointer transition-all flex flex-col justify-between backdrop-blur-md ${
                       isSelected
-                        ? `bg-indigo-500/10 border-indigo-500/50 shadow-lg shadow-indigo-500/10`
+                        ? `bg-emerald-500/10 border-emerald-500/50 shadow-lg shadow-emerald-500/10`
                         : 'border-white/5 bg-black/40 hover:border-white/20'
                     }`}
                   >
@@ -421,7 +421,7 @@ const TeamSelector: React.FC = () => {
                         <p className="text-[9px] text-white/20 mt-0.5 uppercase font-mono tracking-widest">{team.league}</p>
                       </div>
                       <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all ${
-                        isSelected ? 'border-indigo-400 bg-indigo-500' : 'border-white/5 bg-white/5'
+                        isSelected ? 'border-emerald-400 bg-emerald-500' : 'border-white/5 bg-white/5'
                       }`}>
                         {isSelected && <Check className="w-3 h-3 text-black" strokeWidth={4} />}
                       </div>
@@ -484,7 +484,7 @@ const TeamSelector: React.FC = () => {
                 >
                   <div className="flex justify-between items-start mb-2">
                     <h3 className="font-bold text-lg text-white group-hover:text-green-400 transition-colors">League Stage</h3>
-                    {selected.size === 36 && <Check className="w-4 h-4 text-indigo-400" />}
+                    {selected.size === 36 && <Check className="w-4 h-4 text-emerald-400" />}
                   </div>
                   <p className="text-xs text-white/40 leading-relaxed">Generate the full 36-team Swiss system schedule. All 36 teams must be selected.</p>
                 </button>
@@ -493,12 +493,12 @@ const TeamSelector: React.FC = () => {
                   onClick={() => handleGenerate('ucl-knockout')}
                   disabled={selected.size !== 24}
                   className={`p-6 rounded-xl border text-left transition-all group ${
-                    selected.size === 24 ? 'border-white/5 hover:border-indigo-500/50 hover:bg-indigo-500/5' : 'opacity-30 cursor-not-allowed border-white/5 bg-white/[0.02]'
+                    selected.size === 24 ? 'border-white/5 hover:border-emerald-500/50 hover:bg-emerald-500/5' : 'opacity-30 cursor-not-allowed border-white/5 bg-white/[0.02]'
                   }`}
                 >
                   <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-bold text-lg text-white group-hover:text-indigo-400 transition-colors">Knockout Path</h3>
-                    {selected.size === 24 && <Check className="w-4 h-4 text-indigo-400" />}
+                    <h3 className="font-bold text-lg text-white group-hover:text-emerald-400 transition-colors">Knockout Path</h3>
+                    {selected.size === 24 && <Check className="w-4 h-4 text-emerald-400" />}
                   </div>
                   <p className="text-xs text-white/40 leading-relaxed">Start from the Play-offs toward the Round of 16. Requires exactly 24 teams.</p>
                 </button>

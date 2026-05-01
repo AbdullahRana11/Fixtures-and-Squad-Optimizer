@@ -8,7 +8,7 @@ const Home: React.FC = () => {
   const [hoveredPanel, setHoveredPanel] = React.useState<'fixtures' | 'squad' | null>(null);
 
   return (
-    <div className="w-full min-h-screen flex flex-col lg:flex-row bg-void text-zinc-200 overflow-hidden">
+    <div className="w-full min-h-screen flex flex-col lg:flex-row bg-black text-zinc-200 overflow-hidden">
       
       {/* Left Area - Fixtures */}
       <motion.div 

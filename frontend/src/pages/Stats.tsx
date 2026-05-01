@@ -24,7 +24,7 @@ function StatList({ title, rows, leftKey, rightKey, bgImage }: { title: string, 
         {rows.map((row) => (
           <div
             key={row.name}
-            className="ui-hover-chip flex cursor-pointer items-center justify-between rounded-md border border-lime-100/10 bg-[#1f2d17]/88 px-4 py-3 text-xs text-zinc-100 transition-all hover:border-lime-400/50 hover:bg-lime-900/40 hover:shadow-[0_0_15px_rgba(163,230,53,0.2)]"
+            className="ui-hover-chip flex cursor-pointer items-center justify-between rounded-md border border-lime-100/10 bg-black/88 px-4 py-3 text-xs text-zinc-100 transition-all hover:border-lime-400/50 hover:bg-lime-900/40 hover:shadow-[0_0_15px_rgba(163,230,53,0.2)]"
           >
             <p className="font-extrabold tracking-wide text-emerald-100">{row.name}</p>
             <div className="text-right font-medium text-emerald-200/80">

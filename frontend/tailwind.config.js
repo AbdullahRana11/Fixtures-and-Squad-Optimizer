@@ -15,7 +15,7 @@ export default {
 
         // --- HUD / Original Style (Neon) ---
         "neon-mint": "#00F260",
-        "neon-aqua": "#05D5FF",
+        "neon-emerald": "#10b981",
         "neon-purple": "#B026FF",
         "neon-rose": "#FF2A55",
         

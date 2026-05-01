@@ -16,7 +16,7 @@ class GlobalErrorBoundary extends Component<{children: ReactNode}, {hasError: bo
   render() {
     if (this.state.hasError) {
       return (
-        <div className="flex h-screen w-full items-center justify-center bg-[#090A0F] p-8">
+        <div className="flex h-screen w-full items-center justify-center bg-[#000000] p-8">
           <div className="max-w-xl w-full p-12 rounded-[40px] border border-red-500/30 bg-red-950/10 backdrop-blur-3xl text-center shadow-4xl">
              <AlertTriangle className="w-16 h-16 text-red-500 mx-auto mb-6 animate-pulse" />
              <h1 className="text-3xl font-black text-white italic uppercase mb-4">SYSTEM BREACH: COMPONENT CRASH</h1>

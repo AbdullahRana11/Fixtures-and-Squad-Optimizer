@@ -21,7 +21,7 @@ const TeamNode: React.FC<TeamNodeProps> = ({ team, status = 'default' }) => {
       className={`relative p-4 rounded-xl glass-card transition-all duration-300 ${
         team.isDrawn ? 'opacity-30' : 'opacity-100'
       } ${
-        status === 'active' ? 'border-neon-aqua/50 shadow-[0_0_15px_rgba(5,213,255,0.1)]' : ''
+        status === 'active' ? 'border-emerald-400/50 shadow-[0_0_15px_rgba(5,213,255,0.1)]' : ''
       }`}
       whileHover={!team.isDrawn ? { y: -4, scale: 1.02, borderColor: 'rgba(5,213,255,0.3)' } : {}}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
@@ -29,7 +29,7 @@ const TeamNode: React.FC<TeamNodeProps> = ({ team, status = 'default' }) => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-[10px] border border-white/5 ${
-            team.pot === 'A' ? 'bg-cyber-purple/10 text-cyber-purple' : 'bg-neon-aqua/10 text-neon-aqua'
+            team.pot === 'A' ? 'bg-cyber-purple/10 text-cyber-purple' : 'bg-emerald-400/10 text-emerald-400'
           }`}>
             {team.country}
           </div>

@@ -100,7 +100,7 @@ const UCLDraw: React.FC = () => {
     <div className="flex-1 flex overflow-hidden">
       <div className="flex-1 flex flex-col p-8 overflow-y-auto">
         <div className="mb-12">
-          <div className="font-space text-xs text-neon-aqua uppercase tracking-[0.3em] mb-2">
+          <div className="font-space text-xs text-emerald-400 uppercase tracking-[0.3em] mb-2">
             Constraint Satisfaction Engine
           </div>
           <h1 className="text-4xl font-clash">UCL Round of 16 Draw</h1>
@@ -139,15 +139,15 @@ const UCLDraw: React.FC = () => {
                     {match.team_a.name}
                   </div>
                   <div className="flex flex-col items-center gap-1 mx-4 shrink-0">
-                    <div className="h-[1px] w-8 sm:w-12 bg-neon-aqua/50" />
+                    <div className="h-[1px] w-8 sm:w-12 bg-emerald-400/50" />
                     <span className="font-space text-[8px] text-white/30 uppercase tracking-widest">VS</span>
-                    <div className="h-[1px] w-8 sm:w-12 bg-neon-aqua/50" />
+                    <div className="h-[1px] w-8 sm:w-12 bg-emerald-400/50" />
                   </div>
                   <div className="font-outfit font-bold text-white max-w-[120px] truncate text-center">
                     {match.team_b.name}
                   </div>
                   {/* Neon Glow Line */}
-                  <div className="absolute inset-0 border border-neon-aqua/20 rounded-xl pointer-events-none group-hover:border-neon-aqua/40 transition-colors" />
+                  <div className="absolute inset-0 border border-emerald-400/20 rounded-xl pointer-events-none group-hover:border-emerald-400/40 transition-colors" />
                 </motion.div>
               ))}
 

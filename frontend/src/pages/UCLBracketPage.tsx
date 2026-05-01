@@ -117,7 +117,7 @@ const UCLBracketPage: React.FC = () => {
 
     if (isLoading) {
         return (
-            <div className="flex-1 flex flex-col items-center justify-center bg-void text-zinc-400 min-h-screen">
+            <div className="flex-1 flex flex-col items-center justify-center bg-black text-zinc-400 min-h-screen">
                 <motion.div
                     animate={{ rotate: 360 }}
                     transition={{ repeat: Infinity, duration: 1.5, ease: 'linear' }}
@@ -130,7 +130,7 @@ const UCLBracketPage: React.FC = () => {
 
     if (!bracket) {
         return (
-            <div className="flex-1 flex flex-col items-center justify-center bg-void text-zinc-300 min-h-screen relative overflow-hidden font-open">
+            <div className="flex-1 flex flex-col items-center justify-center bg-black text-zinc-300 min-h-screen relative overflow-hidden font-open">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -229,7 +229,7 @@ const UCLBracketPage: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-void text-white font-open relative overflow-x-hidden">
+        <div className="min-h-screen bg-black text-white font-open relative overflow-x-hidden">
             <div className="absolute inset-0 z-0 opacity-5 bg-[url('/noise.svg')]" />
 
             {/* Header */}

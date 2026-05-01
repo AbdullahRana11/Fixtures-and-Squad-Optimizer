@@ -36,7 +36,7 @@ const PlayerPitchCard: React.FC<PlayerPitchCardProps> = ({ player, positionLabel
 
       {/* Avatar Circle */}
       <div className={`w-12 h-12 rounded-full border-2 flex items-center justify-center ${
-        player ? 'bg-void border-neon-aqua/30 shadow-[0_0_10px_rgba(5,213,255,0.2)]' : 'bg-white/5 border-white/5'
+        player ? 'bg-black border-emerald-400/30 shadow-[0_0_10px_rgba(5,213,255,0.2)]' : 'bg-white/5 border-white/5'
       }`}>
         {player && (
           <span className="font-clash text-lg text-white/20">

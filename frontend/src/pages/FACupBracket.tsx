@@ -50,8 +50,8 @@ interface FACupBracket {
 }
 
 const ROUND_GRADIENTS = [
-  { from: '#6366f1', to: '#8b5cf6', label: 'Third Round' },
-  { from: '#06b6d4', to: '#22d3ee', label: 'Fourth Round' },
+  { from: '#10b981', to: '#10b981', label: 'Third Round' },
+  { from: '#10b981', to: '#10b981', label: 'Fourth Round' },
   { from: '#10b981', to: '#34d399', label: 'Fifth Round' },
   { from: '#f59e0b', to: '#fbbf24', label: 'Quarter-Finals' },
   { from: '#ef4444', to: '#f87171', label: 'Semi-Finals' },
@@ -60,7 +60,7 @@ const ROUND_GRADIENTS = [
 
 const TIER_CONFIG: Record<string, { color: string; label: string; bg: string }> = {
   'Premier League': { color: '#a78bfa', label: 'PL', bg: 'rgba(167,139,250,0.1)' },
-  'Championship': { color: '#60a5fa', label: 'CH', bg: 'rgba(96,165,250,0.1)' },
+  'Championship': { color: '#10b981', label: 'CH', bg: 'rgba(96,165,250,0.1)' },
   'League One': { color: '#2dd4bf', label: 'L1', bg: 'rgba(45,212,191,0.1)' },
   'League Two': { color: '#9ca3af', label: 'L2', bg: 'rgba(156,163,175,0.1)' },
 };
@@ -107,9 +107,9 @@ const FACupBracketPage: React.FC = () => {
 
   if (!bracket) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center bg-[#090A0F] text-white/50 min-h-screen">
+      <div className="flex-1 flex flex-col items-center justify-center bg-[#000000] text-white/50 min-h-screen">
         <p className="text-lg">No bracket data.</p>
-        <button onClick={() => navigate('/fixtures')} className="mt-4 text-indigo-400 underline">Back</button>
+        <button onClick={() => navigate('/fixtures')} className="mt-4 text-emerald-400 underline">Back</button>
       </div>
     );
   }
@@ -215,7 +215,7 @@ const FACupBracketPage: React.FC = () => {
             }
           }} 
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#02040A]/90 via-[#02040A]/40 to-[#02040A]/95 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#000000]/90 via-[#000000]/40 to-[#000000]/95 pointer-events-none" />
         <GridScan color="#2dd4bf" scanSpeed={3} />
       </div>
 
@@ -258,7 +258,7 @@ const FACupBracketPage: React.FC = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 onClick={handleNextRound}
-                className="px-10 py-4 rounded-2xl bg-violet-600 text-white font-black text-[11px] uppercase tracking-[0.3em] flex items-center gap-3 shadow-[0_0_40px_rgba(139,92,246,0.2)]"
+                className="px-10 py-4 rounded-2xl bg-emerald-600 text-white font-black text-[11px] uppercase tracking-[0.3em] flex items-center gap-3 shadow-[0_0_40px_rgba(139,92,246,0.2)]"
               >
                 NEXT SECTOR <ChevronRight className="w-4 h-4" />
               </motion.button>

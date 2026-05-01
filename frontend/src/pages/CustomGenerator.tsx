@@ -495,7 +495,7 @@ const CustomGenerator: React.FC = () => {
                <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden flex">
                   <motion.div 
                     initial={{ width: 0 }} animate={{ width: `${(Math.min(5, f.magnitude || 0)/5) * 100}%` }}
-                    className="h-full bg-gradient-to-r from-emerald-500 to-violet-500 shadow-[0_0_10px_rgba(45,212,191,0.5)]" 
+                    className="h-full bg-gradient-to-r from-emerald-500 to-emerald-500 shadow-[0_0_10px_rgba(45,212,191,0.5)]" 
                   />
                </div>
             </div>
@@ -545,7 +545,7 @@ const CustomGenerator: React.FC = () => {
         <motion.button 
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
           onClick={() => navigate(`/fixtures/ucl-bracket?id=${persistedId}`)}
-          className="w-full py-6 rounded-3xl bg-violet-600/20 border border-violet-500/30 text-violet-400 font-black uppercase text-xs tracking-[0.4em] hover:bg-violet-600 hover:text-white transition-all flex items-center justify-center gap-4 group"
+          className="w-full py-6 rounded-3xl bg-emerald-600/20 border border-emerald-500/30 text-emerald-400 font-black uppercase text-xs tracking-[0.4em] hover:bg-emerald-600 hover:text-white transition-all flex items-center justify-center gap-4 group"
         >
           <Trophy className="w-5 h-5 group-hover:rotate-12 transition-transform" /> 
           OPEN TACTICAL BRACKET 

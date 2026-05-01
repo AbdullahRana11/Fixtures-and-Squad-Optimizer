@@ -221,7 +221,7 @@ export default function FPLOptimizer() {
           <AnimatePresence>
             {selectedPlayer && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[500] flex items-center justify-center bg-black/95 p-8" onClick={() => setSelectedPlayer(null)}>
-                <motion.div initial={{ scale: 0.9, y: 50 }} animate={{ scale: 1, y: 0 }} transition={{ type: "spring", damping: 25 }} className="bg-[#0a0b0d] p-16 rounded-[60px] border border-white/5 max-w-4xl w-full" onClick={e => e.stopPropagation()}>
+                <motion.div initial={{ scale: 0.9, y: 50 }} animate={{ scale: 1, y: 0 }} transition={{ type: "spring", damping: 25 }} className="bg-[#000000] p-16 rounded-[60px] border border-white/5 max-w-4xl w-full" onClick={e => e.stopPropagation()}>
                    {!isSwapping ? (
                      <>
                         <div className="flex items-center gap-10 mb-12">
@@ -250,7 +250,7 @@ export default function FPLOptimizer() {
                            </div>
                            <div className="bg-white/5 p-8 rounded-[40px] border border-white/5">
                               <div className="flex items-center gap-3 mb-2"><Target className="w-5 h-5 text-zinc-600" /><span className="text-[10px] text-zinc-600 font-black uppercase">Fixture</span></div>
-                              <div className="text-3xl font-black text-sky-400">{(fixtureContext as any)[selectedPlayer.club] || 'BYE'}</div>
+                              <div className="text-3xl font-black text-lime-400">{(fixtureContext as any)[selectedPlayer.club] || 'BYE'}</div>
                            </div>
                         </div>
 

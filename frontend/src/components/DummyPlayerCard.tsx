@@ -27,11 +27,11 @@ const rarityUI = {
     label: "♦ RARE",
   },
   common: {
-    color: "text-indigo-500",
-    border: "border-indigo-500/50",
-    bg: "bg-indigo-500",
+    color: "text-emerald-500",
+    border: "border-emerald-500/50",
+    bg: "bg-emerald-500",
     glow: "shadow-[0_0_15px_rgba(16,185,129,0.5)]",
-    gradientTop: "from-indigo-500/10",
+    gradientTop: "from-emerald-500/10",
     label: "● COMMON",
   },
 };
@@ -86,7 +86,7 @@ export default function DummyPlayerCard({ player, isActive = false, compact = fa
         willChange: "transform",
       }}
       className={`group relative flex flex-col justify-between overflow-hidden cursor-pointer rounded-sm border border-white/5 bg-[#0a0a0c] hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] ${
-        isActive ? "animate-pulseGlow border-indigo-400/50 shadow-[0_0_30px_rgba(52,211,153,0.3)]" : ""
+        isActive ? "animate-pulseGlow border-emerald-400/50 shadow-[0_0_30px_rgba(52,211,153,0.3)]" : ""
       } ${className} ${compact ? "w-[180px] h-[280px]" : "w-[260px] h-[400px]"}`}
     >
       <div
@@ -150,17 +150,17 @@ export default function DummyPlayerCard({ player, isActive = false, compact = fa
         </div>
 
         <div className="mt-4 pt-3 flex items-center justify-between border-t border-white/5" style={{ transform: "translateZ(40px)" }}>
-           <div className="flex items-center gap-1.5 text-indigo-400 text-xs font-bold tracking-wide">
+           <div className="flex items-center gap-1.5 text-emerald-400 text-xs font-bold tracking-wide">
                <Wallet className="w-3.5 h-3.5 text-zinc-500" />
                {player.currentBid}
            </div>
            {trading ? (
-             <button className="bg-indigo-500 text-black px-2.5 py-1 rounded text-xs font-bold transition-all hover:bg-indigo-400 hover:shadow-[0_0_10px_rgba(16,185,129,0.5)]">
+             <button className="bg-emerald-500 text-black px-2.5 py-1 rounded text-xs font-bold transition-all hover:bg-emerald-400 hover:shadow-[0_0_10px_rgba(16,185,129,0.5)]">
                Buy - {player.buyNow}
              </button>
            ) : (
              <span className="flex items-center gap-1 text-zinc-500 text-[10px] font-medium tracking-wide">
-               <Zap className="w-3 h-3 text-indigo-500" /> Gasless
+               <Zap className="w-3 h-3 text-emerald-500" /> Gasless
              </span>
            )}
         </div>

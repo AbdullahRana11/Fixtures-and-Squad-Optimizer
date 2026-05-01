@@ -103,7 +103,7 @@ const SeasonStatsBox: React.FC<{ title: string; stats: TeamStats; color: string;
       </div>
       <div className="text-center">
         <p className="text-[8px] text-white/20 uppercase font-bold">GD</p>
-        <p className="text-xs font-black text-sky-400">{stats.gd > 0 ? `+${stats.gd}` : stats.gd}</p>
+        <p className="text-xs font-black text-lime-400">{stats.gd > 0 ? `+${stats.gd}` : stats.gd}</p>
       </div>
       <div className="text-center">
         <p className="text-[8px] text-white/20 uppercase font-bold">CS</p>
