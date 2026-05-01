@@ -31,7 +31,7 @@ interface TeamsResponse {
 
 const LEAGUE_THEMES: Record<string, { accent: string; glow: string; border: string; bg: string }> = {
   pl: { accent: 'text-purple-400', glow: 'shadow-purple-500/30', border: 'border-purple-500/30', bg: 'bg-purple-500/10' },
-  ucl: { accent: 'text-blue-400', glow: 'shadow-blue-500/30', border: 'border-blue-500/30', bg: 'bg-blue-500/10' },
+  ucl: { accent: 'text-green-400', glow: 'shadow-green-500/30', border: 'border-green-500/30', bg: 'bg-green-500/10' },
   bundesliga: { accent: 'text-red-400', glow: 'shadow-red-500/30', border: 'border-red-500/30', bg: 'bg-red-500/10' },
   facup: { accent: 'text-rose-400', glow: 'shadow-rose-900/30', border: 'border-rose-900/30', bg: 'bg-rose-900/10' },
   seriea: { accent: 'text-sky-400', glow: 'shadow-sky-500/30', border: 'border-sky-500/30', bg: 'bg-sky-500/10' },
@@ -287,7 +287,7 @@ const TeamSelector: React.FC = () => {
                 animate={{ opacity: 1, x: 0 }}
                 whileHover={{ scale: 1.02 }}
                 onClick={() => setShowResumeModal(true)}
-                className="px-6 py-2.5 rounded-xl bg-teal-500/10 border border-teal-500/30 text-teal-400 font-bold text-sm uppercase tracking-wider hover:bg-teal-500/20 transition-all flex items-center gap-2"
+                className="px-6 py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-bold text-sm uppercase tracking-wider hover:bg-emerald-500/20 transition-all flex items-center gap-2"
               >
                 <Database className="w-4 h-4" />
                 Resume Active
@@ -369,7 +369,7 @@ const TeamSelector: React.FC = () => {
           <div className="flex items-center gap-2 border-l border-white/5 pl-4">
             <button
               onClick={() => autoSelectTop(24)}
-              className="px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest bg-blue-500/20 text-blue-400 border border-blue-500/30 hover:bg-blue-500/30 transition-all flex items-center gap-2"
+              className="px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest bg-green-500/20 text-green-400 border border-green-500/30 hover:bg-green-500/30 transition-all flex items-center gap-2"
             >
               <Zap className="w-3 h-3 fill-current" />
               Auto Select 24
@@ -467,8 +467,8 @@ const TeamSelector: React.FC = () => {
               </div>
 
               <div className="text-center mb-8">
-                <div className="w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-blue-500/20">
-                  <Zap className="w-8 h-8 text-blue-400" />
+                <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-green-500/20">
+                  <Zap className="w-8 h-8 text-green-400" />
                 </div>
                 <h2 className="text-2xl font-black">Champions League</h2>
                 <p className="text-white/40 text-sm mt-1">Select your desired competition format</p>
@@ -479,11 +479,11 @@ const TeamSelector: React.FC = () => {
                   onClick={() => handleGenerate('ucl-league')}
                   disabled={selected.size !== 36}
                   className={`p-6 rounded-xl border text-left transition-all group ${
-                    selected.size === 36 ? 'border-white/10 hover:border-blue-500/50 hover:bg-blue-500/5' : 'opacity-30 cursor-not-allowed border-white/5 bg-white/[0.02]'
+                    selected.size === 36 ? 'border-white/10 hover:border-green-500/50 hover:bg-green-500/5' : 'opacity-30 cursor-not-allowed border-white/5 bg-white/[0.02]'
                   }`}
                 >
                   <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-bold text-lg text-white group-hover:text-blue-400 transition-colors">League Stage</h3>
+                    <h3 className="font-bold text-lg text-white group-hover:text-green-400 transition-colors">League Stage</h3>
                     {selected.size === 36 && <Check className="w-4 h-4 text-indigo-400" />}
                   </div>
                   <p className="text-xs text-white/40 leading-relaxed">Generate the full 36-team Swiss system schedule. All 36 teams must be selected.</p>
@@ -521,7 +521,7 @@ const TeamSelector: React.FC = () => {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="w-full max-w-2xl bg-[#0D0F16] border border-teal-500/20 rounded-2xl p-8 overflow-hidden relative shadow-2xl tactical-glass"
+              className="w-full max-w-2xl bg-[#0D0F16] border border-emerald-500/20 rounded-2xl p-8 overflow-hidden relative shadow-2xl tactical-glass"
             >
               <div className="neon-scanline opacity-10" />
               <div className="absolute top-0 right-0 p-4">
@@ -529,8 +529,8 @@ const TeamSelector: React.FC = () => {
               </div>
 
               <div className="flex items-center gap-4 mb-8">
-                <div className="w-12 h-12 bg-teal-500/10 rounded-full flex items-center justify-center border border-teal-500/20">
-                  <Database className="w-6 h-6 text-teal-400" />
+                <div className="w-12 h-12 bg-emerald-500/10 rounded-full flex items-center justify-center border border-emerald-500/20">
+                  <Database className="w-6 h-6 text-emerald-400" />
                 </div>
                 <div>
                   <h2 className="text-2xl font-black italic uppercase tracking-tighter">Active Sessions</h2>
@@ -553,11 +553,11 @@ const TeamSelector: React.FC = () => {
                         } 
                       });
                     }}
-                    className="w-full p-6 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] hover:border-teal-500/30 transition-all text-left group flex items-center justify-between"
+                    className="w-full p-6 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] hover:border-emerald-500/30 transition-all text-left group flex items-center justify-between"
                   >
                     <div>
                       <div className="flex items-center gap-3 mb-1">
-                        <span className="font-bold text-lg text-white group-hover:text-teal-400 transition-colors">
+                        <span className="font-bold text-lg text-white group-hover:text-emerald-400 transition-colors">
                           {tournament.name}
                         </span>
                         <span className="px-2 py-0.5 rounded text-[8px] font-black uppercase bg-white/5 text-white/40 border border-white/10">
@@ -571,9 +571,9 @@ const TeamSelector: React.FC = () => {
                     <div className="flex items-center gap-4">
                        <div className="text-right">
                           <p className="text-[8px] text-white/20 uppercase tracking-widest">Integrity</p>
-                          <p className="text-xs font-black text-teal-500">STABLE</p>
+                          <p className="text-xs font-black text-emerald-500">STABLE</p>
                        </div>
-                       <Zap className="w-5 h-5 text-teal-500/20 group-hover:text-teal-500 transition-colors" />
+                       <Zap className="w-5 h-5 text-emerald-500/20 group-hover:text-emerald-500 transition-colors" />
                     </div>
                   </button>
                 ))}

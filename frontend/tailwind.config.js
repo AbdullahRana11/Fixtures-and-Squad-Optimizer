@@ -20,8 +20,8 @@ export default {
         "neon-rose": "#FF2A55",
         
         // --- Editorial Style (Muted) ---
-        "ed-teal": "#0f766e",
-        "ed-blue": "#2563eb",
+        "ed-emerald": "#059669",
+        "ed-green": "#16a34a",
         "ed-gold": "#b45309",
         "ed-rose": "#e11d48",
         "ed-zinc": "#52525b",

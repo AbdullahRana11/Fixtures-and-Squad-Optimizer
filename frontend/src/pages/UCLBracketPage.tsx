@@ -121,7 +121,7 @@ const UCLBracketPage: React.FC = () => {
                 <motion.div
                     animate={{ rotate: 360 }}
                     transition={{ repeat: Infinity, duration: 1.5, ease: 'linear' }}
-                    className="w-16 h-16 rounded-full border-4 border-zinc-800 border-t-teal-500"
+                    className="w-16 h-16 rounded-full border-4 border-zinc-800 border-t-emerald-500"
                 />
                 <p className="mt-6 text-sm font-semibold uppercase tracking-widest text-zinc-400 font-open">Loading Knockout Data...</p>
             </div>
@@ -147,7 +147,7 @@ const UCLBracketPage: React.FC = () => {
                     <div className="flex flex-col gap-3 w-full mt-4">
                         <button
                             onClick={() => navigate('/fixtures/custom')}
-                            className="w-full py-4 rounded-xl bg-teal-600 text-white font-bold uppercase text-xs tracking-wider flex items-center justify-center gap-3 hover:bg-teal-700 transition-colors"
+                            className="w-full py-4 rounded-xl bg-emerald-600 text-white font-bold uppercase text-xs tracking-wider flex items-center justify-center gap-3 hover:bg-emerald-700 transition-colors"
                         >
                             <Zap className="w-4 h-4" /> Generate Tournament
                         </button>
@@ -241,7 +241,7 @@ const UCLBracketPage: React.FC = () => {
                         </button>
                         <div>
                             <div className="flex items-center gap-3 mb-1">
-                                <span className="text-xs font-semibold uppercase tracking-wider text-teal-500">Knockout Stage</span>
+                                <span className="text-xs font-semibold uppercase tracking-wider text-emerald-500">Knockout Stage</span>
                             </div>
                             <h1 className="text-3xl font-merriweather font-bold text-white tracking-wide">
                                 Champions League
@@ -254,7 +254,7 @@ const UCLBracketPage: React.FC = () => {
                             <button
                                 onClick={simulateRound}
                                 disabled={simulating}
-                                className="px-6 py-3 rounded-lg bg-teal-600 text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2 hover:bg-teal-700 transition-colors disabled:opacity-50"
+                                className="px-6 py-3 rounded-lg bg-emerald-600 text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2 hover:bg-emerald-700 transition-colors disabled:opacity-50"
                             >
                                 <Zap className="w-4 h-4" />
                                 {simulating ? 'Simulating...' : 'Execute Draw'}
@@ -279,11 +279,11 @@ const UCLBracketPage: React.FC = () => {
                         <button
                             key={round.name}
                             onClick={() => { setActiveRound(idx); setRevealedWinners(new Set()); setIntelLog([]); }}
-                            className={`relative h-full px-2 text-xs font-bold uppercase tracking-wider transition-colors ${activeRound === idx ? 'text-teal-400' : 'text-zinc-500 hover:text-zinc-300'}`}
+                            className={`relative h-full px-2 text-xs font-bold uppercase tracking-wider transition-colors ${activeRound === idx ? 'text-emerald-400' : 'text-zinc-500 hover:text-zinc-300'}`}
                         >
                             {round.name}
                             {activeRound === idx && (
-                                <motion.div layoutId="round-active" className="absolute bottom-0 left-0 right-0 h-[2px] bg-teal-500" />
+                                <motion.div layoutId="round-active" className="absolute bottom-0 left-0 right-0 h-[2px] bg-emerald-500" />
                             )}
                         </button>
                     ))}
@@ -314,48 +314,48 @@ const UCLBracketPage: React.FC = () => {
                                     transition={{ delay: i * 0.05 }}
                                     onClick={() => handleMatchStats(match)}
                                     className={`relative p-6 rounded-xl border transition-all cursor-pointer group bg-zinc-900/50 ${
-                                        isRevealed ? 'border-zinc-700 hover:border-teal-500' : 'border-zinc-800'
+                                        isRevealed ? 'border-zinc-700 hover:border-emerald-500' : 'border-zinc-800'
                                     }`}
                                 >
                                     <div className="flex justify-between items-center mb-6 text-xs font-bold text-zinc-500 uppercase tracking-wider">
                                         <span className="flex items-center gap-2"><Cpu className="w-4 h-4" /> Match {match.matchNumber}</span>
-                                        <span className="group-hover:text-teal-500 transition-colors">Details</span>
+                                        <span className="group-hover:text-emerald-500 transition-colors">Details</span>
                                     </div>
 
                                     <div className="space-y-4">
                                         <div className={`flex justify-between items-center transition-opacity ${isRevealed && !isHomeWin ? 'opacity-50' : 'opacity-100'}`}>
                                             <div className="flex items-center gap-4">
-                                                <div className={`w-2 h-2 rounded-full ${isHomeWin ? 'bg-teal-500' : 'bg-zinc-700'}`} />
+                                                <div className={`w-2 h-2 rounded-full ${isHomeWin ? 'bg-emerald-500' : 'bg-zinc-700'}`} />
                                                 <span className={`text-lg font-bold ${isHomeWin ? 'text-white' : 'text-zinc-300'}`}>
                                                     {match.home?.name || 'TBD'}
                                                 </span>
                                             </div>
-                                            {isRevealed && isHomeWin && <Trophy className="w-5 h-5 text-teal-500" />}
+                                            {isRevealed && isHomeWin && <Trophy className="w-5 h-5 text-emerald-500" />}
                                         </div>
 
                                         <div className="h-px bg-zinc-800" />
 
                                         <div className={`flex justify-between items-center transition-opacity ${isRevealed && !isAwayWin ? 'opacity-50' : 'opacity-100'}`}>
                                             <div className="flex items-center gap-4">
-                                                <div className={`w-2 h-2 rounded-full ${isAwayWin ? 'bg-teal-500' : 'bg-zinc-700'}`} />
+                                                <div className={`w-2 h-2 rounded-full ${isAwayWin ? 'bg-emerald-500' : 'bg-zinc-700'}`} />
                                                 <span className={`text-lg font-bold ${isAwayWin ? 'text-white' : 'text-zinc-300'}`}>
                                                     {match.away?.name || 'TBD'}
                                                 </span>
                                             </div>
-                                            {isRevealed && isAwayWin && <Trophy className="w-5 h-5 text-teal-500" />}
+                                            {isRevealed && isAwayWin && <Trophy className="w-5 h-5 text-emerald-500" />}
                                         </div>
 
                                         {/* Win Probability Bar */}
                                         <div className="mt-6 space-y-2">
                                             <div className="flex justify-between text-xs font-bold text-zinc-500 uppercase tracking-wider">
                                                 <span>Probability</span>
-                                                <span className="text-teal-500">{(match.home?.overallStrength && match.away?.overallStrength) ? (0.5 + (match.home.overallStrength - match.away.overallStrength) / 100).toFixed(2) : '0.00'}</span>
+                                                <span className="text-emerald-500">{(match.home?.overallStrength && match.away?.overallStrength) ? (0.5 + (match.home.overallStrength - match.away.overallStrength) / 100).toFixed(2) : '0.00'}</span>
                                             </div>
                                             <div className="h-1.5 w-full bg-zinc-800 rounded-full overflow-hidden">
                                                 <motion.div 
                                                     initial={{ width: 0 }} 
                                                     animate={{ width: isRevealed ? '100%' : '50%' }}
-                                                    className="h-full bg-teal-500"
+                                                    className="h-full bg-emerald-500"
                                                 />
                                             </div>
                                         </div>
@@ -370,7 +370,7 @@ const UCLBracketPage: React.FC = () => {
                 <aside className="space-y-6">
                     <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6">
                         <div className="flex items-center gap-3 mb-6">
-                           <Activity className="w-5 h-5 text-teal-500" />
+                           <Activity className="w-5 h-5 text-emerald-500" />
                            <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-400">Match Events</h3>
                         </div>
                         
@@ -383,7 +383,7 @@ const UCLBracketPage: React.FC = () => {
                                     key={i} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }}
                                     className="flex items-start gap-3 border-l-2 border-zinc-800 pl-3 py-1"
                                   >
-                                     <span className={`text-xs font-semibold ${log.type === 'success' ? 'text-teal-400' : 'text-zinc-400'}`}>
+                                     <span className={`text-xs font-semibold ${log.type === 'success' ? 'text-emerald-400' : 'text-zinc-400'}`}>
                                         {log.text}
                                      </span>
                                   </motion.div>
@@ -400,13 +400,13 @@ const UCLBracketPage: React.FC = () => {
                     <motion.div
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
-                        className="mt-12 p-12 rounded-2xl border border-teal-500/20 bg-teal-900/20 text-center max-w-2xl mx-auto"
+                        className="mt-12 p-12 rounded-2xl border border-emerald-500/20 bg-emerald-900/20 text-center max-w-2xl mx-auto"
                     >
-                        <Trophy className="w-20 h-20 text-teal-500 mx-auto mb-6" />
+                        <Trophy className="w-20 h-20 text-emerald-500 mx-auto mb-6" />
                         <h2 className="text-5xl font-merriweather font-bold mb-4 text-white">
                             {bracket.champion}
                         </h2>
-                        <p className="text-teal-400 text-sm font-bold uppercase tracking-widest">
+                        <p className="text-emerald-400 text-sm font-bold uppercase tracking-widest">
                             Champions League Winners
                         </p>
                     </motion.div>

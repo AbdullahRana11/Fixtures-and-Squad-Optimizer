@@ -17,7 +17,7 @@ function StatList({ title, rows, leftKey, rightKey, bgImage }: { title: string, 
         backgroundRepeat: "no-repeat"
       } : {}}
     >
-      <h3 className="mb-4 inline-block bg-gradient-to-r from-emerald-300 via-teal-200 to-lime-200 bg-clip-text text-xs font-extrabold uppercase tracking-[0.2em] text-transparent drop-shadow-md md:text-sm">
+      <h3 className="mb-4 inline-block bg-gradient-to-r from-emerald-300 via-emerald-200 to-lime-200 bg-clip-text text-xs font-extrabold uppercase tracking-[0.2em] text-transparent drop-shadow-md md:text-sm">
         {title}
       </h3>
       <div className="space-y-2">

@@ -41,7 +41,7 @@ export const LoadingScreen: React.FC = () => {
             className="absolute inset-0 rounded-full border-4 border-zinc-800"
           />
           <motion.div
-            className="absolute inset-0 rounded-full border-4 border-teal-600 border-t-transparent"
+            className="absolute inset-0 rounded-full border-4 border-emerald-600 border-t-transparent"
             animate={{ rotate: 360 }}
             transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
           />
@@ -55,7 +55,7 @@ export const LoadingScreen: React.FC = () => {
           {/* Clean Progress Bar */}
           <div className="h-2 w-full bg-zinc-800 rounded-full overflow-hidden">
             <motion.div 
-              className="h-full bg-teal-600 rounded-full"
+              className="h-full bg-emerald-600 rounded-full"
               initial={{ width: 0 }}
               animate={{ width: `${progress}%` }}
               transition={{ duration: 0.2 }}

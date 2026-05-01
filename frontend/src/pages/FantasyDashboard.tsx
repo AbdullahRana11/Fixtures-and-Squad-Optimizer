@@ -36,7 +36,7 @@ const teamFilters = [
 function FilterPanel({ title, children }: { title: string, children: React.ReactNode }) {
   return (
     <section className="rounded-[32px] border border-white/5 bg-black/40 p-8 backdrop-blur-2xl shadow-3xl mb-8">
-      <h3 className="mb-6 inline-block bg-gradient-to-r from-emerald-300 via-teal-200 to-lime-200 bg-clip-text text-[10px] font-black uppercase tracking-[0.4em] text-transparent">
+      <h3 className="mb-6 inline-block bg-gradient-to-r from-emerald-300 via-emerald-200 to-lime-200 bg-clip-text text-[10px] font-black uppercase tracking-[0.4em] text-transparent">
         {title}
       </h3>
       {children}

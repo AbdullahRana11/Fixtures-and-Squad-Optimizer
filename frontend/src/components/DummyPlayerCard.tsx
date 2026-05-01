@@ -19,11 +19,11 @@ const rarityUI = {
     label: "✦ EPIC",
   },
   rare: {
-    color: "text-blue-500",
-    border: "border-blue-500/50",
-    bg: "bg-blue-500",
+    color: "text-green-500",
+    border: "border-green-500/50",
+    bg: "bg-green-500",
     glow: "shadow-[0_0_15px_rgba(59,130,246,0.5)]",
-    gradientTop: "from-blue-500/10",
+    gradientTop: "from-green-500/10",
     label: "♦ RARE",
   },
   common: {

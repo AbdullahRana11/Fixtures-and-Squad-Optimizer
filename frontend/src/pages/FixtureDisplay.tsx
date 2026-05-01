@@ -87,7 +87,7 @@ const FixtureDisplay: React.FC = () => {
         <div className="flex items-center justify-between gap-6 relative z-10">
           {/* Home Team */}
           <div className="flex-1 text-right">
-            <span className="text-white font-bold tracking-tight text-lg group-hover:text-teal-400 transition-colors">
+            <span className="text-white font-bold tracking-tight text-lg group-hover:text-emerald-400 transition-colors">
               {match.home}
             </span>
           </div>
@@ -105,7 +105,7 @@ const FixtureDisplay: React.FC = () => {
 
           {/* Away Team */}
           <div className="flex-1 text-left">
-            <span className="text-white font-bold tracking-tight text-lg group-hover:text-teal-400 transition-colors">
+            <span className="text-white font-bold tracking-tight text-lg group-hover:text-emerald-400 transition-colors">
               {match.away}
             </span>
           </div>
@@ -236,7 +236,7 @@ const FixtureDisplay: React.FC = () => {
     return (
       <div className="flex-1 flex flex-col items-center justify-center bg-void text-zinc-500 min-h-screen">
         <p className="text-lg font-open">No fixture data available.</p>
-        <button onClick={() => navigate('/fixtures')} className="mt-4 text-teal-600 font-semibold hover:underline">Back to Competitions</button>
+        <button onClick={() => navigate('/fixtures')} className="mt-4 text-emerald-600 font-semibold hover:underline">Back to Competitions</button>
       </div>
     );
   }
@@ -270,7 +270,7 @@ const FixtureDisplay: React.FC = () => {
             </div>
             <div className="flex items-center gap-4 text-xs font-semibold text-zinc-500 uppercase tracking-wider">
               <span className="flex items-center gap-1">
-                <Cpu className="w-3 h-3 text-teal-500" />
+                <Cpu className="w-3 h-3 text-emerald-500" />
                 {schedule.telemetry.total_rounds} Rounds
               </span>
             </div>
@@ -288,7 +288,7 @@ const FixtureDisplay: React.FC = () => {
           </button>
           <button 
             onClick={handleSaveToHistory}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold transition-all"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-all"
           >
             <Save className="w-4 h-4" />
             Commit Data
@@ -337,7 +337,7 @@ const FixtureDisplay: React.FC = () => {
               <div className="flex items-center gap-4 bg-zinc-900/60 rounded-lg px-4 py-1.5 border border-zinc-800">
                 <button 
                   onClick={() => setCurrentMW(Math.max(1, currentMW - 1))}
-                  className="p-1 hover:text-teal-400 text-zinc-400 transition-colors"
+                  className="p-1 hover:text-emerald-400 text-zinc-400 transition-colors"
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
@@ -347,7 +347,7 @@ const FixtureDisplay: React.FC = () => {
                 </div>
                 <button 
                   onClick={() => setCurrentMW(Math.min(schedule.totalMatchweeks, currentMW + 1))}
-                  className="p-1 hover:text-teal-400 text-zinc-400 transition-colors"
+                  className="p-1 hover:text-emerald-400 text-zinc-400 transition-colors"
                 >
                   <ChevronRight className="w-5 h-5" />
                 </button>
@@ -358,7 +358,7 @@ const FixtureDisplay: React.FC = () => {
                 <select 
                   value={selectedTeam}
                   onChange={(e) => setSelectedTeam(e.target.value)}
-                  className="bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2 text-sm font-semibold text-white focus:outline-none focus:border-teal-500 min-w-[200px]"
+                  className="bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2 text-sm font-semibold text-white focus:outline-none focus:border-emerald-500 min-w-[200px]"
                 >
                   <option value="all">Select Team</option>
                   {schedule.teams.map(t => (
@@ -372,7 +372,7 @@ const FixtureDisplay: React.FC = () => {
               <button 
                 onClick={handleOptimizeSquad}
                 disabled={optimizing}
-                className="flex items-center gap-2 px-6 py-2.5 rounded-lg bg-teal-600/10 border border-teal-600/30 text-xs font-bold text-teal-500 hover:bg-teal-600 hover:text-white transition-all disabled:opacity-50"
+                className="flex items-center gap-2 px-6 py-2.5 rounded-lg bg-emerald-600/10 border border-emerald-600/30 text-xs font-bold text-emerald-500 hover:bg-emerald-600 hover:text-white transition-all disabled:opacity-50"
               >
                 <Cpu className={`w-4 h-4 ${optimizing ? 'animate-spin' : ''}`} />
                 Optimize Squad
@@ -427,7 +427,7 @@ const FixtureDisplay: React.FC = () => {
                 </div>
               ) : (
                 <div className="space-y-4 relative pl-8 border-l border-zinc-800">
-                  <div className="absolute top-0 -left-1.5 w-3 h-3 rounded-full bg-teal-500" />
+                  <div className="absolute top-0 -left-1.5 w-3 h-3 rounded-full bg-emerald-500" />
                   
                   {teamFixturesTimeline.map((match, i) => (
                     <motion.div 
@@ -465,7 +465,7 @@ const FixtureDisplay: React.FC = () => {
                           <span className={`text-base font-bold ${match.home === selectedTeam ? 'text-white' : 'text-zinc-400'}`}>{match.home}</span>
                           <div className="flex items-center gap-4 mx-4">
                             <div className="w-8 h-[1px] bg-zinc-700" />
-                            <span className="text-[10px] font-bold text-zinc-600 group-hover:text-teal-500 transition-colors">VS</span>
+                            <span className="text-[10px] font-bold text-zinc-600 group-hover:text-emerald-500 transition-colors">VS</span>
                             <div className="w-8 h-[1px] bg-zinc-700" />
                           </div>
                           <span className={`text-base font-bold ${match.away === selectedTeam ? 'text-white' : 'text-zinc-400'}`}>{match.away}</span>
@@ -498,7 +498,7 @@ const FixtureDisplay: React.FC = () => {
             >
               <div className="p-6 rounded-xl border border-zinc-700 bg-zinc-800">
                 <div className="flex items-center gap-2 mb-6">
-                  <div className="p-1.5 rounded-md bg-zinc-700 text-teal-400">
+                  <div className="p-1.5 rounded-md bg-zinc-700 text-emerald-400">
                     <Settings2 className="w-4 h-4" />
                   </div>
                   <h3 className="text-sm font-bold text-white">Reschedule Optimization</h3>
@@ -512,7 +512,7 @@ const FixtureDisplay: React.FC = () => {
                 
                 {loadingModify ? (
                   <div className="flex items-center gap-3 py-4">
-                    <div className="w-4 h-4 border-2 border-zinc-600 border-t-teal-500 rounded-full animate-spin" />
+                    <div className="w-4 h-4 border-2 border-zinc-600 border-t-emerald-500 rounded-full animate-spin" />
                     <p className="text-xs text-zinc-400 font-semibold">Analyzing alternative timelines...</p>
                   </div>
                 ) : modifySuggestions.length === 0 ? (
@@ -522,7 +522,7 @@ const FixtureDisplay: React.FC = () => {
                     {modifySuggestions.map((alt, i) => (
                       <div 
                         key={i} 
-                        className="p-4 rounded-lg border border-zinc-700 bg-zinc-900/50 hover:border-teal-500/50 transition-all cursor-pointer group"
+                        className="p-4 rounded-lg border border-zinc-700 bg-zinc-900/50 hover:border-emerald-500/50 transition-all cursor-pointer group"
                       >
                         <div className="flex items-center justify-between mb-2">
                           <p className="text-xs font-bold text-zinc-300">{alt.reason}</p>

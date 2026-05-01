@@ -127,7 +127,7 @@ const CompetitionCard: React.FC<{
   const tierColor = comp.tier === 'S'
     ? 'text-amber-500 bg-amber-500/10'
     : comp.tier === 'A'
-    ? 'text-teal-500 bg-teal-500/10'
+    ? 'text-emerald-500 bg-emerald-500/10'
     : 'text-zinc-400 bg-zinc-800';
 
   return (
@@ -152,7 +152,7 @@ const CompetitionCard: React.FC<{
     >
       <div
         className={`w-full h-full relative rounded-2xl overflow-hidden cursor-pointer border-2 transition-all duration-300 ${
-          isShattering ? 'opacity-0 scale-150 pointer-events-none' : isHovered ? 'border-teal-500 shadow-lg shadow-teal-500/10' : 'border-zinc-800'
+          isShattering ? 'opacity-0 scale-150 pointer-events-none' : isHovered ? 'border-emerald-500 shadow-lg shadow-emerald-500/10' : 'border-zinc-800'
         }`}
         onMouseEnter={() => !isShattering && setHoveredId(comp.id)}
         onMouseLeave={() => !isShattering && setHoveredId(null)}
@@ -207,7 +207,7 @@ const CompetitionCard: React.FC<{
                   exit={{ opacity: 0, height: 0, marginTop: 0 }}
                   className="overflow-hidden"
                 >
-                  <button className="w-full py-3 rounded-lg bg-teal-600 text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-teal-700 transition-colors">
+                  <button className="w-full py-3 rounded-lg bg-emerald-600 text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-emerald-700 transition-colors">
                     Select Competition <ChevronRight className="w-4 h-4" />
                   </button>
                 </motion.div>

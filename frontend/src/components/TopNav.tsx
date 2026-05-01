@@ -21,7 +21,7 @@ export default function TopNav({ activeView, onChange }: { activeView: string, o
 
         <div className="mr-auto flex items-center gap-2 md:gap-4 truncate">
           <img src={logo} alt="PSL Logo" className="h-8 w-auto md:h-12 object-contain drop-shadow-lg shrink-0" />
-          <p className="bg-gradient-to-r from-emerald-300 via-teal-200 to-lime-200 bg-clip-text text-xs md:text-sm font-extrabold uppercase tracking-[0.1em] md:tracking-[0.2em] text-transparent drop-shadow-sm lg:text-lg truncate">
+          <p className="bg-gradient-to-r from-emerald-300 via-emerald-200 to-lime-200 bg-clip-text text-xs md:text-sm font-extrabold uppercase tracking-[0.1em] md:tracking-[0.2em] text-transparent drop-shadow-sm lg:text-lg truncate">
             PSL Fantasy League
           </p>
         </div>

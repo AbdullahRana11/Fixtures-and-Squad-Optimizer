@@ -196,7 +196,7 @@ const FACupBracketPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#02040A] text-white selection:bg-teal-500/30 relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#02040A] text-white selection:bg-emerald-500/30 relative overflow-x-hidden">
       {/* Immersive Background */}
       <div className="fixed inset-0 z-0">
         <Hyperspeed 
@@ -227,8 +227,8 @@ const FACupBracketPage: React.FC = () => {
       >
         <div className="max-w-[1800px] mx-auto px-12 py-8 flex items-center justify-between">
           <div className="flex items-center gap-10">
-            <button onClick={() => navigate('/fixtures')} className="p-4 rounded-2xl border border-white/5 hover:border-teal-500/30 transition-all bg-white/[0.02] group">
-              <ArrowLeft className="w-5 h-5 text-white/20 group-hover:text-teal-400" />
+            <button onClick={() => navigate('/fixtures')} className="p-4 rounded-2xl border border-white/5 hover:border-emerald-500/30 transition-all bg-white/[0.02] group">
+              <ArrowLeft className="w-5 h-5 text-white/20 group-hover:text-emerald-400" />
             </button>
             <div>
               <div className="flex items-center gap-3 mb-2">
@@ -276,11 +276,11 @@ const FACupBracketPage: React.FC = () => {
               <button
                 key={round.shortName}
                 onClick={() => { setActiveRound(i); setRevealedWinners(new Set()); setIntelLog([]); }}
-                className={`relative h-full px-4 text-[10px] font-black uppercase tracking-[0.5em] transition-all ${isActive ? 'text-teal-400' : 'text-white/10 hover:text-white/40'}`}
+                className={`relative h-full px-4 text-[10px] font-black uppercase tracking-[0.5em] transition-all ${isActive ? 'text-emerald-400' : 'text-white/10 hover:text-white/40'}`}
               >
                 {round.name}
                 {isActive && (
-                  <motion.div layoutId="round-active-fa" className="absolute bottom-0 left-0 right-0 h-0.5 bg-teal-400 shadow-[0_0_15px_rgba(45,212,191,0.5)]" />
+                  <motion.div layoutId="round-active-fa" className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-400 shadow-[0_0_15px_rgba(45,212,191,0.5)]" />
                 )}
               </button>
             );
@@ -319,7 +319,7 @@ const FACupBracketPage: React.FC = () => {
                         transition={{ delay: i * 0.05 }}
                         onClick={() => handleMatchStats(match)}
                         className={`relative p-8 rounded-[2rem] border transition-all cursor-pointer group overflow-hidden ${
-                          isRevealed ? 'bg-teal-500/5 border-teal-500/30' : 'bg-black/60 border-white/5 backdrop-blur-2xl'
+                          isRevealed ? 'bg-emerald-500/5 border-emerald-500/30' : 'bg-black/60 border-white/5 backdrop-blur-2xl'
                         }`}
                       >
                         <div className="hud-corner hud-corner-tl opacity-20 group-hover:opacity-100 transition-opacity" />
@@ -327,7 +327,7 @@ const FACupBracketPage: React.FC = () => {
 
                         <div className="flex justify-between items-center mb-8 opacity-20 text-[9px] font-black uppercase tracking-[0.4em]">
                           <span className="flex items-center gap-2"><Cpu className="w-3 h-3" /> MATCH {match.matchNumber}</span>
-                          <span className="group-hover:text-teal-400 transition-colors uppercase">Tap for Intel</span>
+                          <span className="group-hover:text-emerald-400 transition-colors uppercase">Tap for Intel</span>
                         </div>
 
                         <div className="space-y-6">
@@ -340,7 +340,7 @@ const FACupBracketPage: React.FC = () => {
                                 {match.home.name}
                               </span>
                             </div>
-                            {isRevealed && isHomeWin && <Trophy className="w-5 h-5 text-teal-400 drop-shadow-[0_0_10px_rgba(45,212,191,0.5)]" fill="currentColor" />}
+                            {isRevealed && isHomeWin && <Trophy className="w-5 h-5 text-emerald-400 drop-shadow-[0_0_10px_rgba(45,212,191,0.5)]" fill="currentColor" />}
                           </div>
 
                           <div className="h-px bg-white/5" />
@@ -354,7 +354,7 @@ const FACupBracketPage: React.FC = () => {
                                 {match.away.name}
                               </span>
                             </div>
-                            {isRevealed && isAwayWin && <Trophy className="w-5 h-5 text-teal-400 drop-shadow-[0_0_10px_rgba(45,212,191,0.5)]" fill="currentColor" />}
+                            {isRevealed && isAwayWin && <Trophy className="w-5 h-5 text-emerald-400 drop-shadow-[0_0_10px_rgba(45,212,191,0.5)]" fill="currentColor" />}
                           </div>
                         </div>
 
