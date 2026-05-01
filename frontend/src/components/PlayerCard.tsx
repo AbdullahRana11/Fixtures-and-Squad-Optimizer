@@ -74,9 +74,20 @@ export default function PlayerCard({ player, isActive = false, compact = false, 
   const safeClub = player?.club || "Unattached";
   const safePos = player?.position || "ANY";
   const safeId = player?.id || "000";
+  const isCustom = typeof safeId === 'string' && safeId.startsWith('custom_');
 
   const rarityKey = getRarity(cost);
-  const rarity = rarityUI[rarityKey as keyof typeof rarityUI] || rarityUI.common;
+  const baseRarity = rarityUI[rarityKey as keyof typeof rarityUI] || rarityUI.common;
+
+  // Custom (injected) players get a Cyber Purple override
+  const rarity = isCustom ? {
+    color: 'text-purple-400',
+    border: 'border-purple-500/50',
+    bg: 'bg-purple-500',
+    glow: 'shadow-[0_0_15px_rgba(176,38,255,0.6)]',
+    gradientTop: 'from-purple-500/10',
+    label: '⚡ INJECTED',
+  } : baseRarity;
 
   function handleMouseMove(event: React.MouseEvent) {
     if (!cardRef.current) return;
@@ -115,7 +126,9 @@ export default function PlayerCard({ player, isActive = false, compact = false, 
         transformStyle: "preserve-3d",
         willChange: "transform",
       }}
-      className={`group relative flex flex-col justify-between overflow-hidden cursor-pointer rounded-sm border border-white/5 bg-[#0a0a0c] hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] z-20 ${
+      className={`group relative flex flex-col justify-between overflow-hidden cursor-pointer rounded-sm border bg-[#0a0a0c] hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] z-20 ${
+        isCustom ? "border-purple-500/40 shadow-[0_0_25px_rgba(176,38,255,0.35)]" : "border-white/5"
+      } ${
         isActive ? "border-emerald-400/50 shadow-[0_0_30px_rgba(52,211,153,0.3)]" : ""
       } ${className} ${compact ? "w-[150px] h-[240px] lg:w-[180px] lg:h-[290px]" : "w-[260px] h-[400px]"}`}
     >
@@ -133,9 +146,15 @@ export default function PlayerCard({ player, isActive = false, compact = false, 
            <span className={`px-2 py-0.5 text-[7px] lg:text-[9px] font-bold border rounded-full ${rarity.border} ${rarity.color} ${rarity.glow} tracking-widest bg-[#0a0a0c]`}>
              {rarity.label}
            </span>
-           <span className="text-[8px] lg:text-[10px] text-zinc-500 font-mono tracking-wider bg-[#0a0a0c]/80 px-1 rounded backdrop-blur">
-             #{String(safeId).padStart(3, '0')}
-           </span>
+           {isCustom ? (
+              <span className="text-[7px] lg:text-[9px] font-black text-purple-400 uppercase tracking-widest bg-purple-500/10 border border-purple-500/30 px-1.5 py-0.5 rounded-full animate-pulse">
+                INJECTED
+              </span>
+            ) : (
+              <span className="text-[8px] lg:text-[10px] text-zinc-500 font-mono tracking-wider bg-[#0a0a0c]/80 px-1 rounded backdrop-blur">
+                #{String(safeId).padStart(3, '0')}
+              </span>
+            )}
         </div>
         
         <div 
