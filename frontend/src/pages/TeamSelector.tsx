@@ -204,7 +204,7 @@ const TeamSelector: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#030408] text-white relative overflow-hidden">
+    <div className="min-h-screen bg-black text-white relative overflow-hidden">
       {/* Immersive Background */}
       <div className="fixed inset-0 z-0">
         <Hyperspeed 
@@ -237,7 +237,7 @@ const TeamSelector: React.FC = () => {
           <div className="flex items-center gap-4">
             <button
               onClick={() => navigate('/fixtures')}
-              className="p-2 rounded-lg border border-white/10 hover:border-white/30 transition-colors"
+              className="p-2 rounded-lg border border-white/5 hover:border-white/30 transition-colors"
             >
               <ArrowLeft className="w-5 h-5 text-white/50" />
             </button>
@@ -255,7 +255,7 @@ const TeamSelector: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-4">
-            <div className={`px-4 py-2 rounded-xl border ${canGenerate ? 'border-indigo-500/50 bg-indigo-500/10' : 'border-white/10'} transition-colors`}>
+            <div className={`px-4 py-2 rounded-xl border ${canGenerate ? 'border-indigo-500/50 bg-indigo-500/10' : 'border-white/5'} transition-colors`}>
               <span className={`text-lg font-bold ${canGenerate ? 'text-indigo-400' : 'text-white/50'}`}>
                 {selected.size}
               </span>
@@ -321,7 +321,7 @@ const TeamSelector: React.FC = () => {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search teams or cities..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-indigo-500/50 transition-colors"
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/5 border border-white/5 text-white text-sm focus:outline-none focus:border-indigo-500/50 transition-colors"
           />
         </div>
 
@@ -421,7 +421,7 @@ const TeamSelector: React.FC = () => {
                         <p className="text-[9px] text-white/20 mt-0.5 uppercase font-mono tracking-widest">{team.league}</p>
                       </div>
                       <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all ${
-                        isSelected ? 'border-indigo-400 bg-indigo-500' : 'border-white/10 bg-white/5'
+                        isSelected ? 'border-indigo-400 bg-indigo-500' : 'border-white/5 bg-white/5'
                       }`}>
                         {isSelected && <Check className="w-3 h-3 text-black" strokeWidth={4} />}
                       </div>
@@ -460,7 +460,7 @@ const TeamSelector: React.FC = () => {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="w-full max-w-lg bg-[#0D0F16] border border-white/10 rounded-2xl p-8 overflow-hidden relative shadow-2xl"
+              className="w-full max-w-lg bg-black border border-white/5 rounded-2xl p-8 overflow-hidden relative shadow-2xl"
             >
               <div className="absolute top-0 right-0 p-4">
                 <button onClick={() => setShowStageModal(false)} className="text-white/20 hover:text-white transition-colors">✕</button>
@@ -479,7 +479,7 @@ const TeamSelector: React.FC = () => {
                   onClick={() => handleGenerate('ucl-league')}
                   disabled={selected.size !== 36}
                   className={`p-6 rounded-xl border text-left transition-all group ${
-                    selected.size === 36 ? 'border-white/10 hover:border-green-500/50 hover:bg-green-500/5' : 'opacity-30 cursor-not-allowed border-white/5 bg-white/[0.02]'
+                    selected.size === 36 ? 'border-white/5 hover:border-green-500/50 hover:bg-green-500/5' : 'opacity-30 cursor-not-allowed border-white/5 bg-white/[0.02]'
                   }`}
                 >
                   <div className="flex justify-between items-start mb-2">
@@ -493,7 +493,7 @@ const TeamSelector: React.FC = () => {
                   onClick={() => handleGenerate('ucl-knockout')}
                   disabled={selected.size !== 24}
                   className={`p-6 rounded-xl border text-left transition-all group ${
-                    selected.size === 24 ? 'border-white/10 hover:border-indigo-500/50 hover:bg-indigo-500/5' : 'opacity-30 cursor-not-allowed border-white/5 bg-white/[0.02]'
+                    selected.size === 24 ? 'border-white/5 hover:border-indigo-500/50 hover:bg-indigo-500/5' : 'opacity-30 cursor-not-allowed border-white/5 bg-white/[0.02]'
                   }`}
                 >
                   <div className="flex justify-between items-start mb-2">
@@ -521,7 +521,7 @@ const TeamSelector: React.FC = () => {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="w-full max-w-2xl bg-[#0D0F16] border border-emerald-500/20 rounded-2xl p-8 overflow-hidden relative shadow-2xl tactical-glass"
+              className="w-full max-w-2xl bg-black border border-emerald-500/20 rounded-2xl p-8 overflow-hidden relative shadow-2xl tactical-glass"
             >
               <div className="neon-scanline opacity-10" />
               <div className="absolute top-0 right-0 p-4">
@@ -560,7 +560,7 @@ const TeamSelector: React.FC = () => {
                         <span className="font-bold text-lg text-white group-hover:text-emerald-400 transition-colors">
                           {tournament.name}
                         </span>
-                        <span className="px-2 py-0.5 rounded text-[8px] font-black uppercase bg-white/5 text-white/40 border border-white/10">
+                        <span className="px-2 py-0.5 rounded text-[8px] font-black uppercase bg-white/5 text-white/40 border border-white/5">
                           {tournament.type}
                         </span>
                       </div>

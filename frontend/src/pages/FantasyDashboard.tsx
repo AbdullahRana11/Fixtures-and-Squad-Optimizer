@@ -78,7 +78,7 @@ export default function FantasyDashboard() {
                  <button 
                    key={team.id}
                    onClick={() => setFilterTeam(filterTeam === team.id ? null : team.id)}
-                   className={`flex h-16 items-center justify-center rounded-2xl border transition-all hover:scale-110 active:scale-95 ${filterTeam === team.id ? 'border-emerald-400 bg-emerald-400/20 shadow-glow' : 'border-white/10 bg-black/60 p-3'}`}
+                   className={`flex h-16 items-center justify-center rounded-2xl border transition-all hover:scale-110 active:scale-95 ${filterTeam === team.id ? 'border-emerald-400 bg-emerald-400/20 shadow-glow' : 'border-white/5 bg-black/60 p-3'}`}
                  >
                    <img src={team.logo} alt={team.id} className="h-full w-full object-contain" />
                  </button>
@@ -121,7 +121,7 @@ export default function FantasyDashboard() {
                    <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.5em] mt-4">Global Network Active</p>
                 </div>
              </div>
-             <div className="bg-white/5 border border-white/10 px-10 py-6 rounded-[32px] backdrop-blur-xl text-center shadow-2xl">
+             <div className="bg-white/5 border border-white/5 px-10 py-6 rounded-[32px] backdrop-blur-xl text-center shadow-2xl">
                 <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mb-1">Total Assets</p>
                 <p className="text-4xl font-black text-white italic tracking-tighter">{filteredPlayers.length} SCOUTED</p>
              </div>

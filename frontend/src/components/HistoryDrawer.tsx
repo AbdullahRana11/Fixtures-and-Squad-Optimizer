@@ -80,7 +80,7 @@ const HistoryDrawer: React.FC<HistoryDrawerProps> = ({ isOpen, onClose, onView }
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed top-0 right-0 h-full w-full max-w-md bg-[#0D0F16] border-l border-white/10 z-[101] shadow-2xl flex flex-col"
+            className="fixed top-0 right-0 h-full w-full max-w-md bg-black border-l border-white/5 z-[101] shadow-2xl flex flex-col"
           >
             {/* Header */}
             <div className="p-6 border-b border-white/5 bg-black/20 flex items-center justify-between">
@@ -109,7 +109,7 @@ const HistoryDrawer: React.FC<HistoryDrawerProps> = ({ isOpen, onClose, onView }
                   placeholder="Filter by name or team..."
                   value={searchTerm}
                   onChange={e => setSearchTerm(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-sm focus:border-indigo-500/50 outline-none transition-all"
+                  className="w-full bg-white/5 border border-white/5 rounded-lg pl-10 pr-4 py-2 text-sm focus:border-indigo-500/50 outline-none transition-all"
                 />
               </div>
               <div className="flex gap-2">
@@ -118,7 +118,7 @@ const HistoryDrawer: React.FC<HistoryDrawerProps> = ({ isOpen, onClose, onView }
                   <select
                     value={sourceFilter}
                     onChange={e => setSourceFilter(e.target.value)}
-                    className="w-full bg-white/5 border border-white/10 rounded-lg pl-8 pr-2 py-1.5 text-[10px] uppercase font-bold outline-none appearance-none"
+                    className="w-full bg-white/5 border border-white/5 rounded-lg pl-8 pr-2 py-1.5 text-[10px] uppercase font-bold outline-none appearance-none"
                   >
                     <option value="all">All Sources</option>
                     <option value="UCL">UCL</option>
@@ -130,7 +130,7 @@ const HistoryDrawer: React.FC<HistoryDrawerProps> = ({ isOpen, onClose, onView }
                   <select
                     value={sortBy}
                     onChange={e => setSortBy(e.target.value as any)}
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-[10px] uppercase font-bold outline-none appearance-none"
+                    className="w-full bg-white/5 border border-white/5 rounded-lg px-2 py-1.5 text-[10px] uppercase font-bold outline-none appearance-none"
                   >
                     <option value="date">Newest First</option>
                     <option value="name">Name A-Z</option>
@@ -178,7 +178,7 @@ const HistoryDrawer: React.FC<HistoryDrawerProps> = ({ isOpen, onClose, onView }
                       </button>
                       <button
                         onClick={() => exportJSON(item)}
-                        className="w-10 h-10 flex items-center justify-center bg-white/5 border border-white/10 rounded-lg hover:border-white/30 transition-all text-white/50"
+                        className="w-10 h-10 flex items-center justify-center bg-white/5 border border-white/5 rounded-lg hover:border-white/30 transition-all text-white/50"
                       >
                         <Download className="w-4 h-4" />
                       </button>

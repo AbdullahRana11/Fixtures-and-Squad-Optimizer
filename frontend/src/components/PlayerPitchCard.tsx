@@ -21,7 +21,7 @@ const PlayerPitchCard: React.FC<PlayerPitchCardProps> = ({ player, positionLabel
     <motion.div
       className={`w-28 h-32 rounded-lg border flex flex-col items-center justify-between p-3 transition-all duration-300 backdrop-blur-sm ${
         player 
-          ? 'bg-obsidian/80 border-white/10 shadow-[0_0_15px_rgba(0,0,0,0.2)]' 
+          ? 'bg-obsidian/80 border-white/5 shadow-[0_0_15px_rgba(0,0,0,0.2)]' 
           : 'bg-white/5 border-dashed border-white/5'
       }`}
       initial={player ? { opacity: 0, scale: 0.8 } : {}}

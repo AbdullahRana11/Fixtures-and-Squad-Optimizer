@@ -26,7 +26,7 @@ const TelemetrySidebar: React.FC<TelemetrySidebarProps> = ({
 
   return (
     <motion.aside 
-      className="w-72 bg-white/5 backdrop-blur-xl border-l border-white/10 flex flex-col p-6 h-full shadow-2xl"
+      className="w-72 bg-white/5 backdrop-blur-xl border-l border-white/5 flex flex-col p-6 h-full shadow-2xl"
       initial={{ x: 288 }}
       animate={{ x: 0 }}
       transition={{ type: "spring", damping: 25, stiffness: 200 }}

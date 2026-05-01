@@ -259,7 +259,7 @@ const CustomGenerator: React.FC = () => {
         <input 
           type="text" value={settings.name} 
           onChange={e => setSettings({...settings, name: e.target.value})} 
-          className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-lg text-white font-black italic tracking-tight focus:border-emerald-500/50 outline-none transition-all shadow-[inset_0_0_20px_rgba(45,212,191,0.05)]"
+          className="w-full bg-white/5 border border-white/5 rounded-2xl px-6 py-4 text-lg text-white font-black italic tracking-tight focus:border-emerald-500/50 outline-none transition-all shadow-[inset_0_0_20px_rgba(45,212,191,0.05)]"
           placeholder="ENTER TITLE..."
         />
       </div>
@@ -271,7 +271,7 @@ const CustomGenerator: React.FC = () => {
             <Trophy className="absolute left-4 top-1/2 -tranzinc-y-1/2 w-4 h-4 text-emerald-400" />
             <select 
               value={settings.format} onChange={e => setSettings({...settings, format: e.target.value as Format})}
-              className="w-full bg-black border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-sm font-bold text-white appearance-none outline-none group-hover:border-white/30 transition-all cursor-pointer"
+              className="w-full bg-black border border-white/5 rounded-2xl pl-12 pr-4 py-4 text-sm font-bold text-white appearance-none outline-none group-hover:border-white/30 transition-all cursor-pointer"
             >
               <option value="round_robin">Round Robin (League)</option>
               <option value="knockout">Knockout (Bracket)</option>
@@ -287,7 +287,7 @@ const CustomGenerator: React.FC = () => {
             <input 
               type="number" min={2} max={128} value={settings.teamCount} 
               onChange={e => setSettings({...settings, teamCount: parseInt(e.target.value) || 2})}
-              className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-sm font-bold text-white outline-none"
+              className="w-full bg-white/5 border border-white/5 rounded-2xl pl-12 pr-4 py-4 text-sm font-bold text-white outline-none"
             />
           </div>
         </div>
@@ -300,7 +300,7 @@ const CustomGenerator: React.FC = () => {
             {[1, 2].map(l => (
               <button 
                 key={l} onClick={() => setSettings({...settings, legs: l})}
-                className={`p-4 rounded-2xl border transition-all flex flex-col items-center gap-1 ${settings.legs === l ? 'bg-emerald-500/10 border-emerald-500 text-emerald-400 shadow-[0_0_20px_rgba(45,212,191,0.2)]' : 'bg-white/5 border-white/10 text-white/30 hover:border-white/30'}`}
+                className={`p-4 rounded-2xl border transition-all flex flex-col items-center gap-1 ${settings.legs === l ? 'bg-emerald-500/10 border-emerald-500 text-emerald-400 shadow-[0_0_20px_rgba(45,212,191,0.2)]' : 'bg-white/5 border-white/5 text-white/30 hover:border-white/30'}`}
               >
                 <span className="text-xs font-black uppercase tracking-widest">{l === 1 ? 'Single Leg' : 'Double Leg'}</span>
                 <span className="text-[9px] font-bold opacity-60">{l === 1 ? 'Play each team once' : 'Home & Away fixtures'}</span>
@@ -386,13 +386,13 @@ const CustomGenerator: React.FC = () => {
           <label className="text-[10px] uppercase font-black text-white/30 tracking-widest flex items-center gap-2">
             <Calendar className="w-3 h-3" /> Start Date
           </label>
-          <input type="date" value={settings.startDate} onChange={e => setSettings({...settings, startDate: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white outline-none focus:border-emerald-500/50" />
+          <input type="date" value={settings.startDate} onChange={e => setSettings({...settings, startDate: e.target.value})} className="w-full bg-white/5 border border-white/5 rounded-2xl px-6 py-4 text-white outline-none focus:border-emerald-500/50" />
         </div>
         <div className="space-y-3">
           <label className="text-[10px] uppercase font-black text-white/30 tracking-widest flex items-center gap-2">
              <Layout className="w-3 h-3" /> Days per Round
           </label>
-          <input type="number" value={settings.matchFrequency} onChange={e => setSettings({...settings, matchFrequency: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white outline-none focus:border-emerald-500/50" />
+          <input type="number" value={settings.matchFrequency} onChange={e => setSettings({...settings, matchFrequency: e.target.value})} className="w-full bg-white/5 border border-white/5 rounded-2xl px-6 py-4 text-white outline-none focus:border-emerald-500/50" />
         </div>
       </div>
 
@@ -421,7 +421,7 @@ const CustomGenerator: React.FC = () => {
             <p className="text-xs font-mono text-emerald-500/60 font-bold">#{settings.seed}</p>
           </div>
          <div className="text-right">
-            <button onClick={() => setSettings({...settings, seed: Math.floor(Math.random() * 999999) + 1})} className="p-2 rounded-lg bg-white/5 border border-white/10 text-white/30 hover:text-white transition-all">
+            <button onClick={() => setSettings({...settings, seed: Math.floor(Math.random() * 999999) + 1})} className="p-2 rounded-lg bg-white/5 border border-white/5 text-white/30 hover:text-white transition-all">
               <RefreshCw className="w-4 h-4" />
             </button>
          </div>
@@ -446,7 +446,7 @@ const CustomGenerator: React.FC = () => {
           <h3 className="text-2xl font-black text-white uppercase italic tracking-tighter">{settings.name}</h3>
           <div className="flex gap-2 mt-2">
             <span className="text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-black uppercase tracking-widest">{settings.format.replace('_', ' ')}</span>
-            <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-white/40 font-black uppercase tracking-widest">{settings.legs} Leg(s)</span>
+            <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/5 border border-white/5 text-white/40 font-black uppercase tracking-widest">{settings.legs} Leg(s)</span>
           </div>
         </div>
         <div className="text-right">
@@ -533,10 +533,10 @@ const CustomGenerator: React.FC = () => {
         <button onClick={saveToHistoryAndExport} className="col-span-2 py-5 rounded-3xl bg-emerald-500 text-black font-black uppercase text-xs tracking-widest hover:bg-emerald-400 shadow-lg shadow-emerald-500/20 transition-all flex items-center justify-center gap-3">
           <Check className="w-5 h-5" /> Save Tournament
         </button>
-        <button onClick={handleExportCSV} className="py-5 rounded-3xl bg-white/5 border border-white/10 text-white font-black uppercase text-[10px] tracking-widest hover:bg-white/10 transition-all flex flex-col items-center gap-1 justify-center">
+        <button onClick={handleExportCSV} className="py-5 rounded-3xl bg-white/5 border border-white/5 text-white font-black uppercase text-[10px] tracking-widest hover:bg-white/10 transition-all flex flex-col items-center gap-1 justify-center">
           <FileType className="w-4 h-4 text-white/40" /> CSV
         </button>
-        <button onClick={handleExportJSON} className="py-5 rounded-3xl bg-white/5 border border-white/10 text-white font-black uppercase text-[10px] tracking-widest hover:bg-white/10 transition-all flex flex-col items-center gap-1 justify-center">
+        <button onClick={handleExportJSON} className="py-5 rounded-3xl bg-white/5 border border-white/5 text-white font-black uppercase text-[10px] tracking-widest hover:bg-white/10 transition-all flex flex-col items-center gap-1 justify-center">
           <FileJson className="w-4 h-4 text-white/40" /> JSON
         </button>
       </div>
@@ -556,7 +556,7 @@ const CustomGenerator: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-[#02040A] relative overflow-hidden flex items-center justify-center p-6 perspective-[1500px]">
+    <div className="min-h-screen bg-black relative overflow-hidden flex items-center justify-center p-6 perspective-[1500px]">
       {/* Immersive Background */}
       <div className="fixed inset-0 z-0">
         <div className="absolute inset-0 z-0 opacity-40">
@@ -581,7 +581,7 @@ const CustomGenerator: React.FC = () => {
              }} 
            />
         </div>
-        <div className="absolute inset-0 bg-[#02040A]/60 backdrop-blur-[2px] pointer-events-none" />
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px] pointer-events-none" />
         
         {/* Advanced Tactical Grid */}
         <div className="absolute inset-0 opacity-20 pointer-events-none" 
@@ -680,7 +680,7 @@ const CustomGenerator: React.FC = () => {
                   setStep(s => Math.max(1, s-1));
                 }} 
                 disabled={step === 1}
-                className="flex items-center gap-2 px-6 md:px-8 py-3 md:py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-black uppercase text-xs tracking-widest hover:bg-white/10 disabled:opacity-10 transition-all cursor-pointer relative z-[70]"
+                className="flex items-center gap-2 px-6 md:px-8 py-3 md:py-4 rounded-2xl bg-white/5 border border-white/5 text-white font-black uppercase text-xs tracking-widest hover:bg-white/10 disabled:opacity-10 transition-all cursor-pointer relative z-[70]"
               >
                 Previous
               </button>
@@ -735,7 +735,7 @@ const CustomGenerator: React.FC = () => {
                     <p className="text-[10px] text-emerald-400 font-mono italic opacity-60 tracking-widest">EXECUTING TOURNAMENT LOGIC v4.0.2</p>
                   </div>
 
-                  <div className="bg-black/60 border border-white/10 rounded-2xl p-6 h-48 overflow-hidden relative">
+                  <div className="bg-black/60 border border-white/5 rounded-2xl p-6 h-48 overflow-hidden relative">
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent pointer-events-none z-10" />
                     <div className="space-y-2">
                        {commandLog.map((log, i) => (

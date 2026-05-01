@@ -72,7 +72,7 @@ const FixtureDisplay: React.FC = () => {
     >
       <div 
         onClick={onClick}
-        className="p-5 rounded-xl border border-zinc-800 bg-zinc-900/50 hover:bg-zinc-800 cursor-pointer transition-all group overflow-hidden relative shadow-sm hover:shadow-md"
+        className="p-5 rounded-xl border border-zinc-800 bg-black/50 hover:bg-zinc-800 cursor-pointer transition-all group overflow-hidden relative shadow-sm hover:shadow-md"
         style={{
           borderTopColor: match.is_derby ? colors.primary : '',
           borderTopWidth: match.is_derby ? '2px' : '1px'
@@ -252,7 +252,7 @@ const FixtureDisplay: React.FC = () => {
       <div className="absolute inset-0 z-0 opacity-5 bg-[url('/noise.svg')]" />
 
       {/* Header Bar */}
-      <header className="relative z-20 px-8 py-6 flex flex-col md:flex-row items-start md:items-center justify-between border-b border-zinc-800 bg-zinc-900/40">
+      <header className="relative z-20 px-8 py-6 flex flex-col md:flex-row items-start md:items-center justify-between border-b border-zinc-800 bg-black/40">
         <div className="flex items-center gap-6 mb-4 md:mb-0">
           <button 
             onClick={() => navigate('/fixtures')}
@@ -307,9 +307,9 @@ const FixtureDisplay: React.FC = () => {
       </header>
 
       {/* Control Center */}
-      <div className="relative z-20 px-8 py-6 bg-zinc-950/20 border-b border-zinc-800">
+      <div className="relative z-20 px-8 py-6 bg-black/20 border-b border-zinc-800">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          <div className="flex items-center gap-2 bg-zinc-900/60 p-1 rounded-lg border border-zinc-800">
+          <div className="flex items-center gap-2 bg-black/60 p-1 rounded-lg border border-zinc-800">
             <button 
               onClick={() => setViewMode('matchweek')}
               className={`px-4 py-2 rounded-md text-xs font-bold uppercase tracking-wider transition-all ${
@@ -334,7 +334,7 @@ const FixtureDisplay: React.FC = () => {
 
           <div className="flex items-center gap-6">
             {viewMode === 'matchweek' ? (
-              <div className="flex items-center gap-4 bg-zinc-900/60 rounded-lg px-4 py-1.5 border border-zinc-800">
+              <div className="flex items-center gap-4 bg-black/60 rounded-lg px-4 py-1.5 border border-zinc-800">
                 <button 
                   onClick={() => setCurrentMW(Math.max(1, currentMW - 1))}
                   className="p-1 hover:text-emerald-400 text-zinc-400 transition-colors"
@@ -358,7 +358,7 @@ const FixtureDisplay: React.FC = () => {
                 <select 
                   value={selectedTeam}
                   onChange={(e) => setSelectedTeam(e.target.value)}
-                  className="bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2 text-sm font-semibold text-white focus:outline-none focus:border-emerald-500 min-w-[200px]"
+                  className="bg-black border border-zinc-700 rounded-lg px-4 py-2 text-sm font-semibold text-white focus:outline-none focus:border-emerald-500 min-w-[200px]"
                 >
                   <option value="all">Select Team</option>
                   {schedule.teams.map(t => (
@@ -406,7 +406,7 @@ const FixtureDisplay: React.FC = () => {
               </div>
 
               {matchweekFixtures.length === 0 && (
-                <div className="text-center py-20 bg-zinc-900/30 rounded-2xl border border-dashed border-zinc-700">
+                <div className="text-center py-20 bg-black/30 rounded-2xl border border-dashed border-zinc-700">
                   <Calendar className="w-12 h-12 text-zinc-600 mx-auto mb-4" />
                   <p className="text-zinc-400 font-semibold text-sm">Scanning for fixtures...</p>
                 </div>
@@ -421,7 +421,7 @@ const FixtureDisplay: React.FC = () => {
               className="max-w-3xl mx-auto"
             >
               {selectedTeam === 'all' ? (
-                <div className="text-center py-32 bg-zinc-900/30 rounded-2xl border border-dashed border-zinc-700">
+                <div className="text-center py-32 bg-black/30 rounded-2xl border border-dashed border-zinc-700">
                   <Filter className="w-12 h-12 text-zinc-600 mx-auto mb-4" />
                   <p className="text-zinc-400 font-semibold text-sm">Select a team to view their schedule</p>
                 </div>
@@ -449,7 +449,7 @@ const FixtureDisplay: React.FC = () => {
                       
                       <div 
                         onClick={() => handleMatchClick(match)}
-                        className="p-5 rounded-xl bg-zinc-900/50 border border-zinc-800 hover:bg-zinc-800 transition-all cursor-pointer group"
+                        className="p-5 rounded-xl bg-black/50 border border-zinc-800 hover:bg-zinc-800 transition-all cursor-pointer group"
                       >
                         <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center gap-2">
@@ -522,7 +522,7 @@ const FixtureDisplay: React.FC = () => {
                     {modifySuggestions.map((alt, i) => (
                       <div 
                         key={i} 
-                        className="p-4 rounded-lg border border-zinc-700 bg-zinc-900/50 hover:border-emerald-500/50 transition-all cursor-pointer group"
+                        className="p-4 rounded-lg border border-zinc-700 bg-black/50 hover:border-emerald-500/50 transition-all cursor-pointer group"
                       >
                         <div className="flex items-center justify-between mb-2">
                           <p className="text-xs font-bold text-zinc-300">{alt.reason}</p>

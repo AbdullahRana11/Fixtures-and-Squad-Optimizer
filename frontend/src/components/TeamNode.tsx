@@ -28,7 +28,7 @@ const TeamNode: React.FC<TeamNodeProps> = ({ team, status = 'default' }) => {
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-[10px] border border-white/10 ${
+          <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-[10px] border border-white/5 ${
             team.pot === 'A' ? 'bg-cyber-purple/10 text-cyber-purple' : 'bg-neon-aqua/10 text-neon-aqua'
           }`}>
             {team.country}

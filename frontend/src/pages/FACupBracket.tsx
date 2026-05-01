@@ -196,7 +196,7 @@ const FACupBracketPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#02040A] text-white selection:bg-emerald-500/30 relative overflow-x-hidden">
+    <div className="min-h-screen bg-black text-white selection:bg-emerald-500/30 relative overflow-x-hidden">
       {/* Immersive Background */}
       <div className="fixed inset-0 z-0">
         <Hyperspeed 

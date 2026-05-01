@@ -33,8 +33,8 @@ interface UCLBracket {
 }
 
 const THEME = {
-    primary: '#0052FF', // Deep Blue
-    bg: '#02040A',
+    primary: '#10b981', // Emerald instead of Blue
+    bg: '#000000',
 };
 
 const UCLBracketPage: React.FC = () => {
@@ -134,7 +134,7 @@ const UCLBracketPage: React.FC = () => {
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="relative z-10 flex flex-col items-center gap-8 p-12 rounded-3xl border border-zinc-800 bg-zinc-900/50 text-center max-w-md shadow-sm"
+                    className="relative z-10 flex flex-col items-center gap-8 p-12 rounded-3xl border border-zinc-800 bg-black/50 text-center max-w-md shadow-sm"
                 >
                     <div className="w-20 h-20 rounded-2xl bg-zinc-800 flex items-center justify-center">
                         <Trophy className="w-10 h-10 text-zinc-500" />
@@ -233,7 +233,7 @@ const UCLBracketPage: React.FC = () => {
             <div className="absolute inset-0 z-0 opacity-5 bg-[url('/noise.svg')]" />
 
             {/* Header */}
-            <header className="relative z-40 border-b border-zinc-800 bg-zinc-900/80 backdrop-blur-md">
+            <header className="relative z-40 border-b border-zinc-800 bg-black/80 backdrop-blur-md">
                 <div className="max-w-[1800px] mx-auto px-8 py-6 flex items-center justify-between">
                     <div className="flex items-center gap-6">
                         <button onClick={() => navigate('/fixtures')} className="p-3 rounded-full border border-zinc-700 hover:bg-zinc-800 transition-colors">
@@ -273,7 +273,7 @@ const UCLBracketPage: React.FC = () => {
             </header>
 
             {/* Rounds Navigation */}
-            <div className="relative z-30 bg-zinc-900/50 border-b border-zinc-800 overflow-x-auto">
+            <div className="relative z-30 bg-black/50 border-b border-zinc-800 overflow-x-auto">
                 <div className="max-w-[1800px] mx-auto px-8 h-14 flex items-center gap-8">
                     {bracket.rounds.map((round, idx) => (
                         <button
@@ -313,7 +313,7 @@ const UCLBracketPage: React.FC = () => {
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: i * 0.05 }}
                                     onClick={() => handleMatchStats(match)}
-                                    className={`relative p-6 rounded-xl border transition-all cursor-pointer group bg-zinc-900/50 ${
+                                    className={`relative p-6 rounded-xl border transition-all cursor-pointer group bg-black/50 ${
                                         isRevealed ? 'border-zinc-700 hover:border-emerald-500' : 'border-zinc-800'
                                     }`}
                                 >
@@ -368,7 +368,7 @@ const UCLBracketPage: React.FC = () => {
 
                 {/* Event Log Sidebar */}
                 <aside className="space-y-6">
-                    <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6">
+                    <div className="bg-black/50 border border-zinc-800 rounded-xl p-6">
                         <div className="flex items-center gap-3 mb-6">
                            <Activity className="w-5 h-5 text-emerald-500" />
                            <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-400">Match Events</h3>
@@ -400,7 +400,7 @@ const UCLBracketPage: React.FC = () => {
                     <motion.div
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
-                        className="mt-12 p-12 rounded-2xl border border-emerald-500/20 bg-emerald-900/20 text-center max-w-2xl mx-auto"
+                        className="mt-12 p-12 rounded-2xl border border-emerald-500/20 bg-black/40 text-center max-w-2xl mx-auto"
                     >
                         <Trophy className="w-20 h-20 text-emerald-500 mx-auto mb-6" />
                         <h2 className="text-5xl font-merriweather font-bold mb-4 text-white">

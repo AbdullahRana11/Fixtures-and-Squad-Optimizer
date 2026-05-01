@@ -179,7 +179,7 @@ const CompetitionCard: React.FC<{
             <span className={`text-xs font-bold px-2 py-1 rounded tracking-wider ${tierColor}`}>
               {comp.tier} TIER
             </span>
-            <div className={`p-2 rounded-lg bg-zinc-900/80 border border-zinc-700 text-zinc-300`}>
+            <div className={`p-2 rounded-lg bg-black/80 border border-zinc-700 text-zinc-300`}>
                 {comp.icon}
             </div>
           </div>
@@ -258,7 +258,7 @@ const CompetitionSelector: React.FC = () => {
       <div className="absolute inset-0 z-0 opacity-5 bg-[url('/noise.svg')] pointer-events-none" />
 
       {/* ── Top Nav Bar ── */}
-      <header className="relative z-50 h-20 border-b border-zinc-800 bg-zinc-900/80 backdrop-blur-md px-8 flex items-center justify-between">
+      <header className="relative z-50 h-20 border-b border-zinc-800 bg-black/80 backdrop-blur-md px-8 flex items-center justify-between">
         <button
           onClick={() => navigate('/')}
           className="flex items-center gap-2 px-4 py-2 rounded-lg border border-zinc-700 text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors text-sm font-semibold"

@@ -14,7 +14,7 @@ export default function TopNav({ activeView, onChange }: { activeView: string, o
         
         <button 
           onClick={() => navigate('/')} 
-          className="ui-hover-btn mr-4 lg:mr-16 flex h-12 w-12 md:h-16 md:w-16 shrink-0 items-center justify-center rounded-full border border-white/10 bg-black/30 backdrop-blur-md transition-all duration-300 hover:border-emerald-400/40 hover:bg-emerald-950/40"
+          className="ui-hover-btn mr-4 lg:mr-16 flex h-12 w-12 md:h-16 md:w-16 shrink-0 items-center justify-center rounded-full border border-white/5 bg-black/30 backdrop-blur-md transition-all duration-300 hover:border-emerald-400/40 hover:bg-emerald-950/40"
         >
           <Home className="h-5 w-5 md:h-8 md:w-8 text-zinc-300 transition-colors group-hover:text-emerald-300" />
         </button>
@@ -46,13 +46,13 @@ export default function TopNav({ activeView, onChange }: { activeView: string, o
 
         <div className="flex shrink-0 items-center gap-2 ml-4">
           <button 
-            className="ui-hover-btn md:hidden flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-black/30 backdrop-blur-md transition-all duration-300 hover:border-emerald-400/40"
+            className="ui-hover-btn md:hidden flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/5 bg-black/30 backdrop-blur-md transition-all duration-300 hover:border-emerald-400/40"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             {mobileMenuOpen ? <X className="h-5 w-5 text-zinc-300" /> : <Menu className="h-5 w-5 text-zinc-300" />}
           </button>
           
-          <button className="ui-hover-btn flex h-10 w-10 md:h-12 md:w-12 shrink-0 items-center justify-center rounded-full border border-white/10 bg-black/30 backdrop-blur-md transition-all duration-300 hover:border-emerald-400/40 hover:bg-emerald-950/40">
+          <button className="ui-hover-btn flex h-10 w-10 md:h-12 md:w-12 shrink-0 items-center justify-center rounded-full border border-white/5 bg-black/30 backdrop-blur-md transition-all duration-300 hover:border-emerald-400/40 hover:bg-emerald-950/40">
             <UserCircle2 className="h-5 w-5 md:h-6 md:w-6 text-zinc-300 transition-colors group-hover:text-emerald-300" />
           </button>
         </div>

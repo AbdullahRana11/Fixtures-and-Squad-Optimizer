@@ -195,7 +195,7 @@ const StatsPanel: React.FC<StatsPanelProps> = ({ prediction, isOpen, onClose, le
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: '100%', opacity: 0 }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="fixed right-0 top-0 bottom-0 w-full max-w-md z-50 bg-[#0A0B10] border-l border-white/5 overflow-y-auto"
+            className="fixed right-0 top-0 bottom-0 w-full max-w-md z-50 bg-black border-l border-white/5 overflow-y-auto"
           >
             {/* Header */}
             <div className="p-6 border-b border-white/5">
@@ -206,7 +206,7 @@ const StatsPanel: React.FC<StatsPanelProps> = ({ prediction, isOpen, onClose, le
                     Match Intelligence
                   </h2>
                 </div>
-                <button onClick={onClose} className="p-1.5 rounded-lg border border-white/10 hover:border-white/30 transition-colors">
+                <button onClick={onClose} className="p-1.5 rounded-lg border border-white/5 hover:border-white/30 transition-colors">
                   <X className="w-4 h-4 text-white/40" />
                 </button>
               </div>

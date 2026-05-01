@@ -33,7 +33,7 @@ const Home: React.FC = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="flex items-center gap-3 mb-8"
           >
-            <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-emerald-500 group-hover:bg-emerald-500 group-hover:text-black transition-colors duration-500">
+            <div className="w-12 h-12 rounded-full bg-white/5 border border-white/5 flex items-center justify-center text-emerald-500 group-hover:bg-emerald-500 group-hover:text-black transition-colors duration-500">
               <Calendar className="w-6 h-6" />
             </div>
             <span className="text-sm font-semibold tracking-widest uppercase text-zinc-600">Scheduling Engine</span>

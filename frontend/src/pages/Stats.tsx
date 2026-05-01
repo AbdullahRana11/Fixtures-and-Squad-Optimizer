@@ -9,7 +9,7 @@ import pslBackground from "../assets/pics/PSL-Background.png";
 function StatList({ title, rows, leftKey, rightKey, bgImage }: { title: string, rows: any[], leftKey: string, rightKey: string, bgImage?: string }) {
   return (
     <section 
-      className={`rounded-xl border border-white/10 p-4 shadow-lg ${!bgImage ? "bg-black/20 backdrop-blur-md" : ""}`}
+      className={`rounded-xl border border-white/5 p-4 shadow-lg ${!bgImage ? "bg-black/20 backdrop-blur-md" : ""}`}
       style={bgImage ? {
         backgroundImage: `linear-gradient(to bottom, rgba(5, 10, 6, 0.8), rgba(7, 11, 8, 0.9)), url(${bgImage})`,
         backgroundSize: "cover",

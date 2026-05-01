@@ -37,7 +37,7 @@ const teamFilters = [
 
 function FilterPanel({ title, children }: { title: string, children: React.ReactNode }) {
   return (
-    <section className="rounded-2xl border border-white/10 bg-black/40 p-6 shadow-2xl mb-6">
+    <section className="rounded-2xl border border-white/5 bg-black/40 p-6 shadow-2xl mb-6">
       <h3 className="mb-6 inline-block bg-gradient-to-r from-emerald-300 via-emerald-200 to-lime-200 bg-clip-text text-[10px] font-black uppercase tracking-[0.4em] text-transparent drop-shadow-md">
         {title}
       </h3>
@@ -159,7 +159,7 @@ export default function FPLOptimizer() {
                     SQUAD <span className="text-emerald-500">OPTIMIZER</span>
                   </h1>
                   
-                  <div className="mt-6 flex items-center gap-6 bg-black/20 border border-white/10 px-6 py-3 rounded-2xl w-fit shadow-xl">
+                  <div className="mt-6 flex items-center gap-6 bg-black/20 border border-white/5 px-6 py-3 rounded-2xl w-fit shadow-xl">
                      <button onClick={() => handleGwChange(gameweek - 1)} className="text-zinc-400 hover:text-emerald-400 transition-all hover:scale-125">
                         <ChevronLeft className="w-6 h-6" />
                      </button>
@@ -174,7 +174,7 @@ export default function FPLOptimizer() {
             </div>
 
             <div className="flex gap-6">
-               <div className="p-6 rounded-[32px] bg-black/40 border border-white/10 flex flex-col items-center min-w-[180px] shadow-2xl">
+               <div className="p-6 rounded-[32px] bg-black/40 border border-white/5 flex flex-col items-center min-w-[180px] shadow-2xl">
                   <span className="text-[10px] font-black text-zinc-400 mb-2 tracking-[0.3em] uppercase">Expected Yield</span>
                   <span className="text-5xl font-black text-emerald-400 font-mono tracking-tighter italic drop-shadow-glow">{safeProjectedPoints.toFixed(1)}</span>
                </div>
