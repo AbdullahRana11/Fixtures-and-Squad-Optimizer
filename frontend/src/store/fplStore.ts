@@ -10,9 +10,20 @@ export interface Player {
   club: string;
 }
 
+export interface CustomPlayerInput {
+  name: string;
+  club: string;
+  position: 'GK' | 'DEF' | 'MID' | 'FWD';
+  cost_millions: number;
+  overall_ability: number;
+  base_form: number;
+  expectation_status: string;
+}
+
 interface FPLState {
   squad: Player[];
   allPlayers: Player[]; // Full database pool
+  customPlayers: CustomPlayerInput[]; // Hypothesis pool (RAM-only, never saved to DB)
   budget: number;
   projectedPoints: number;
   kIndex: number;
@@ -30,11 +41,17 @@ interface FPLState {
   setGameweek: (gw: number) => void;
   clearError: () => void;
   setOptimizationResult: (data: any) => void;
+  addCustomPlayer: (player: CustomPlayerInput) => void;
+  removeCustomPlayer: (id: string) => void;
+  clearCustomPlayers: () => void;
 }
+
+let customIdCounter = 0;
 
 export const useFplStore = create<FPLState>((set, get) => ({
   squad: [],
   allPlayers: [],
+  customPlayers: [],
   budget: 100.0,
   projectedPoints: 0,
   kIndex: 1,
@@ -43,6 +60,18 @@ export const useFplStore = create<FPLState>((set, get) => ({
   gameweek: 1,
   seasonalFixtures: null,
   fixtureContext: {},
+
+  addCustomPlayer: (player: CustomPlayerInput) => {
+    const id = `custom_${++customIdCounter}_${Date.now()}`;
+    const enriched = { ...player, id };
+    set(state => ({ customPlayers: [...state.customPlayers, enriched as any] }));
+  },
+
+  removeCustomPlayer: (id: string) => {
+    set(state => ({ customPlayers: state.customPlayers.filter((p: any) => p.id !== id) }));
+  },
+
+  clearCustomPlayers: () => set({ customPlayers: [] }),
 
   fetchSeasonPool: async () => {
     try {
@@ -63,7 +92,7 @@ export const useFplStore = create<FPLState>((set, get) => ({
   },
 
   optimize: async (shuffle = false) => {
-    const { budget, gameweek, kIndex, seasonalFixtures } = get();
+    const { budget, gameweek, kIndex, seasonalFixtures, customPlayers } = get();
     const nextKIndex = shuffle ? kIndex + 1 : 1;
 
     set({ isLoading: true, error: null });
@@ -82,7 +111,19 @@ export const useFplStore = create<FPLState>((set, get) => ({
         ? 'http://localhost:3000/api/fpl/optimize-matchweek' 
         : 'http://localhost:3000/api/fpl/optimize';
       
-      const payload = { budget: 100.0, matchweek: gameweek, fixtures, k_index: nextKIndex };
+      // Build backend-compatible custom players payload
+      const customPayload = customPlayers.map((cp: any) => ({
+        id: cp.id,
+        name: cp.name,
+        club: cp.club,
+        position: cp.position,
+        cost_millions: cp.cost_millions,
+        overall_ability: cp.overall_ability,
+        base_form: cp.base_form,
+        expectation_status: cp.expectation_status,
+      }));
+
+      const payload = { budget: 100.0, matchweek: gameweek, fixtures, k_index: nextKIndex, customPlayers: customPayload };
 
       const response = await axios.post(endpoint, payload);
       const { squad, summary } = response.data;
