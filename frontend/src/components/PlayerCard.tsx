@@ -117,7 +117,7 @@ export default function PlayerCard({ player, isActive = false, compact = false, 
       }}
       className={`group relative flex flex-col justify-between overflow-hidden cursor-pointer rounded-sm border border-white/5 bg-[#0a0a0c] hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] z-20 ${
         isActive ? "border-emerald-400/50 shadow-[0_0_30px_rgba(52,211,153,0.3)]" : ""
-      } ${className} ${compact ? "w-[150px] h-[230px] lg:w-[180px] lg:h-[280px]" : "w-[260px] h-[400px]"}`}
+      } ${className} ${compact ? "w-[150px] h-[240px] lg:w-[180px] lg:h-[290px]" : "w-[260px] h-[400px]"}`}
     >
       <div
         className="pointer-events-none absolute inset-0 z-10 mix-blend-screen"
@@ -158,15 +158,15 @@ export default function PlayerCard({ player, isActive = false, compact = false, 
         </div>
       </div>
 
-      <div className="relative-1 bg-[#121316] p-3 lg:p-4 flex flex-col justify-between border-t border-white/5">
-        <div className="flex flex-col space-y-2 lg:space-y-3" style={{ transform: "translateZ(30px)", transformStyle: "preserve-3d" }}>
+      <div className={`relative-1 bg-[#121316] flex flex-col justify-between border-t border-white/5 ${compact ? "p-2 lg:p-3" : "p-3 lg:p-4"}`}>
+        <div className={`flex flex-col ${compact ? "space-y-1 lg:space-y-2" : "space-y-2 lg:space-y-3"}`} style={{ transform: "translateZ(30px)", transformStyle: "preserve-3d" }}>
            <div>
              <h3 className={`font-bold text-white leading-tight ${compact ? "text-xs lg:text-[15px]" : "text-[17px]"} line-clamp-1`}>{safeName}</h3>
              <p className="text-zinc-500 text-[9px] lg:text-[11px] font-medium tracking-wide line-clamp-1">{safeClub}</p>
              <p className={`text-[9px] lg:text-[11px] mt-0.5 tracking-wide ${rarity.color}`}>{safePos}</p>
            </div>
            
-           <div className="bg-[#18181a] border border-white/5 rounded p-1.5 lg:p-2.5 font-light italic text-zinc-400 text-[9px] lg:text-[11px] hidden lg:block">
+           <div className={`bg-[#18181a] border border-white/5 rounded font-light italic text-zinc-400 hidden lg:block ${compact ? "p-1 lg:p-1.5 text-[8px] lg:text-[9px]" : "p-1.5 lg:p-2.5 text-[9px] lg:text-[11px]"}`}>
              Ability Base: {(player as any)?.overall_ability || 'N/A'}
            </div>
 
@@ -175,12 +175,12 @@ export default function PlayerCard({ player, isActive = false, compact = false, 
                <motion.div 
                  initial={{ opacity: 0 }}
                  animate={{ opacity: 1 }}
-                 className={`mt-2 flex items-center justify-between bg-black/80 border ${rarity.border} rounded-sm px-2 py-2 shadow-lg`}
+                 className={`mt-1 flex items-center justify-between bg-black/80 border ${rarity.border} rounded-sm ${compact ? "px-1.5 py-1" : "px-2 py-2"} shadow-lg`}
                >
-                 <span className="text-[8px] text-zinc-500 font-bold uppercase tracking-tighter">Next Match</span>
+                 <span className={`${compact ? "text-[6px] lg:text-[7px]" : "text-[8px]"} text-zinc-500 font-bold uppercase tracking-tighter`}>Next Match</span>
                  <div className="flex items-center gap-1.5">
-                   <span className="text-[7px] font-black text-zinc-600 uppercase tracking-widest">vs</span>
-                   <span className={`text-[11px] font-black ${rarity.color} uppercase tracking-tight`}>
+                   <span className={`${compact ? "text-[5px] lg:text-[6px]" : "text-[7px]"} font-black text-zinc-600 uppercase tracking-widest`}>vs</span>
+                   <span className={`${compact ? "text-[8px] lg:text-[10px]" : "text-[11px]"} font-black ${rarity.color} uppercase tracking-tight`}>
                      {opponent}
                    </span>
                  </div>
@@ -188,8 +188,8 @@ export default function PlayerCard({ player, isActive = false, compact = false, 
              )}
            </AnimatePresence>
 
-           <div className="pt-1">
-             <div className="flex justify-between items-end mb-1 lg:mb-1.5">
+           <div className="pt-0.5">
+             <div className="flex justify-between items-end mb-1">
                 <span className="text-[8px] lg:text-[10px] text-zinc-500 font-medium">Dyn. Value</span>
                 <span className={`font-bold ${rarity.color} text-[12px] lg:text-[15px] leading-none`}>
                   {dynPoints.toFixed(1)} <span className="text-[7px] lg:text-[9px] text-zinc-500 font-normal">pts</span>
@@ -201,7 +201,7 @@ export default function PlayerCard({ player, isActive = false, compact = false, 
            </div>
         </div>
 
-        <div className="mt-2 lg:mt-4 pt-2 lg:pt-3 flex items-center justify-between border-t border-white/5" style={{ transform: "translateZ(40px)" }}>
+        <div className={`${compact ? "mt-1 lg:mt-2 pt-1 lg:pt-2" : "mt-2 lg:mt-4 pt-2 lg:pt-3"} flex items-center justify-between border-t border-white/5`} style={{ transform: "translateZ(40px)" }}>
            <div className="flex items-center gap-1.5 text-emerald-400 text-[9px] lg:text-xs font-bold tracking-wide">
                <Wallet className="w-2.5 h-2.5 lg:w-3.5 lg:h-3.5 text-zinc-500" />
                £{cost.toFixed(1)}m
