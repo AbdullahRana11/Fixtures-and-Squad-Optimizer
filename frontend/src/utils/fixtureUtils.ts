@@ -97,7 +97,7 @@ export const generateRoundRobin = (teams: string[], legs: number = 1, seed: numb
         const away = teamList[n - 1 - i];
         if (home !== 'BYE' && away !== 'BYE') {
           fixtures.push({
-            id: crypto.randomUUID(),
+            id: typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : Math.random().toString(36).substring(2),
             matchweek,
             home: leg % 2 === 0 ? home : away,
             away: leg % 2 === 0 ? away : home,
@@ -119,7 +119,7 @@ export const generateKnockout = (teams: string[], seed: number = 123) => {
   for (let i = 0; i < pool.length; i += 2) {
     if (pool[i + 1]) {
       matches.push({
-        id: crypto.randomUUID(),
+        id: typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : Math.random().toString(36).substring(2),
         matchweek: 1,
         home: pool[i],
         away: pool[i + 1],

@@ -7,19 +7,20 @@ export default {
   theme: {
     extend: {
       colors: {
-        void: "#090A0F",
-        obsidian: "#12151E",
+        void: "#09090b", // Deep slate background
+        obsidian: "#18181b", // Lighter slate for panels
         "glass-base": "rgba(255, 255, 255, 0.05)",
         "glass-border": "rgba(255, 255, 255, 0.1)",
-        "mint-sentinel": "#00F260",
-        "neon-aqua": "#05D5FF",
-        "cyber-purple": "#B026FF",
-        "mint-valid": "#00F260",
-        "crimson-danger": "#FF2A55",
+        "mint-sentinel": "#0f766e", // Deep teal
+        "neon-aqua": "#0ea5e9", // Muted blue
+        "cyber-purple": "#52525b", // Slate gray instead of purple
+        "mint-valid": "#2563eb", // Royal blue
+        "crimson-danger": "#e11d48", // Rose red
+        "editorial-gold": "#b45309", // Muted gold/amber
       },
       fontFamily: {
-        clash: ["'Clash Display'", "sans-serif"],
-        outfit: ["Outfit", "sans-serif"],
+        clash: ["'Merriweather'", "serif"], // Replacing clash with Merriweather
+        outfit: ["'Open Sans'", "sans-serif"], // Replacing outfit with Open Sans
         space: ["'Space Mono'", "monospace"],
       },
       backdropBlur: {
@@ -32,11 +33,11 @@ export default {
       keyframes: {
         drift: {
           '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
-          '50%': { transform: 'translate(10%, 5%) scale(1.1)' },
+          '50%': { transform: 'translate(5%, 2%) scale(1.05)' },
         },
         'drift-reverse': {
           '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
-          '50%': { transform: 'translate(-10%, -5%) scale(1.1)' },
+          '50%': { transform: 'translate(-5%, -2%) scale(1.05)' },
         },
       },
     },
