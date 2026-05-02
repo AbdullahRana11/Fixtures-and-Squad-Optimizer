@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Calendar, Clock, MapPin, Shield, ArrowLeft, Settings2, Cpu, Filter, RefreshCw, Save, Zap } from 'lucide-react';
 import axios from 'axios';
 import StatsPanel from '../components/StatsPanel';
-import { getHistory, saveToHistory } from '../utils/fixtureUtils';
+import { getHistory, saveToHistory, deleteHistoryEntry } from '../utils/fixtureUtils';
 
 interface FixtureMatch {
   id: string;
@@ -66,10 +66,25 @@ const FixtureDisplay: React.FC = () => {
   React.useEffect(() => {
     if (schedule && schedule.fixtures.length > 0) {
       const history = getHistory();
-      const latest = history[0];
-      const isSameAsLatest = latest && latest.name === (LEAGUE_NAMES[leagueId] || 'League') && latest.fixtures.length === schedule.fixtures.length;
+      const latest = history.find(h => 
+        h.name === (LEAGUE_NAMES[leagueId] || 'League') || 
+        h.source === (LEAGUE_NAMES[leagueId] || leagueId)
+      );
       
-      if (!isSameAsLatest) {
+      // Compare actual fixture content, not just count — fixtures.length is always 380 for PL,
+      // so count-based comparison would never detect regenerated fixtures.
+      const firstFixture = schedule.fixtures[0];
+      const latestFirst = latest?.fixtures?.[0];
+      const isSameContent = latest && latestFirst &&
+        latestFirst.home === firstFixture.home &&
+        latestFirst.away === firstFixture.away &&
+        latest.fixtures.length === schedule.fixtures.length;
+      
+      if (!isSameContent) {
+        // Remove old entry for this league before saving the new one
+        if (latest) {
+          deleteHistoryEntry(latest.id);
+        }
         saveToHistory({
           name: LEAGUE_NAMES[leagueId] || 'League',
           format: leagueId === 'ucl' ? 'tournament' : 'league',

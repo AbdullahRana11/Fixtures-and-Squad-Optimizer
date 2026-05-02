@@ -92,12 +92,27 @@ export const useFplStore = create<FPLState>((set, get) => ({
   },
 
   optimize: async (shuffle = false) => {
-    const { budget, gameweek, kIndex, seasonalFixtures, customPlayers } = get();
+    let { budget, gameweek, kIndex, seasonalFixtures, customPlayers } = get();
     const nextKIndex = shuffle ? kIndex + 1 : 1;
 
     set({ isLoading: true, error: null });
 
     try {
+      // Safety: If seasonalFixtures is missing, try to re-hydrate from localStorage
+      if (!seasonalFixtures || !seasonalFixtures.fixtures) {
+        try {
+          const raw = localStorage.getItem('fixture_optimizer_history');
+          if (raw) {
+            const history = JSON.parse(raw);
+            const latestPL = history.find((h: any) => h.source === 'Premier League' || h.name === 'Premier League');
+            if (latestPL) {
+              seasonalFixtures = { fixtures: latestPL.fixtures, teams: latestPL.teams };
+              set({ seasonalFixtures });
+            }
+          }
+        } catch (e) { /* ignore */ }
+      }
+
       // Extract fixtures for the current gameweek from the flat array
       let fixtures: any[] = [];
       if (seasonalFixtures && seasonalFixtures.fixtures) {
@@ -105,6 +120,8 @@ export const useFplStore = create<FPLState>((set, get) => ({
           .filter((f: any) => Number(f.matchweek) === Number(gameweek))
           .map((f: any) => ({ home: f.home, away: f.away }));
       }
+
+      console.log(`[FPL] GW${gameweek}: ${fixtures.length} fixtures found, seasonalFixtures has ${seasonalFixtures?.fixtures?.length || 0} total`);
 
       // If we have fixtures, use the specialized optimize-matchweek endpoint
       const endpoint = fixtures.length > 0 
@@ -129,13 +146,19 @@ export const useFplStore = create<FPLState>((set, get) => ({
       const { squad, summary } = response.data;
 
       const TEAM_CODE_MAP: Record<string, string> = {
-        'Arsenal': 'ARS', 'Aston Villa': 'AVL', 'Bournemouth': 'BOU', 'Brentford': 'BRE',
-        'Brighton': 'BHA', 'Brighton & Hove Albion': 'BHA', 'Chelsea': 'CHE', 'Crystal Palace': 'CRY',
+        'Arsenal': 'ARS', 'Aston Villa': 'AVL', 'Bournemouth': 'BOU', 'AFC Bournemouth': 'BOU', 'Brentford': 'BRE',
+        'Brighton': 'BHA', 'Brighton & Hove Albion': 'BHA', 'Brighton and Hove Albion': 'BHA', 'Chelsea': 'CHE', 'Crystal Palace': 'CRY',
         'Everton': 'EVE', 'Fulham': 'FUL', 'Ipswich Town': 'IPS', 'Ipswich': 'IPS', 'Leicester City': 'LEI', 
         'Leicester': 'LEI', 'Liverpool': 'LIV', 'Manchester City': 'MCI', 'Man City': 'MCI',
-        'Manchester United': 'MUN', 'Man Utd': 'MUN', 'Newcastle United': 'NEW', 'Newcastle': 'NEW',
-        'Nottingham Forest': 'NFO', 'Southampton': 'SOU', 'Tottenham Hotspur': 'TOT', 'Tottenham': 'TOT', 'Spurs': 'TOT',
-        'West Ham United': 'WHU', 'West Ham': 'WHU', 'Wolverhampton Wanderers': 'WOL', 'Wolves': 'WOL'
+        'Manchester United': 'MUN', 'Man Utd': 'MUN', 'Newcastle United': 'NEW', 'Newcastle Utd': 'NEW', 'Newcastle': 'NEW',
+        'Nottingham Forest': 'NFO', "Nott'm Forest": 'NFO', 'Nott Forest': 'NFO',
+        'Southampton': 'SOU', 'Tottenham Hotspur': 'TOT', 'Tottenham': 'TOT', 'Spurs': 'TOT',
+        'West Ham United': 'WHU', 'West Ham': 'WHU', 'Wolverhampton Wanderers': 'WOL', 'Wolves': 'WOL',
+        // Short code identity (passthrough)
+        'ARS': 'ARS', 'AVL': 'AVL', 'BOU': 'BOU', 'BRE': 'BRE', 'BHA': 'BHA',
+        'CHE': 'CHE', 'CRY': 'CRY', 'EVE': 'EVE', 'FUL': 'FUL', 'IPS': 'IPS',
+        'LEI': 'LEI', 'LIV': 'LIV', 'MCI': 'MCI', 'MUN': 'MUN', 'NEW': 'NEW',
+        'NFO': 'NFO', 'SOU': 'SOU', 'TOT': 'TOT', 'WHU': 'WHU', 'WOL': 'WOL',
       };
 
       // Build fixture context for the current gameweek
