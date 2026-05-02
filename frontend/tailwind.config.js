@@ -42,8 +42,13 @@ export default {
       animation: {
         'slow-drift': 'drift 20s ease-in-out infinite',
         'slow-drift-reverse': 'drift-reverse 25s ease-in-out infinite',
+        'shimmer': 'shimmer 3s ease-in-out infinite',
       },
       keyframes: {
+        shimmer: {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+        },
         drift: {
           '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
           '50%': { transform: 'translate(5%, 2%) scale(1.05)' },
