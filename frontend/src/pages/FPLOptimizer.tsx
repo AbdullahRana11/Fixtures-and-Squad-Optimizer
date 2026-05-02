@@ -3,10 +3,11 @@ import PlayerCard from '../components/PlayerCard';
 import teamPitchBackground from "../assets/pics/background_pic.png";
 import logo from "../assets/pics/PSL-logo.png";
 import { useFplStore, Player, CustomPlayerInput } from '../store/fplStore';
-import { RefreshCw, X, Loader2, AlertTriangle, ChevronLeft, ChevronRight, TrendingUp, DollarSign, Target, Repeat, Search, Plus, FlaskConical, Trash2 } from 'lucide-react';
+import { RefreshCw, X, Loader2, AlertTriangle, ChevronLeft, ChevronRight, TrendingUp, DollarSign, Target, Repeat, Search, Plus, FlaskConical, Trash2, Camera, ImagePlus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 import { getHistory } from '../utils/fixtureUtils';
+import { setPlayerPhoto, compressImage, getAllPlayerPhotos } from '../utils/playerPhotoStore';
 
 import arsLogo from "../assets/pics/EPL Logos/arsenal.football-logos.cc.png";
 import avlLogo from "../assets/pics/EPL Logos/aston-villa.football-logos.cc.png";
@@ -80,14 +81,39 @@ export default function FPLOptimizer() {
     name: '', club: 'ARS', position: 'FWD' as 'GK'|'DEF'|'MID'|'FWD',
     cost_millions: 8.0, overall_ability: 80, base_form: 6.0, expectation_status: 'Expected'
   });
+  const [playerPhotos, setPlayerPhotos] = useState<Record<string, string>>(getAllPlayerPhotos());
+  const [injectPhotoPreview, setInjectPhotoPreview] = useState<string | null>(null);
+  const photoInputRef = React.useRef<HTMLInputElement>(null);
+  const injectPhotoRef = React.useRef<HTMLInputElement>(null);
   const location = useLocation();
+
+  const handlePhotoUpload = async (playerId: string, file: File) => {
+    const dataUrl = await compressImage(file, 200);
+    setPlayerPhoto(playerId, dataUrl);
+    setPlayerPhotos(getAllPlayerPhotos());
+  };
 
   const handleInjectSubmit = () => {
     if (!injectForm.name.trim()) return;
     addCustomPlayer(injectForm as CustomPlayerInput);
+    // If a photo was selected for the inject form, save it after the player is added
+    if (injectPhotoPreview) {
+      const cps = useFplStore.getState().customPlayers as any[];
+      const newest = cps[cps.length - 1];
+      if (newest?.id) {
+        setPlayerPhoto(newest.id, injectPhotoPreview);
+        setPlayerPhotos(getAllPlayerPhotos());
+      }
+    }
     setInjectForm({ name: '', club: 'ARS', position: 'FWD', cost_millions: 8.0, overall_ability: 80, base_form: 6.0, expectation_status: 'Expected' });
+    setInjectPhotoPreview(null);
     setInjectOpen(false);
     setTimeout(() => optimize(false), 100);
+  };
+
+  const handleInjectPhotoSelect = async (file: File) => {
+    const dataUrl = await compressImage(file, 200);
+    setInjectPhotoPreview(dataUrl);
   };
 
   const totalSquadCost = (squad || []).reduce((sum, p) => sum + Number(p?.cost_millions || 0), 0);
@@ -166,10 +192,10 @@ export default function FPLOptimizer() {
   const handleGwChange = (newGw: number) => {
     if (newGw < 1 || newGw > 38) return;
     setGameweek(newGw);
-    // Automatically trigger a re-optimization for the selected matchweek
+    // Give Zustand time to settle the state before re-optimizing
     setTimeout(() => {
        optimize(false);
-    }, 50);
+    }, 150);
   };
 
   const executeSwap = (newPlayer: Player) => {
@@ -181,25 +207,33 @@ export default function FPLOptimizer() {
   };
 
   useEffect(() => {
-    if (location.state?.seasonalFixtures) {
-       useFplStore.setState({ seasonalFixtures: location.state.seasonalFixtures });
-    }
     if (location.state?.squadData) {
       setOptimizationResult(location.state.squadData);
     }
     const init = async () => {
-      let hasFixtures = !!location.state?.seasonalFixtures;
-      if (!hasFixtures) {
-         const history = getHistory();
-         const latestPL = history.find(h => h.source === 'Premier League' || h.name === 'Premier League' || h.source === 'pl');
-         if (latestPL) {
-            useFplStore.setState({ seasonalFixtures: { fixtures: latestPL.fixtures, teams: latestPL.teams } });
-            hasFixtures = true;
-         }
+      let hasFixtures = false;
+
+      // PRIORITY 1: Always check localStorage for the LATEST saved PL fixtures.
+      // This is the single source of truth — it gets updated whenever the user
+      // regenerates/saves fixtures on the fixture display page.
+      const history = getHistory();
+      const latestPL = history.find(h => h.source === 'Premier League' || h.name === 'Premier League' || h.source === 'pl');
+      if (latestPL) {
+        useFplStore.setState({ seasonalFixtures: { fixtures: latestPL.fixtures, teams: latestPL.teams } });
+        hasFixtures = true;
       }
+
+      // PRIORITY 2: location.state (only if localStorage had nothing)
+      if (!hasFixtures && location.state?.seasonalFixtures) {
+        useFplStore.setState({ seasonalFixtures: location.state.seasonalFixtures });
+        hasFixtures = true;
+      }
+
+      // PRIORITY 3: Backend-generated fixtures (last resort)
       if (!hasFixtures) {
          await fetchSeasonPool();
       }
+
       await fetchAllPlayers();
       if (squad.length === 0) optimize(false);
     };
@@ -336,7 +370,7 @@ export default function FPLOptimizer() {
                          style={{ left: dynamicFormation[index].left, top: dynamicFormation[index].top, zIndex: 40 - index }}
                        >
                           <div className="scale-[0.3] min-[380px]:scale-[0.35] min-[420px]:scale-[0.4] sm:scale-[0.55] md:scale-[0.7] lg:scale-[0.72] xl:scale-[0.85] hover:scale-[0.4] min-[380px]:hover:scale-[0.45] min-[420px]:hover:scale-[0.5] sm:hover:scale-[0.7] md:hover:scale-[0.85] lg:hover:scale-[0.9] xl:hover:scale-[1.0] transition-all duration-300 origin-center">
-                             <PlayerCard player={player} compact onClick={() => { setSelectedPlayer(player); setIsSwapping(false); }} opponent={(fixtureContext as any)[player.club]} />
+                             <PlayerCard player={player} compact onClick={() => { setSelectedPlayer(player); setIsSwapping(false); }} opponent={(fixtureContext as any)[player.club]} photoUrl={playerPhotos[player.id] || null} />
                           </div>
                        </motion.div>
                      )
@@ -352,8 +386,25 @@ export default function FPLOptimizer() {
                    {!isSwapping ? (
                      <>
                         <div className="flex items-center gap-10 mb-12">
-                           <div className="w-40 h-40 rounded-full border-2 border-emerald-500 bg-emerald-500/5 flex items-center justify-center text-7xl font-black text-emerald-400">
-                              {initialsFromName(selectedPlayer.name)}
+                           <div className="relative group/avatar">
+                             <div className="w-40 h-40 rounded-full border-2 border-emerald-500 bg-emerald-500/5 flex items-center justify-center text-7xl font-black text-emerald-400 overflow-hidden">
+                               {playerPhotos[selectedPlayer.id] ? (
+                                 <img src={playerPhotos[selectedPlayer.id]} alt={selectedPlayer.name} className="w-full h-full object-cover object-top" />
+                               ) : (
+                                 initialsFromName(selectedPlayer.name)
+                               )}
+                             </div>
+                             <button 
+                               onClick={() => photoInputRef.current?.click()}
+                               className="absolute inset-0 rounded-full bg-black/60 opacity-0 group-hover/avatar:opacity-100 transition-opacity flex items-center justify-center gap-2 cursor-pointer"
+                             >
+                               {playerPhotos[selectedPlayer.id] ? (
+                                 <><Camera className="w-6 h-6 text-white" /><span className="text-[10px] font-bold text-white uppercase tracking-wider">Update</span></>
+                               ) : (
+                                 <><ImagePlus className="w-6 h-6 text-emerald-400" /><span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">Add Photo</span></>
+                               )}
+                             </button>
+                             <input ref={photoInputRef} type="file" accept="image/*" className="hidden" onChange={async (e) => { const f = e.target.files?.[0]; if (f) { await handlePhotoUpload(selectedPlayer.id, f); } e.target.value = ''; }} />
                            </div>
                            <div className="flex-1">
                              <div className="flex items-center justify-between">
@@ -424,71 +475,127 @@ export default function FPLOptimizer() {
           {/* ── Custom Player Injection Modal ── */}
           <AnimatePresence>
             {injectOpen && (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[600] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 sm:p-8" onClick={() => setInjectOpen(false)}>
-                <motion.div initial={{ scale: 0.9, y: 40 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 40 }} transition={{ type: 'spring', damping: 25 }} className="bg-[#0a0a0c]/95 backdrop-blur-xl p-8 sm:p-12 rounded-[32px] sm:rounded-[48px] border border-purple-500/20 max-w-xl w-full shadow-[0_0_80px_rgba(176,38,255,0.15)]" onClick={e => e.stopPropagation()}>
-                  <div className="flex items-center justify-between mb-8">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center">
-                        <FlaskConical className="w-6 h-6 text-purple-400" />
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[600] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 sm:p-8" onClick={() => { setInjectOpen(false); setInjectPhotoPreview(null); }}>
+                <motion.div 
+                  initial={{ scale: 0.92, y: 30, opacity: 0 }} 
+                  animate={{ scale: 1, y: 0, opacity: 1 }} 
+                  exit={{ scale: 0.92, y: 30, opacity: 0 }} 
+                  transition={{ type: 'spring', damping: 28, stiffness: 300 }} 
+                  className="relative bg-[#08080a] backdrop-blur-xl rounded-[28px] sm:rounded-[40px] border border-purple-500/15 max-w-lg w-full shadow-[0_0_120px_rgba(176,38,255,0.08)] overflow-hidden max-h-[90vh] overflow-y-auto" 
+                  onClick={e => e.stopPropagation()}
+                >
+                  {/* Animated gradient header bar */}
+                  <div className="h-1 w-full bg-gradient-to-r from-purple-600 via-fuchsia-500 to-purple-600 bg-[length:200%_100%] animate-[shimmer_3s_ease-in-out_infinite]" />
+                  
+                  <div className="p-6 sm:p-10">
+                    {/* Header */}
+                    <div className="flex items-center justify-between mb-8">
+                      <div className="flex items-center gap-4">
+                        <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-purple-500/20 to-fuchsia-500/10 border border-purple-500/25 flex items-center justify-center shadow-[0_0_20px_rgba(176,38,255,0.1)]">
+                          <FlaskConical className="w-5 h-5 text-purple-400" />
+                        </div>
+                        <div>
+                          <h2 className="text-xl sm:text-2xl font-black text-white uppercase tracking-tight italic leading-none">Inject Player</h2>
+                          <p className="text-[8px] sm:text-[9px] text-purple-400/50 font-bold uppercase tracking-[0.25em] mt-1">What-If Hypothesis · Transient RAM</p>
+                        </div>
                       </div>
-                      <div>
-                        <h2 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight italic">Inject Player</h2>
-                        <p className="text-[9px] text-purple-400/60 font-bold uppercase tracking-[0.3em]">What-If Simulation · RAM Only</p>
+                      <button onClick={() => { setInjectOpen(false); setInjectPhotoPreview(null); }} className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 transition-colors border border-white/5">
+                        <X className="w-4 h-4 text-white/40" />
+                      </button>
+                    </div>
+
+                    {/* Photo + Name Row */}
+                    <div className="flex items-center gap-5 mb-6">
+                      <button 
+                        onClick={() => injectPhotoRef.current?.click()}
+                        className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl border-2 border-dashed border-purple-500/25 bg-purple-500/5 flex flex-col items-center justify-center gap-1.5 hover:border-purple-400/50 hover:bg-purple-500/10 transition-all cursor-pointer shrink-0 overflow-hidden group/photo"
+                      >
+                        {injectPhotoPreview ? (
+                          <>
+                            <img src={injectPhotoPreview} alt="Preview" className="w-full h-full object-cover rounded-xl" />
+                          </>
+                        ) : (
+                          <>
+                            <Camera className="w-5 h-5 text-purple-400/60 group-hover/photo:text-purple-400 transition-colors" />
+                            <span className="text-[7px] sm:text-[8px] font-bold text-purple-400/40 uppercase tracking-wider group-hover/photo:text-purple-400/70 transition-colors">Photo</span>
+                          </>
+                        )}
+                      </button>
+                      <input ref={injectPhotoRef} type="file" accept="image/*" className="hidden" onChange={async (e) => { const f = e.target.files?.[0]; if (f) await handleInjectPhotoSelect(f); e.target.value = ''; }} />
+                      
+                      <div className="flex-1">
+                        <label className="text-[8px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-1 block">Player Name</label>
+                        <input 
+                          type="text" 
+                          value={injectForm.name} 
+                          onChange={e => setInjectForm(f => ({...f, name: e.target.value}))} 
+                          placeholder="e.g. K. Mbappé" 
+                          className="w-full bg-white/[0.03] border border-white/8 rounded-xl py-3 px-4 text-white font-bold text-sm placeholder:text-zinc-700 focus:outline-none focus:ring-1 focus:ring-purple-500/50 focus:border-purple-500/30 transition-all" 
+                        />
                       </div>
                     </div>
-                    <button onClick={() => setInjectOpen(false)} className="p-3 rounded-full bg-white/5 hover:bg-white/10 transition-colors">
-                      <X className="w-5 h-5 text-white/40" />
+
+                    {/* Club + Position */}
+                    <div className="grid grid-cols-2 gap-3 mb-4">
+                      <div>
+                        <label className="text-[8px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-1 block">Club</label>
+                        <select value={injectForm.club} onChange={e => setInjectForm(f => ({...f, club: e.target.value}))} className="w-full bg-white/[0.03] border border-white/8 rounded-xl py-2.5 px-3 text-white text-sm font-bold focus:outline-none focus:ring-1 focus:ring-purple-500/50 appearance-none cursor-pointer">
+                          {PL_CLUBS.map(c => <option key={c.code} value={c.code} className="bg-[#0a0a0c] text-white">{c.name}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="text-[8px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-1 block">Position</label>
+                        <select value={injectForm.position} onChange={e => setInjectForm(f => ({...f, position: e.target.value as any}))} className="w-full bg-white/[0.03] border border-white/8 rounded-xl py-2.5 px-3 text-white text-sm font-bold focus:outline-none focus:ring-1 focus:ring-purple-500/50 appearance-none cursor-pointer">
+                          {['GK','DEF','MID','FWD'].map(p => <option key={p} value={p} className="bg-[#0a0a0c] text-white">{p}</option>)}
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Sliders */}
+                    <div className="space-y-4 mb-6">
+                      <div className="bg-white/[0.02] rounded-xl p-4 border border-white/5">
+                        <div className="flex justify-between items-center mb-2">
+                          <label className="text-[8px] font-black text-zinc-500 uppercase tracking-[0.2em]">Cost</label>
+                          <span className="text-sm font-black text-purple-400 tabular-nums">£{injectForm.cost_millions.toFixed(1)}M</span>
+                        </div>
+                        <input type="range" min={4.0} max={15.0} step={0.1} value={injectForm.cost_millions} onChange={e => setInjectForm(f => ({...f, cost_millions: parseFloat(e.target.value)}))} className="w-full accent-purple-500 h-1.5 rounded-full bg-white/5 cursor-pointer" />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="bg-white/[0.02] rounded-xl p-4 border border-white/5">
+                          <div className="flex justify-between items-center mb-2">
+                            <label className="text-[8px] font-black text-zinc-500 uppercase tracking-[0.2em]">Ability</label>
+                            <span className="text-sm font-black text-purple-400 tabular-nums">{injectForm.overall_ability}</span>
+                          </div>
+                          <input type="range" min={50} max={100} step={1} value={injectForm.overall_ability} onChange={e => setInjectForm(f => ({...f, overall_ability: parseInt(e.target.value)}))} className="w-full accent-purple-500 h-1.5 rounded-full bg-white/5 cursor-pointer" />
+                        </div>
+                        <div className="bg-white/[0.02] rounded-xl p-4 border border-white/5">
+                          <div className="flex justify-between items-center mb-2">
+                            <label className="text-[8px] font-black text-zinc-500 uppercase tracking-[0.2em]">Form</label>
+                            <span className="text-sm font-black text-purple-400 tabular-nums">{injectForm.base_form.toFixed(1)}</span>
+                          </div>
+                          <input type="range" min={1.0} max={10.0} step={0.1} value={injectForm.base_form} onChange={e => setInjectForm(f => ({...f, base_form: parseFloat(e.target.value)}))} className="w-full accent-purple-500 h-1.5 rounded-full bg-white/5 cursor-pointer" />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="text-[8px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-1 block">Expectation Status</label>
+                        <select value={injectForm.expectation_status} onChange={e => setInjectForm(f => ({...f, expectation_status: e.target.value}))} className="w-full bg-white/[0.03] border border-white/8 rounded-xl py-2.5 px-3 text-white text-sm font-bold focus:outline-none focus:ring-1 focus:ring-purple-500/50 appearance-none cursor-pointer">
+                          {['Hot_Streak','Overperforming','Expected','Underperforming'].map(s => <option key={s} value={s} className="bg-[#0a0a0c] text-white">{s.replace('_', ' ')}</option>)}
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Submit */}
+                    <button 
+                      onClick={handleInjectSubmit} 
+                      disabled={!injectForm.name.trim()} 
+                      className="w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 via-fuchsia-600 to-purple-600 bg-[length:200%_100%] text-white font-black text-base sm:text-lg uppercase tracking-widest hover:scale-[1.01] active:scale-[0.98] transition-all shadow-[0_4px_30px_rgba(176,38,255,0.3)] flex items-center justify-center gap-3 disabled:opacity-20 disabled:cursor-not-allowed disabled:hover:scale-100 border border-purple-400/20"
+                    >
+                      <FlaskConical className="w-5 h-5" />
+                      INJECT INTO MATRIX
                     </button>
                   </div>
-
-                  <div className="space-y-5">
-                    <div>
-                      <label className="text-[9px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-1.5 block">Player Name</label>
-                      <input type="text" value={injectForm.name} onChange={e => setInjectForm(f => ({...f, name: e.target.value}))} placeholder="e.g. K. Mbappé" className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white font-bold placeholder:text-zinc-700 focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-purple-500/50 transition-all" />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-[9px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-1.5 block">Club</label>
-                        <select value={injectForm.club} onChange={e => setInjectForm(f => ({...f, club: e.target.value}))} className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white font-bold focus:outline-none focus:ring-1 focus:ring-purple-500 appearance-none cursor-pointer">
-                          {PL_CLUBS.map(c => <option key={c.code} value={c.code} className="bg-black text-white">{c.name}</option>)}
-                        </select>
-                      </div>
-                      <div>
-                        <label className="text-[9px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-1.5 block">Position</label>
-                        <select value={injectForm.position} onChange={e => setInjectForm(f => ({...f, position: e.target.value as any}))} className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white font-bold focus:outline-none focus:ring-1 focus:ring-purple-500 appearance-none cursor-pointer">
-                          {['GK','DEF','MID','FWD'].map(p => <option key={p} value={p} className="bg-black text-white">{p}</option>)}
-                        </select>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="text-[9px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-1.5 block">Cost (£M) — <span className="text-purple-400">£{injectForm.cost_millions.toFixed(1)}M</span></label>
-                      <input type="range" min={4.0} max={15.0} step={0.1} value={injectForm.cost_millions} onChange={e => setInjectForm(f => ({...f, cost_millions: parseFloat(e.target.value)}))} className="w-full accent-purple-500 h-2 rounded-full bg-white/5 cursor-pointer" />
-                    </div>
-
-                    <div>
-                      <label className="text-[9px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-1.5 block">Overall Ability — <span className="text-purple-400">{injectForm.overall_ability}</span></label>
-                      <input type="range" min={50} max={100} step={1} value={injectForm.overall_ability} onChange={e => setInjectForm(f => ({...f, overall_ability: parseInt(e.target.value)}))} className="w-full accent-purple-500 h-2 rounded-full bg-white/5 cursor-pointer" />
-                    </div>
-
-                    <div>
-                      <label className="text-[9px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-1.5 block">Current Form — <span className="text-purple-400">{injectForm.base_form.toFixed(1)}</span></label>
-                      <input type="range" min={1.0} max={10.0} step={0.1} value={injectForm.base_form} onChange={e => setInjectForm(f => ({...f, base_form: parseFloat(e.target.value)}))} className="w-full accent-purple-500 h-2 rounded-full bg-white/5 cursor-pointer" />
-                    </div>
-
-                    <div>
-                      <label className="text-[9px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-1.5 block">Expectation Status</label>
-                      <select value={injectForm.expectation_status} onChange={e => setInjectForm(f => ({...f, expectation_status: e.target.value}))} className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white font-bold focus:outline-none focus:ring-1 focus:ring-purple-500 appearance-none cursor-pointer">
-                        {['Hot_Streak','Overperforming','Expected','Underperforming'].map(s => <option key={s} value={s} className="bg-black text-white">{s.replace('_', ' ')}</option>)}
-                      </select>
-                    </div>
-                  </div>
-
-                  <button onClick={handleInjectSubmit} disabled={!injectForm.name.trim()} className="w-full mt-8 py-5 rounded-2xl bg-gradient-to-r from-purple-600 to-purple-500 text-white font-black text-xl uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-[0_0_40px_rgba(176,38,255,0.4)] flex items-center justify-center gap-4 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100">
-                    <FlaskConical className="w-6 h-6" />
-                    INJECT INTO MATRIX
-                  </button>
                 </motion.div>
               </motion.div>
             )}
