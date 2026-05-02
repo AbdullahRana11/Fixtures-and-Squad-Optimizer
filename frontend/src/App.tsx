@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import RootLayout from './layouts/RootLayout';
 import { PageTransition } from './components/PageTransition';
@@ -18,11 +18,20 @@ const CustomGenerator = lazy(() => import('./pages/CustomGenerator'));
 
 
 const AppContent: React.FC = () => {
+  const [hasLaunched, setHasLaunched] = useState(false);
+
+  if (!hasLaunched) {
+    return <LoadingScreen onLaunch={() => setHasLaunched(true)} />;
+  }
 
   return (
     <RootLayout>
       <main className="flex-1 flex flex-col min-h-screen">
-        <Suspense fallback={<LoadingScreen />}>
+        <Suspense fallback={
+          <div className="flex-1 flex items-center justify-center bg-black">
+            <div className="w-12 h-12 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        }>
           <PageTransition>
             <Routes>
               {/* --- Editorial Section (Fixture Generator) --- */}
@@ -58,6 +67,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-
-
-
