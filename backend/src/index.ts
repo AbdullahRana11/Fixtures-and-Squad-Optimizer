@@ -41,6 +41,10 @@ app.get('/api/tournaments/:id', fixturesController.getTournament);
 // --- Stats Routes ---
 app.get('/api/stats/players', fixturesController.getPlayerStats);
 
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
+  });
+}
+
+export default app;
