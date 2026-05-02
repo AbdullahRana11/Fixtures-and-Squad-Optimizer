@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { Wallet, Zap } from "lucide-react";
 import { Player } from "../store/fplStore";
 import { motion, AnimatePresence } from "framer-motion";
+import { getPlayerPhoto } from "../utils/playerPhotoStore";
 
 const rarityUI = {
   legendary: {
@@ -11,6 +12,7 @@ const rarityUI = {
     glow: "shadow-[0_0_15px_rgba(245,158,11,0.5)]",
     gradientTop: "from-amber-500/10",
     label: "★ LEGEND",
+    ringColor: "ring-amber-500/40",
   },
   epic: {
     color: "text-fuchsia-500",
@@ -19,6 +21,7 @@ const rarityUI = {
     glow: "shadow-[0_0_15px_rgba(217,70,239,0.5)]",
     gradientTop: "from-fuchsia-500/10",
     label: "✦ EPIC",
+    ringColor: "ring-fuchsia-500/40",
   },
   rare: {
     color: "text-green-500",
@@ -27,6 +30,7 @@ const rarityUI = {
     glow: "shadow-[0_0_15px_rgba(59,130,246,0.5)]",
     gradientTop: "from-green-500/10",
     label: "♦ RARE",
+    ringColor: "ring-green-500/40",
   },
   common: {
     color: "text-emerald-500",
@@ -35,6 +39,7 @@ const rarityUI = {
     glow: "shadow-[0_0_15px_rgba(16,185,129,0.5)]",
     gradientTop: "from-emerald-500/10",
     label: "● COMMON",
+    ringColor: "ring-emerald-500/40",
   },
 };
 
@@ -60,9 +65,10 @@ interface PlayerCardProps {
   trading?: boolean;
   onClick?: () => void;
   opponent?: string;
+  photoUrl?: string | null; // External override — if not provided, pulls from localStorage
 }
 
-export default function PlayerCard({ player, isActive = false, compact = false, className = "", trading = false, onClick, opponent }: PlayerCardProps) {
+export default function PlayerCard({ player, isActive = false, compact = false, className = "", trading = false, onClick, opponent, photoUrl }: PlayerCardProps) {
   const cardRef = useRef<HTMLElement>(null);
   const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0, scale: 1, glareX: 50, glareY: 50 });
   const maxTilt = 15;
@@ -76,6 +82,9 @@ export default function PlayerCard({ player, isActive = false, compact = false, 
   const safeId = player?.id || "000";
   const isCustom = typeof safeId === 'string' && safeId.startsWith('custom_');
 
+  // Resolve photo: prop override > localStorage lookup
+  const resolvedPhoto = photoUrl !== undefined ? photoUrl : getPlayerPhoto(safeId);
+
   const rarityKey = getRarity(cost);
   const baseRarity = rarityUI[rarityKey as keyof typeof rarityUI] || rarityUI.common;
 
@@ -85,8 +94,9 @@ export default function PlayerCard({ player, isActive = false, compact = false, 
     border: 'border-purple-500/50',
     bg: 'bg-purple-500',
     glow: 'shadow-[0_0_15px_rgba(176,38,255,0.6)]',
-    gradientTop: 'from-purple-500/10',
+    gradientTop: 'from-purple-500/15',
     label: '⚡ INJECTED',
+    ringColor: 'ring-purple-500/50',
   } : baseRarity;
 
   function handleMouseMove(event: React.MouseEvent) {
@@ -157,11 +167,25 @@ export default function PlayerCard({ player, isActive = false, compact = false, 
             )}
         </div>
         
+        {/* ── Player Avatar: Photo or Initials ── */}
         <div 
-          className={`flex items-center justify-center rounded-full border bg-[#0a0a0c]/50 backdrop-blur-sm ${rarity.border} ${rarity.color} ${compact ? "h-10 w-10 text-sm mt-4 lg:h-14 lg:w-14 lg:text-lg lg:mt-6" : "h-[75px] w-[75px] text-2xl mt-8"}`}
+          className={`flex items-center justify-center rounded-full border-2 overflow-hidden ${rarity.border} ${compact ? "h-12 w-12 mt-4 lg:h-16 lg:w-16 lg:mt-6" : "h-[80px] w-[80px] mt-8"} ${
+            resolvedPhoto ? 'p-0' : `bg-[#0a0a0c]/50 backdrop-blur-sm ${rarity.color}`
+          } ${resolvedPhoto ? `ring-2 ${rarity.ringColor}` : ''}`}
           style={{ transform: "translateZ(45px)", transformStyle: "preserve-3d" }}
         >
-          {initialsFromName(safeName)}
+          {resolvedPhoto ? (
+            <img 
+              src={resolvedPhoto} 
+              alt={safeName}
+              className="w-full h-full object-cover object-top"
+              draggable={false}
+            />
+          ) : (
+            <span className={`font-bold ${compact ? "text-sm lg:text-lg" : "text-2xl"}`}>
+              {initialsFromName(safeName)}
+            </span>
+          )}
         </div>
         
         <div className="text-center mt-3 lg:mt-5" style={{ transform: "translateZ(35px)" }}>
