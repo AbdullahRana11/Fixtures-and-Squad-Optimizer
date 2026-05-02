@@ -90,7 +90,7 @@ const TeamSelector: React.FC = () => {
       }
 
       try {
-        const { data } = await axios.get(`http://localhost:3000/api/tournaments/type/${leagueId === 'ucl' ? 'ucl' : (leagueId === 'facup' ? 'facup' : 'league')}`);
+        const { data } = await axios.get(`/api/tournaments/type/${leagueId === 'ucl' ? 'ucl' : (leagueId === 'facup' ? 'facup' : 'league')}`);
         setActiveTournaments([...data.filter((t: any) => t.status === 'active'), ...localHistory]);
       } catch (err) {
         console.error('Failed to fetch tournaments:', err);
@@ -106,7 +106,7 @@ const TeamSelector: React.FC = () => {
       try {
         setLoading(true);
         const { data } = await axios.get<TeamsResponse>(
-          `http://localhost:3000/api/fixtures/teams/${leagueId}`
+          `/api/fixtures/teams/${leagueId}`
         );
         setTeams(data.teams);
         
@@ -190,7 +190,7 @@ const TeamSelector: React.FC = () => {
     setGenerating(true);
     try {
       const mode = leagueId === 'facup' ? 'auto' : (forceMode || undefined);
-      const { data } = await axios.post('http://localhost:3000/api/fixtures/generate', {
+      const { data } = await axios.post('/api/fixtures/generate', {
         league: leagueId,
         teamNames: Array.from(selected),
         mode,

@@ -148,7 +148,7 @@ const CustomGenerator: React.FC = () => {
         }
       };
 
-      const { data } = await axios.post('http://localhost:3000/api/tournaments/save', tournamentData);
+      const { data } = await axios.post('/api/tournaments/save', tournamentData);
       setCommandLog(prev => [...prev, { text: `PERSISTENCE ACHIEVED: ID ${data.id}`, type: 'success' }]);
       return data.id;
     } catch (err) {

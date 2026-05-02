@@ -88,7 +88,7 @@ const FACupBracketPage: React.FC = () => {
     if (!bracket) return;
     const saveBracket = async () => {
       try {
-        const { data } = await axios.post('http://localhost:3000/api/tournaments/save', {
+        const { data } = await axios.post('/api/tournaments/save', {
           id: tournamentId,
           type: 'facup',
           name: 'FA Cup Tournament',
@@ -120,7 +120,7 @@ const FACupBracketPage: React.FC = () => {
   const handleMatchStats = useCallback(async (match: FACupMatch) => {
     setStatsPanelOpen(true);
     try {
-      const { data } = await axios.post('http://localhost:3000/api/fixtures/predict', {
+      const { data } = await axios.post('/api/fixtures/predict', {
         homeTeam: match.home.name,
         awayTeam: match.away.name,
         homeLeague: match.home.league,
@@ -160,7 +160,7 @@ const FACupBracketPage: React.FC = () => {
     // Generate next round if not the final
     if (bracket.rounds.length < 6) {
       try {
-        const { data } = await axios.post('http://localhost:3000/api/fixtures/fa-cup/next-round', {
+        const { data } = await axios.post('/api/fixtures/fa-cup/next-round', {
           bracket, winners,
         });
         setBracket(data);

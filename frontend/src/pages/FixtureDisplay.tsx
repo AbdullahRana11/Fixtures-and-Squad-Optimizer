@@ -203,7 +203,7 @@ const FixtureDisplay: React.FC = () => {
   const handleRegenerate = async () => {
     setIsRegenerating(true);
     try {
-      const { data } = await axios.post('http://localhost:3000/api/fixtures/generate', {
+      const { data } = await axios.post('/api/fixtures/generate', {
         league: leagueId,
         teamNames: schedule.teams,
       });
@@ -217,7 +217,7 @@ const FixtureDisplay: React.FC = () => {
 
   const handleSaveToHistory = async () => {
     try {
-      await axios.post('http://localhost:3000/api/tournaments/save', {
+      await axios.post('/api/tournaments/save', {
         type: leagueId === 'ucl' ? 'ucl' : 'league',
         name: LEAGUE_NAMES[leagueId] || 'League',
         status: 'active',
@@ -243,7 +243,7 @@ const FixtureDisplay: React.FC = () => {
     setSelectedFixture(match.id);
     setStatsPanelOpen(true);
     try {
-      const { data } = await axios.post('http://localhost:3000/api/fixtures/predict', {
+      const { data } = await axios.post('/api/fixtures/predict', {
         homeTeam: match.home,
         awayTeam: match.away,
         isDerby: match.is_derby,
@@ -259,7 +259,7 @@ const FixtureDisplay: React.FC = () => {
     setOptimizing(true);
     try {
       const mwFixtures = matchweekFixtures.map(f => ({ home: f.home, away: f.away }));
-      const { data } = await axios.post('http://localhost:3000/api/fpl/optimize-matchweek', {
+      const { data } = await axios.post('/api/fpl/optimize-matchweek', {
         budget: 100,
         matchweek: currentMW,
         fixtures: mwFixtures,

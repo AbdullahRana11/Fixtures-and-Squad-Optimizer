@@ -75,7 +75,7 @@ export const useFplStore = create<FPLState>((set, get) => ({
 
   fetchSeasonPool: async () => {
     try {
-      const { data } = await axios.get('http://localhost:3000/api/fixtures/pl/season');
+      const { data } = await axios.get('/api/fixtures/pl/season');
       set({ seasonalFixtures: data });
     } catch (err) {
       console.error("Failed to fetch seasonal pool", err);
@@ -84,7 +84,7 @@ export const useFplStore = create<FPLState>((set, get) => ({
 
   fetchAllPlayers: async () => {
     try {
-      const { data } = await axios.get('http://localhost:3000/api/fpl/players');
+      const { data } = await axios.get('/api/fpl/players');
       set({ allPlayers: data });
     } catch (err) {
       console.error("Failed to fetch all players", err);
@@ -125,8 +125,8 @@ export const useFplStore = create<FPLState>((set, get) => ({
 
       // If we have fixtures, use the specialized optimize-matchweek endpoint
       const endpoint = fixtures.length > 0 
-        ? 'http://localhost:3000/api/fpl/optimize-matchweek' 
-        : 'http://localhost:3000/api/fpl/optimize';
+        ? '/api/fpl/optimize-matchweek' 
+        : '/api/fpl/optimize';
       
       // Build backend-compatible custom players payload
       const customPayload = customPlayers.map((cp: any) => ({

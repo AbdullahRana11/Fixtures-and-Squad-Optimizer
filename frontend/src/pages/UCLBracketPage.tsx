@@ -64,7 +64,7 @@ const UCLBracketPage: React.FC = () => {
             try {
                 if (queryId) {
                     // Load specific tournament by ID
-                    const { data } = await axios.get(`http://localhost:3000/api/tournaments/${queryId}`);
+                    const { data } = await axios.get(`/api/tournaments/${queryId}`);
                     if (data) {
                         setBracket(data.bracket);
                         setTournamentId(data.id);
@@ -73,7 +73,7 @@ const UCLBracketPage: React.FC = () => {
                     }
                 } else {
                     // Fallback: load latest UCL tournament
-                    const { data } = await axios.get('http://localhost:3000/api/tournaments/type/ucl');
+                    const { data } = await axios.get('/api/tournaments/type/ucl');
                     if (data && data.length > 0) {
                         const latest = data[0];
                         setBracket(latest.bracket);
@@ -97,7 +97,7 @@ const UCLBracketPage: React.FC = () => {
         const saveBracket = async () => {
             if (bracket) {
                 try {
-                    const { data } = await axios.post('http://localhost:3000/api/tournaments/save', {
+                    const { data } = await axios.post('/api/tournaments/save', {
                         id: tournamentId,
                         name: `UCL Tournament ${new Date().toLocaleDateString()}`,
                         type: 'ucl',
@@ -169,7 +169,7 @@ const UCLBracketPage: React.FC = () => {
         if (!match.home || !match.away) return;
         setStatsPanelOpen(true);
         try {
-            const { data } = await axios.post('http://localhost:3000/api/fixtures/predict', {
+            const { data } = await axios.post('/api/fixtures/predict', {
                 homeTeam: match.home.name,
                 awayTeam: match.away.name,
             });
@@ -210,7 +210,7 @@ const UCLBracketPage: React.FC = () => {
         // Progress to next round
         if (activeRound < bracket.rounds.length - 1) {
             try {
-                const { data } = await axios.post('http://localhost:3000/api/fixtures/ucl/next-round', {
+                const { data } = await axios.post('/api/fixtures/ucl/next-round', {
                     bracket,
                     winners,
                     roundIndex: activeRound
