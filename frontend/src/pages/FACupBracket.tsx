@@ -96,6 +96,13 @@ const FACupBracketPage: React.FC = () => {
           bracket: bracket
         });
         if (!tournamentId) setTournamentId(data.id);
+
+        if (data.reschedulingSummary?.status === 'rescheduled' && data.reschedulingSummary.matchesRescheduled?.length > 0) {
+          setIntelLog(prev => [
+            ...prev,
+            { text: `CROSS-SYNC ALERt: ${data.reschedulingSummary.matchesRescheduled.length} PL FIXTURE(S) AUTO-RESCHEDULED`, type: 'success' }
+          ]);
+        }
       } catch (err) {
         console.error('Failed to auto-save FA Cup bracket:', err);
       }

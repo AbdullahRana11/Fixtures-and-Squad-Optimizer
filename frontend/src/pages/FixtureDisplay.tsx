@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Calendar, Clock, MapPin, Shield, ArrowLeft, Settings2, Cpu, Filter, RefreshCw, Save, Zap } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calendar, Clock, MapPin, Shield, ArrowLeft, Settings2, Cpu, Filter, RefreshCw, Save, Zap, FileText, X } from 'lucide-react';
 import axios from 'axios';
 import StatsPanel from '../components/StatsPanel';
 import { getHistory, saveToHistory, deleteHistoryEntry } from '../utils/fixtureUtils';
@@ -63,6 +63,33 @@ const FixtureDisplay: React.FC = () => {
   const [isRegenerating, setIsRegenerating] = useState(false);
   const [viewMode, setViewMode] = useState<'matchweek' | 'team'>('matchweek');
 
+  // New state for FA Cup Rescheduling Integration
+  const [syncing, setSyncing] = useState(false);
+  const [reschedulingSummary, setReschedulingSummary] = useState<any | null>((schedule as any)?.reschedulingSummary || null);
+  const [logDrawerOpen, setLogDrawerOpen] = useState(false);
+  const [auditLogs, setAuditLogs] = useState<any[]>([]);
+
+  const handleFASync = async () => {
+    setSyncing(true);
+    try {
+      const { data } = await axios.post('/api/fixtures/sync-tournaments');
+      if (data.status === 'rescheduled') {
+        alert(`Rescheduled ${data.matchesRescheduled.length} matches due to FA Cup conflicts. Please regenerate or refresh to see the latest full schedule.`);
+        if (data.plScheduleUpdated) {
+          setReschedulingSummary(data);
+        }
+      } else if (data.status === 'no_conflicts') {
+        alert('No FA Cup conflicts found.');
+      } else {
+        alert(`Sync failed: ${data.errors?.join(', ')}`);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSyncing(false);
+    }
+  };
+
   React.useEffect(() => {
     if (schedule && schedule.fixtures.length > 0) {
       const history = getHistory();
@@ -97,7 +124,11 @@ const FixtureDisplay: React.FC = () => {
     }
   }, [schedule, leagueId]);
 
-  const MatchCard: React.FC<{ match: FixtureMatch; index: number; colors: any; onClick: () => void }> = ({ match, index, colors, onClick }) => (
+  const MatchCard: React.FC<{ match: FixtureMatch; index: number; colors: any; onClick: () => void; reschedulingSummary?: any }> = ({ match, index, colors, onClick, reschedulingSummary }) => {
+    const isRescheduled = reschedulingSummary?.matchesRescheduled?.some((r: any) => r.matchId === match.id);
+    const rescheduleInfo = reschedulingSummary?.matchesRescheduled?.find((r: any) => r.matchId === match.id);
+
+    return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -106,15 +137,20 @@ const FixtureDisplay: React.FC = () => {
     >
       <div 
         onClick={onClick}
-        className="p-5 rounded-xl border border-zinc-800 bg-black/50 hover:bg-zinc-800 cursor-pointer transition-all group overflow-hidden relative shadow-sm hover:shadow-md"
+        className={`p-5 rounded-xl border bg-black/50 hover:bg-zinc-800 cursor-pointer transition-all group overflow-hidden relative shadow-sm hover:shadow-md ${isRescheduled ? 'border-amber-500/30 bg-amber-900/10' : 'border-zinc-800'}`}
         style={{
-          borderTopColor: match.is_derby ? colors.primary : '',
-          borderTopWidth: match.is_derby ? '2px' : '1px'
+          borderTopColor: match.is_derby && !isRescheduled ? colors.primary : '',
+          borderTopWidth: match.is_derby && !isRescheduled ? '2px' : '1px'
         }}
       >
-        {match.is_derby && (
+        {match.is_derby && !isRescheduled && (
           <div className="absolute top-0 right-0 p-2 z-20">
             <Zap className="w-4 h-4 text-amber-500" />
+          </div>
+        )}
+        {isRescheduled && (
+          <div className="absolute top-0 right-4 bg-amber-500 text-black text-[9px] font-bold px-2 py-0.5 rounded-b-md z-20 shadow-md flex items-center gap-1">
+            <RefreshCw className="w-2 h-2" /> RESCHEDULED
           </div>
         )}
 
@@ -129,12 +165,17 @@ const FixtureDisplay: React.FC = () => {
           {/* Match Info Central HUD */}
           <div className="flex flex-col items-center gap-1 min-w-[80px]">
             <div className="text-xs font-semibold text-zinc-400 tracking-wider">
-              {match.time}
+              {isRescheduled && rescheduleInfo && rescheduleInfo.newTime ? rescheduleInfo.newTime : match.time}
             </div>
             <div className="h-px w-8 bg-zinc-700 my-1" />
-            <div className="text-xs text-zinc-500 font-open">
-              {match.date}
+            <div className={`text-xs font-open ${isRescheduled ? 'text-amber-500 font-bold' : 'text-zinc-500'}`}>
+              {isRescheduled && rescheduleInfo ? rescheduleInfo.newDate : match.date}
             </div>
+            {isRescheduled && rescheduleInfo && (
+              <div className="text-[9px] text-zinc-500 line-through mt-0.5">
+                {rescheduleInfo.oldDate}
+              </div>
+            )}
           </div>
 
           {/* Away Team */}
@@ -151,7 +192,8 @@ const FixtureDisplay: React.FC = () => {
         </div>
       </div>
     </motion.div>
-  );
+    );
+  };
 
   const colors = LEAGUE_COLORS[leagueId] || LEAGUE_COLORS.pl;
 
@@ -318,6 +360,29 @@ const FixtureDisplay: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-3">
+          {leagueId === 'pl' && (
+            <>
+              <button 
+                onClick={handleFASync}
+                disabled={syncing}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold transition-all disabled:opacity-50 shadow-sm"
+              >
+                <RefreshCw className={`w-4 h-4 ${syncing ? 'animate-spin' : ''}`} />
+                Sync FA Cup
+              </button>
+              <button 
+                onClick={() => {
+                  setLogDrawerOpen(true);
+                  axios.get('/api/fixtures/rescheduling-log').then(res => setAuditLogs(res.data)).catch(console.error);
+                }}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg border border-amber-600/30 text-amber-500 hover:bg-amber-600/10 text-xs font-semibold transition-all"
+              >
+                <FileText className="w-4 h-4" />
+                Reschedule Log
+              </button>
+            </>
+          )}
+
           <button 
             onClick={handleRegenerate}
             disabled={isRegenerating}
@@ -441,6 +506,7 @@ const FixtureDisplay: React.FC = () => {
                     index={i} 
                     colors={colors} 
                     onClick={() => handleMatchClick(match)}
+                    reschedulingSummary={reschedulingSummary}
                   />
                 ))}
               </div>
@@ -588,6 +654,68 @@ const FixtureDisplay: React.FC = () => {
         onClose={() => { setStatsPanelOpen(false); setPrediction(null); }}
         leagueColor={colors.primary}
       />
+
+      {/* Rescheduling Log Drawer */}
+      <AnimatePresence>
+        {logDrawerOpen && (
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              onClick={() => setLogDrawerOpen(false)}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+            />
+            <motion.div
+              initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed top-0 right-0 h-full w-full max-w-md bg-[#0a0a0a] border-l border-zinc-800 z-50 p-6 overflow-y-auto flex flex-col font-open shadow-2xl"
+            >
+              <div className="flex items-center justify-between mb-8 pb-4 border-b border-zinc-800">
+                <div>
+                  <h2 className="text-xl font-bold text-white mb-1">Rescheduling Log</h2>
+                  <p className="text-xs text-zinc-500 font-semibold">Audit trail of FA Cup conflicts & moves</p>
+                </div>
+                <button onClick={() => setLogDrawerOpen(false)} className="p-2 text-zinc-400 hover:text-white bg-zinc-900 rounded-full transition-colors">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {auditLogs.length === 0 ? (
+                <div className="flex-1 flex flex-col items-center justify-center text-zinc-500 opacity-60">
+                  <Clock className="w-12 h-12 mb-4" />
+                  <p className="text-sm font-semibold">No rescheduling actions logged yet.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {auditLogs.map(log => (
+                    <div key={log.id} className="p-4 rounded-xl border border-zinc-800 bg-zinc-900/30">
+                      <div className="flex justify-between items-start mb-3">
+                        <span className="text-[10px] font-bold px-2 py-1 bg-zinc-800 text-zinc-300 rounded uppercase tracking-wider">
+                          {log.action}
+                        </span>
+                        <span className="text-[10px] text-zinc-500 font-semibold">
+                          {new Date(log.created_at).toLocaleString()}
+                        </span>
+                      </div>
+                      <h4 className="text-sm font-bold text-white mb-1">{log.team} vs {log.opponent}</h4>
+                      <p className="text-xs text-zinc-400 font-medium mb-3">Reason: <span className="text-amber-500">{log.reason}</span></p>
+                      
+                      <div className="flex items-center gap-3 text-xs bg-black/40 p-3 rounded-lg border border-zinc-800">
+                        <div className="flex-1 text-zinc-500 line-through">
+                          MW{log.old_matchweek} • {log.old_date}
+                        </div>
+                        <ArrowLeft className="w-4 h-4 text-zinc-600 rotate-180" />
+                        <div className="flex-1 text-emerald-400 font-bold">
+                          {log.new_matchweek ? `MW${log.new_matchweek}` : 'End Season'} • {log.new_date}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
