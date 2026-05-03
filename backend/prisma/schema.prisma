@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model Team {
@@ -59,14 +59,35 @@ model Player {
 }
 
 model Tournament {
-  id          String   @id @default(uuid())
-  name        String
-  type        String   // 'ucl', 'facup', 'league'
-  status      String   @default("active") // 'active', 'completed'
-  bracket     String   // Store as JSON string
-  settings    String?  // Store as JSON string
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
+  id                    String   @id @default(uuid())
+  name                  String
+  type                  String   // 'ucl', 'facup', 'league'
+  status                String   @default("draft") // 'draft', 'generated', 'saved', 'completed'
+  league                String?  // 'PL', 'FA_CUP', 'UCL' — normalized identifier
+  participant_teams     String?  // JSON array of team names
+  fa_cup_knockout_teams String?  // JSON: teams in QF/SF/F stages
+  affected_pl_matchweeks String? // JSON: rescheduling metadata
+  bracket               String   // Store as JSON string
+  settings              String?  // Store as JSON string
+  created_at            DateTime @default(now())
+  updated_at            DateTime @updatedAt
 
   @@map("tournaments")
+}
+
+model ReschedulingLog {
+  id             String   @id @default(uuid())
+  tournament_id  String
+  match_id       String
+  team           String
+  opponent       String
+  old_date       String
+  new_date       String
+  old_matchweek  Int
+  new_matchweek  Int?
+  reason         String   // 'QF conflict', 'SF conflict', 'F conflict'
+  action         String   // 'auto-sync', 'manual-save', 'generate-sync'
+  created_at     DateTime @default(now())
+
+  @@map("rescheduling_logs")
 }
