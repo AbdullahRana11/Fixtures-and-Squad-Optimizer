@@ -32,6 +32,8 @@ app.post('/api/fixtures/modify', fixturesController.modifyFixture);
 app.post('/api/fixtures/fa-cup/next-round', fixturesController.advanceFACupRound);
 app.post('/api/fixtures/ucl/next-round', fixturesController.getNextUCLRound);
 app.get('/api/fixtures/pl/season', fixturesController.getSeasonFixtures);
+app.post('/api/fixtures/sync-tournaments', fixturesController.syncTournaments);
+app.get('/api/fixtures/rescheduling-log', fixturesController.getReschedulingLog);
 
 // --- Tournament Persistence Routes ---
 app.post('/api/tournaments/save', fixturesController.saveTournament);
