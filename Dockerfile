@@ -38,36 +38,33 @@ RUN npm run build && ls -R dist
 # ─────────────────────────────────────────────────────────────────────────────
 FROM node:20-alpine AS production
 
-# node:20-alpine already ships with a built-in 'node' user at UID 1000
-# (HF Spaces requirement). No need to create a new user.
-
+# Set working directory
 WORKDIR /app
 
-# Install ALL deps (need ts-node + prisma for seeding at startup)
-COPY backend/package*.json ./
-RUN npm ci
+# Copy package files (for reference and npx usage)
+COPY --from=backend-builder /app/backend/package*.json ./
 
-# Compiled backend
+# Copy built backend + pre-installed node_modules + prisma schema
+# (This avoids re-running npm ci in the final stage)
 COPY --from=backend-builder /app/backend/dist ./dist
+COPY --from=backend-builder /app/backend/node_modules ./node_modules
+COPY --from=backend-builder /app/backend/prisma ./prisma
 
-# Prisma schema + generated client
-COPY --from=backend-builder /app/backend/node_modules/.prisma ./node_modules/.prisma
-COPY --from=backend-builder /app/backend/node_modules/@prisma  ./node_modules/@prisma
-COPY backend/prisma ./prisma
-
-# Built React frontend (Express will serve this as static files)
+# Copy built frontend
 COPY --from=frontend-builder /app/frontend/dist ./public
 
-# Dataset file for FPL seed
+# Copy dataset for FPL seeding
 COPY FPL_Real_Players_25_26.xlsx ./FPL_Real_Players_25_26.xlsx
 
+# HF Spaces requires the 'node' user (UID 1000)
 RUN chown -R node:node /app
 USER node
 
 # HF Spaces exposes port 7860
 EXPOSE 7860
 
-# Startup: push schema → seed teams/players → start server
+# Startup: push schema -> seed data -> start Express
+# We use npx for prisma/ts-node which are in node_modules/.bin
 CMD ["sh", "-c", "\
   npx prisma db push --accept-data-loss && \
   npx ts-node --skip-project prisma/seed.ts && \
