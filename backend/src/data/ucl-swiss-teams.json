@@ -1,0 +1,42 @@
+[
+  { "name": "Real Madrid",       "country": "ESP", "pot": 1, "coefficient": 136, "stadium": "Santiago Bernabeu",         "homeAdvantage": 1.25, "zone": "Western Europe",  "winterRestricted": false, "rating": 94 },
+  { "name": "Manchester City",   "country": "ENG", "pot": 1, "coefficient": 131, "stadium": "Etihad Stadium",            "homeAdvantage": 1.22, "zone": "Western Europe",  "winterRestricted": false, "rating": 92 },
+  { "name": "Bayern Munich",     "country": "GER", "pot": 1, "coefficient": 128, "stadium": "Allianz Arena",             "homeAdvantage": 1.25, "zone": "Western Europe",  "winterRestricted": false, "rating": 91 },
+  { "name": "Paris Saint-Germain","country":"FRA", "pot": 1, "coefficient": 116, "stadium": "Parc des Princes",          "homeAdvantage": 1.22, "zone": "Western Europe",  "winterRestricted": false, "rating": 89 },
+  { "name": "Liverpool",         "country": "ENG", "pot": 1, "coefficient": 114, "stadium": "Anfield",                   "homeAdvantage": 1.25, "zone": "Western Europe",  "winterRestricted": false, "rating": 90 },
+  { "name": "Inter Milan",       "country": "ITA", "pot": 1, "coefficient": 113, "stadium": "Giuseppe Meazza",           "homeAdvantage": 1.20, "zone": "Western Europe",  "winterRestricted": false, "rating": 89 },
+  { "name": "Borussia Dortmund", "country": "GER", "pot": 1, "coefficient": 110, "stadium": "Signal Iduna Park",         "homeAdvantage": 1.22, "zone": "Western Europe",  "winterRestricted": false, "rating": 87 },
+  { "name": "RB Leipzig",        "country": "GER", "pot": 1, "coefficient": 97,  "stadium": "Red Bull Arena",            "homeAdvantage": 1.15, "zone": "Western Europe",  "winterRestricted": false, "rating": 85 },
+  { "name": "Barcelona",         "country": "ESP", "pot": 1, "coefficient": 96,  "stadium": "Lluis Companys Olympic",    "homeAdvantage": 1.22, "zone": "Western Europe",  "winterRestricted": false, "rating": 88 },
+
+  { "name": "Bayer Leverkusen",  "country": "GER", "pot": 2, "coefficient": 87,  "stadium": "BayArena",                  "homeAdvantage": 1.18, "zone": "Western Europe",  "winterRestricted": false, "rating": 86 },
+  { "name": "Atletico Madrid",   "country": "ESP", "pot": 2, "coefficient": 86,  "stadium": "Civitas Metropolitano",     "homeAdvantage": 1.18, "zone": "Western Europe",  "winterRestricted": false, "rating": 86 },
+  { "name": "Atalanta",          "country": "ITA", "pot": 2, "coefficient": 73,  "stadium": "Gewiss Stadium",            "homeAdvantage": 1.15, "zone": "Western Europe",  "winterRestricted": false, "rating": 83 },
+  { "name": "Juventus",          "country": "ITA", "pot": 2, "coefficient": 68,  "stadium": "Allianz Stadium",           "homeAdvantage": 1.18, "zone": "Western Europe",  "winterRestricted": false, "rating": 84 },
+  { "name": "Benfica",           "country": "POR", "pot": 2, "coefficient": 68,  "stadium": "Estadio da Luz",            "homeAdvantage": 1.20, "zone": "Western Europe",  "winterRestricted": false, "rating": 82 },
+  { "name": "Arsenal",           "country": "ENG", "pot": 2, "coefficient": 64,  "stadium": "Emirates Stadium",          "homeAdvantage": 1.22, "zone": "Western Europe",  "winterRestricted": false, "rating": 88 },
+  { "name": "Club Brugge",       "country": "BEL", "pot": 2, "coefficient": 64,  "stadium": "Jan Breydel Stadium",       "homeAdvantage": 1.12, "zone": "Western Europe",  "winterRestricted": false, "rating": 78 },
+  { "name": "Shakhtar Donetsk",  "country": "UKR", "pot": 2, "coefficient": 63,  "stadium": "Arena Lviv",                "homeAdvantage": 1.05, "zone": "Eastern Europe",  "winterRestricted": true,  "rating": 79 },
+  { "name": "AC Milan",          "country": "ITA", "pot": 2, "coefficient": 58,  "stadium": "Giuseppe Meazza",           "homeAdvantage": 1.18, "zone": "Western Europe",  "winterRestricted": false, "rating": 83 },
+
+  { "name": "Feyenoord",         "country": "NED", "pot": 3, "coefficient": 56,  "stadium": "De Kuip",                   "homeAdvantage": 1.18, "zone": "Western Europe",  "winterRestricted": false, "rating": 80 },
+  { "name": "Sporting CP",       "country": "POR", "pot": 3, "coefficient": 54,  "stadium": "Jose Alvalade",             "homeAdvantage": 1.18, "zone": "Western Europe",  "winterRestricted": false, "rating": 80 },
+  { "name": "PSV Eindhoven",     "country": "NED", "pot": 3, "coefficient": 52,  "stadium": "Philips Stadion",           "homeAdvantage": 1.15, "zone": "Western Europe",  "winterRestricted": false, "rating": 81 },
+  { "name": "Dinamo Zagreb",     "country": "CRO", "pot": 3, "coefficient": 50,  "stadium": "Stadion Maksimir",          "homeAdvantage": 1.15, "zone": "Eastern Europe",  "winterRestricted": false, "rating": 71 },
+  { "name": "Red Bull Salzburg", "country": "AUT", "pot": 3, "coefficient": 50,  "stadium": "Red Bull Arena",            "homeAdvantage": 1.15, "zone": "Western Europe",  "winterRestricted": false, "rating": 78 },
+  { "name": "Lille",             "country": "FRA", "pot": 3, "coefficient": 47,  "stadium": "Stade Pierre-Mauroy",       "homeAdvantage": 1.12, "zone": "Western Europe",  "winterRestricted": false, "rating": 80 },
+  { "name": "Crvena Zvezda",     "country": "SRB", "pot": 3, "coefficient": 40,  "stadium": "Rajko Mitic Stadium",       "homeAdvantage": 1.20, "zone": "Eastern Europe",  "winterRestricted": false, "rating": 74 },
+  { "name": "Young Boys",        "country": "SUI", "pot": 3, "coefficient": 34,  "stadium": "Wankdorf Stadium",          "homeAdvantage": 1.12, "zone": "Western Europe",  "winterRestricted": false, "rating": 72 },
+  { "name": "Celtic",            "country": "SCO", "pot": 3, "coefficient": 32,  "stadium": "Celtic Park",               "homeAdvantage": 1.20, "zone": "Western Europe",  "winterRestricted": false, "rating": 77 },
+
+  { "name": "Slovan Bratislava", "country": "SVK", "pot": 4, "coefficient": 30,  "stadium": "Tehelne Pole",              "homeAdvantage": 1.08, "zone": "Eastern Europe",  "winterRestricted": false, "rating": 68 },
+  { "name": "Monaco",            "country": "FRA", "pot": 4, "coefficient": 24,  "stadium": "Stade Louis II",            "homeAdvantage": 1.12, "zone": "Western Europe",  "winterRestricted": false, "rating": 82 },
+  { "name": "Sparta Praha",      "country": "CZE", "pot": 4, "coefficient": 22,  "stadium": "Letna Stadium",             "homeAdvantage": 1.12, "zone": "Eastern Europe",  "winterRestricted": false, "rating": 73 },
+  { "name": "Aston Villa",       "country": "ENG", "pot": 4, "coefficient": 20,  "stadium": "Villa Park",                "homeAdvantage": 1.12, "zone": "Western Europe",  "winterRestricted": false, "rating": 84 },
+  { "name": "Bologna",           "country": "ITA", "pot": 4, "coefficient": 18,  "stadium": "Renato Dall'Ara",           "homeAdvantage": 1.08, "zone": "Western Europe",  "winterRestricted": false, "rating": 79 },
+  { "name": "Girona",            "country": "ESP", "pot": 4, "coefficient": 18,  "stadium": "Estadio Montilivi",         "homeAdvantage": 1.08, "zone": "Western Europe",  "winterRestricted": false, "rating": 78 },
+  { "name": "Stuttgart",         "country": "GER", "pot": 4, "coefficient": 17,  "stadium": "MHPArena",                  "homeAdvantage": 1.12, "zone": "Western Europe",  "winterRestricted": false, "rating": 81 },
+  { "name": "Sturm Graz",        "country": "AUT", "pot": 4, "coefficient": 14,  "stadium": "Merkur Arena",              "homeAdvantage": 1.08, "zone": "Western Europe",  "winterRestricted": false, "rating": 70 },
+  { "name": "Brest",             "country": "FRA", "pot": 4, "coefficient": 13,  "stadium": "Stade Francis-Le Ble",      "homeAdvantage": 1.08, "zone": "Western Europe",  "winterRestricted": false, "rating": 74 }
+]
+

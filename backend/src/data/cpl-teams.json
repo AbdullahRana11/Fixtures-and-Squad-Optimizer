@@ -1,0 +1,90 @@
+[
+  {
+    "name": "Trinbago Knight Riders",
+    "city": "Port of Spain",
+    "stadium": "Queen's Park Oval",
+    "biggest_rival": "Barbados Royals",
+    "policing_conflict": null,
+    "country": "TT",
+    "homeAdvantage": 1.2,
+    "other_rivals": "Jamaica Tallawahs",
+    "uefa_pot": 1
+  },
+  {
+    "name": "Barbados Royals",
+    "city": "Bridgetown",
+    "stadium": "Kensington Oval",
+    "biggest_rival": "Trinbago Knight Riders",
+    "policing_conflict": null,
+    "country": "BB",
+    "homeAdvantage": 1.15,
+    "other_rivals": "Guyana Amazon Warriors",
+    "uefa_pot": 1
+  },
+  {
+    "name": "Guyana Amazon Warriors",
+    "city": "Providence",
+    "stadium": "Providence Stadium",
+    "biggest_rival": "Trinbago Knight Riders",
+    "policing_conflict": null,
+    "country": "GY",
+    "homeAdvantage": 1.1,
+    "other_rivals": "Barbados Royals",
+    "uefa_pot": 2
+  },
+  {
+    "name": "Jamaica Tallawahs",
+    "city": "Kingston",
+    "stadium": "Sabina Park",
+    "biggest_rival": "St Kitts and Nevis Patriots",
+    "policing_conflict": null,
+    "country": "JM",
+    "homeAdvantage": 1.1,
+    "other_rivals": "Trinbago Knight Riders",
+    "uefa_pot": 2
+  },
+  {
+    "name": "St Kitts and Nevis Patriots",
+    "city": "Basseterre",
+    "stadium": "Warner Park",
+    "biggest_rival": "Jamaica Tallawahs",
+    "policing_conflict": null,
+    "country": "KN",
+    "homeAdvantage": 1.05,
+    "other_rivals": null,
+    "uefa_pot": 3
+  },
+  {
+    "name": "Saint Lucia Kings",
+    "city": "Gros Islet",
+    "stadium": "Daren Sammy Stadium",
+    "biggest_rival": "Barbados Royals",
+    "policing_conflict": null,
+    "country": "LC",
+    "homeAdvantage": 1.05,
+    "other_rivals": null,
+    "uefa_pot": 3
+  },
+  {
+    "name": "Antigua and Barbuda Falcons",
+    "city": "North Sound",
+    "stadium": "Sir Vivian Richards Stadium",
+    "biggest_rival": "Barbados Royals",
+    "policing_conflict": null,
+    "country": "AG",
+    "homeAdvantage": 1.0,
+    "other_rivals": "Saint Lucia Kings",
+    "uefa_pot": 4
+  },
+  {
+    "name": "Windward Islands Volcanoes",
+    "city": "Arnos Vale",
+    "stadium": "Arnos Vale Sports Complex",
+    "biggest_rival": "Saint Lucia Kings",
+    "policing_conflict": null,
+    "country": "VC",
+    "homeAdvantage": 1.0,
+    "other_rivals": null,
+    "uefa_pot": 4
+  }
+]

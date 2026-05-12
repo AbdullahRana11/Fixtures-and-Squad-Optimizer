@@ -1,0 +1,82 @@
+[
+  {
+    "name": "Karachi Kings",
+    "city": "Karachi",
+    "stadium": "National Bank Cricket Arena",
+    "biggest_rival": "Lahore Qalandars",
+    "policing_conflict": null,
+    "country": "PK",
+    "homeAdvantage": 1.15,
+    "uefa_pot": 1
+  },
+  {
+    "name": "Lahore Qalandars",
+    "city": "Lahore",
+    "stadium": "Gaddafi Stadium",
+    "biggest_rival": "Karachi Kings",
+    "policing_conflict": null,
+    "country": "PK",
+    "homeAdvantage": 1.2,
+    "uefa_pot": 1
+  },
+  {
+    "name": "Islamabad United",
+    "city": "Islamabad",
+    "stadium": "Pindi Cricket Stadium",
+    "biggest_rival": "Peshawar Zalmi",
+    "policing_conflict": null,
+    "country": "PK",
+    "homeAdvantage": 1.1,
+    "uefa_pot": 2
+  },
+  {
+    "name": "Peshawar Zalmi",
+    "city": "Peshawar",
+    "stadium": "Arbab Niaz Stadium",
+    "biggest_rival": "Islamabad United",
+    "policing_conflict": null,
+    "country": "PK",
+    "homeAdvantage": 1.1,
+    "uefa_pot": 2
+  },
+  {
+    "name": "Quetta Gladiators",
+    "city": "Quetta",
+    "stadium": "Bugti Stadium",
+    "biggest_rival": null,
+    "policing_conflict": null,
+    "country": "PK",
+    "homeAdvantage": 1.05,
+    "uefa_pot": 3
+  },
+  {
+    "name": "Multan Sultans",
+    "city": "Multan",
+    "stadium": "Multan Cricket Stadium",
+    "biggest_rival": null,
+    "policing_conflict": null,
+    "country": "PK",
+    "homeAdvantage": 1.15,
+    "uefa_pot": 3
+  },
+  {
+    "name": "Sialkot Stallions",
+    "city": "Sialkot",
+    "stadium": "Jinnah Stadium",
+    "biggest_rival": "Faisalabad Wolves",
+    "policing_conflict": null,
+    "country": "PK",
+    "homeAdvantage": 1.05,
+    "uefa_pot": 4
+  },
+  {
+    "name": "Faisalabad Wolves",
+    "city": "Faisalabad",
+    "stadium": "Iqbal Stadium",
+    "biggest_rival": "Sialkot Stallions",
+    "policing_conflict": null,
+    "country": "PK",
+    "homeAdvantage": 1.05,
+    "uefa_pot": 4
+  }
+]

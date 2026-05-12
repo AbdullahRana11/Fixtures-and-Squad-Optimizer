@@ -1,0 +1,29 @@
+**/.git
+**/.gitignore
+**/node_modules
+**/dist
+**/.env
+**/dev.db
+**/dev.db-journal
+
+# Large temp/legacy files at root
+diff.txt
+test-knapsack.*
+backend_fixtures*.ts
+claude_frontend_code.txt.txt
+legacy_FPLOptimizer*.tsx
+temp_old_*.tsx
+temp_old_*.ts
+frontend_mods_extracted/
+improvements_zip/
+temp_unzip/
+dataset/
+extract.py
+
+# Frontend build artifacts (built fresh in Docker)
+frontend/dist
+frontend/.vite
+
+# Backend compiled output (built fresh in Docker)
+backend/dist
+backend/prisma/dev.db

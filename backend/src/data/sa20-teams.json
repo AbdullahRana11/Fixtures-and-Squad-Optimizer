@@ -1,0 +1,90 @@
+[
+  {
+    "name": "Sunrisers Eastern Cape",
+    "city": "Gqeberha",
+    "stadium": "St George's Park",
+    "biggest_rival": "Cape Town Spurs",
+    "policing_conflict": null,
+    "country": "ZA",
+    "homeAdvantage": 1.2,
+    "other_rivals": "Durban Super Giants",
+    "uefa_pot": 1
+  },
+  {
+    "name": "Paarl Royals",
+    "city": "Paarl",
+    "stadium": "Boland Park",
+    "biggest_rival": "MI Cape Town",
+    "policing_conflict": null,
+    "country": "ZA",
+    "homeAdvantage": 1.1,
+    "other_rivals": "Sunrisers Eastern Cape",
+    "uefa_pot": 1
+  },
+  {
+    "name": "MI Cape Town",
+    "city": "Cape Town",
+    "stadium": "Newlands Stadium",
+    "biggest_rival": "Paarl Royals",
+    "policing_conflict": null,
+    "country": "ZA",
+    "homeAdvantage": 1.15,
+    "other_rivals": "Pretoria Capitals",
+    "uefa_pot": 2
+  },
+  {
+    "name": "Durban Super Giants",
+    "city": "Durban",
+    "stadium": "Kingsmead",
+    "biggest_rival": "Sunrisers Eastern Cape",
+    "policing_conflict": null,
+    "country": "ZA",
+    "homeAdvantage": 1.1,
+    "other_rivals": "Johannesburg Super Kings",
+    "uefa_pot": 2
+  },
+  {
+    "name": "Pretoria Capitals",
+    "city": "Pretoria",
+    "stadium": "SuperSport Park",
+    "biggest_rival": "Johannesburg Super Kings",
+    "policing_conflict": null,
+    "country": "ZA",
+    "homeAdvantage": 1.1,
+    "other_rivals": "MI Cape Town",
+    "uefa_pot": 3
+  },
+  {
+    "name": "Johannesburg Super Kings",
+    "city": "Johannesburg",
+    "stadium": "The Wanderers",
+    "biggest_rival": "Pretoria Capitals",
+    "policing_conflict": null,
+    "country": "ZA",
+    "homeAdvantage": 1.05,
+    "other_rivals": "Durban Super Giants",
+    "uefa_pot": 3
+  },
+  {
+    "name": "North West Dragons",
+    "city": "Potchefstroom",
+    "stadium": "Senwes Park",
+    "biggest_rival": "Pretoria Capitals",
+    "policing_conflict": null,
+    "country": "ZA",
+    "homeAdvantage": 1.0,
+    "other_rivals": null,
+    "uefa_pot": 4
+  },
+  {
+    "name": "Eastern Province Warriors",
+    "city": "Gqeberha",
+    "stadium": "St George's Park Arena",
+    "biggest_rival": "Sunrisers Eastern Cape",
+    "policing_conflict": null,
+    "country": "ZA",
+    "homeAdvantage": 1.0,
+    "other_rivals": null,
+    "uefa_pot": 4
+  }
+]

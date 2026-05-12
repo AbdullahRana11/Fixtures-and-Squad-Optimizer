@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Team {
+  id                String   @id @default(uuid())
+  name              String   @unique
+  sport             String   @default("football") // 'football' or 'cricket'
+  league            String
+  country_code      String
+  city              String
+  stadium           String
+  biggest_rival     String?
+  other_rivals      String?
+  policing_conflict String?
+  sheet_source      String
+  // UCL-specific fields
+  uefa_pot          String?
+  home_advantage    Float?
+  geographic_zone   String?
+  winter_restricted Boolean  @default(false)
+  // Legacy fields for backward compat
+  group_id          String   @default("X")
+  is_seeded         Boolean  @default(false)
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
+
+  @@index([league])
+  @@index([sheet_source])
+  @@index([is_seeded])
+  @@map("teams")
+}
+
+model Player {
+  id                        String   @id
+  name                      String
+  sport                     String   @default("football") // 'football' or 'cricket'
+  club                      String
+  position                  String
+  cost_millions             Float
+  overall_ability           Int
+  expectation_status        String
+  expectation_multiplier    Float
+  base_form                 Float
+  home_stadium_multiplier   Float
+  last_3_vs_opponent_pts    Float
+  // Performance Stats
+  goals                     Int      @default(0)
+  assists                   Int      @default(0)
+  clean_sheets              Int      @default(0)
+  matches_played            Int      @default(0)
+  created_at                DateTime @default(now())
+  updated_at                DateTime @updatedAt
+
+  @@map("players")
+}
+
+model Tournament {
+  id                    String   @id @default(uuid())
+  name                  String
+  type                  String   // 'ucl', 'facup', 'league'
+  status                String   @default("draft") // 'draft', 'generated', 'saved', 'completed'
+  league                String?  // 'PL', 'FA_CUP', 'UCL' — normalized identifier
+  participant_teams     String?  // JSON array of team names
+  fa_cup_knockout_teams String?  // JSON: teams in QF/SF/F stages
+  affected_pl_matchweeks String? // JSON: rescheduling metadata
+  bracket               String   // Store as JSON string
+  settings              String?  // Store as JSON string
+  created_at            DateTime @default(now())
+  updated_at            DateTime @updatedAt
+
+  @@map("tournaments")
+}
+
+model ReschedulingLog {
+  id             String   @id @default(uuid())
+  tournament_id  String
+  match_id       String
+  team           String
+  opponent       String
+  old_date       String
+  new_date       String
+  old_matchweek  Int
+  new_matchweek  Int?
+  reason         String   // 'QF conflict', 'SF conflict', 'F conflict'
+  action         String   // 'auto-sync', 'manual-save', 'generate-sync'
+  created_at     DateTime @default(now())
+
+  @@map("rescheduling_logs")
+}

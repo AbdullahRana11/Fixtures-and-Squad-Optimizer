@@ -1,0 +1,112 @@
+[
+  {
+    "name": "Sydney Sixers",
+    "city": "Sydney",
+    "stadium": "Sydney Cricket Ground",
+    "biggest_rival": "Sydney Thunder",
+    "policing_conflict": null,
+    "country": "AU",
+    "homeAdvantage": 1.2,
+    "other_rivals": "Melbourne Stars",
+    "uefa_pot": 1
+  },
+  {
+    "name": "Perth Scorchers",
+    "city": "Perth",
+    "stadium": "Optus Stadium",
+    "biggest_rival": "Sydney Sixers",
+    "policing_conflict": null,
+    "country": "AU",
+    "homeAdvantage": 1.2,
+    "other_rivals": "Adelaide Strikers",
+    "uefa_pot": 1
+  },
+  {
+    "name": "Melbourne Stars",
+    "city": "Melbourne",
+    "stadium": "Melbourne Cricket Ground",
+    "biggest_rival": "Melbourne Renegades",
+    "policing_conflict": "Melbourne Renegades",
+    "country": "AU",
+    "homeAdvantage": 1.15,
+    "other_rivals": "Sydney Sixers",
+    "uefa_pot": 2
+  },
+  {
+    "name": "Brisbane Heat",
+    "city": "Brisbane",
+    "stadium": "The Gabba",
+    "biggest_rival": "Sydney Thunder",
+    "policing_conflict": null,
+    "country": "AU",
+    "homeAdvantage": 1.1,
+    "other_rivals": "Perth Scorchers",
+    "uefa_pot": 2
+  },
+  {
+    "name": "Sydney Thunder",
+    "city": "Sydney",
+    "stadium": "Sydney Showground Stadium",
+    "biggest_rival": "Sydney Sixers",
+    "policing_conflict": "Sydney Sixers",
+    "country": "AU",
+    "homeAdvantage": 1.1,
+    "other_rivals": "Brisbane Heat",
+    "uefa_pot": 3
+  },
+  {
+    "name": "Melbourne Renegades",
+    "city": "Melbourne",
+    "stadium": "Marvel Stadium",
+    "biggest_rival": "Melbourne Stars",
+    "policing_conflict": "Melbourne Stars",
+    "country": "AU",
+    "homeAdvantage": 1.05,
+    "other_rivals": null,
+    "uefa_pot": 3
+  },
+  {
+    "name": "Adelaide Strikers",
+    "city": "Adelaide",
+    "stadium": "Adelaide Oval",
+    "biggest_rival": "Perth Scorchers",
+    "policing_conflict": null,
+    "country": "AU",
+    "homeAdvantage": 1.1,
+    "other_rivals": "Brisbane Heat",
+    "uefa_pot": 2
+  },
+  {
+    "name": "Hobart Hurricanes",
+    "city": "Hobart",
+    "stadium": "Blundstone Arena",
+    "biggest_rival": "Melbourne Stars",
+    "policing_conflict": null,
+    "country": "AU",
+    "homeAdvantage": 1.05,
+    "other_rivals": "Adelaide Strikers",
+    "uefa_pot": 4
+  },
+  {
+    "name": "Canberra Raiders XI",
+    "city": "Canberra",
+    "stadium": "Manuka Oval",
+    "biggest_rival": "Sydney Thunder",
+    "policing_conflict": null,
+    "country": "AU",
+    "homeAdvantage": 1.0,
+    "other_rivals": null,
+    "uefa_pot": 4
+  },
+  {
+    "name": "Gold Coast Thunder",
+    "city": "Gold Coast",
+    "stadium": "Metricon Stadium",
+    "biggest_rival": "Brisbane Heat",
+    "policing_conflict": null,
+    "country": "AU",
+    "homeAdvantage": 1.0,
+    "other_rivals": null,
+    "uefa_pot": 4
+  }
+]

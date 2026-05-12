@@ -1,0 +1,134 @@
+[
+  { 
+    "name": "Mumbai Indians", 
+    "city": "Mumbai", 
+    "stadium": "Wankhede Stadium", 
+    "country": "IN", 
+    "homeAdvantage": 1.2,
+    "biggest_rival": "Chennai Super Kings",
+    "other_rivals": "Kolkata Knight Riders, Royal Challengers Bangalore",
+    "policing_conflict": null,
+    "uefa_pot": 1
+  },
+  { 
+    "name": "Chennai Super Kings", 
+    "city": "Chennai", 
+    "stadium": "MA Chidambaram Stadium", 
+    "country": "IN", 
+    "homeAdvantage": 1.25,
+    "biggest_rival": "Mumbai Indians",
+    "other_rivals": "Royal Challengers Bangalore, Sunrisers Hyderabad",
+    "policing_conflict": null,
+    "uefa_pot": 1
+  },
+  { 
+    "name": "Royal Challengers Bangalore", 
+    "city": "Bengaluru", 
+    "stadium": "M. Chinnaswamy Stadium", 
+    "country": "IN", 
+    "homeAdvantage": 1.15,
+    "biggest_rival": "Chennai Super Kings",
+    "other_rivals": "Kolkata Knight Riders, Sunrisers Hyderabad",
+    "policing_conflict": null,
+    "uefa_pot": 1
+  },
+  { 
+    "name": "Kolkata Knight Riders", 
+    "city": "Kolkata", 
+    "stadium": "Eden Gardens", 
+    "country": "IN", 
+    "homeAdvantage": 1.15,
+    "biggest_rival": "Mumbai Indians",
+    "other_rivals": "Royal Challengers Bangalore",
+    "policing_conflict": null,
+    "uefa_pot": 2
+  },
+  { 
+    "name": "Gujarat Titans", 
+    "city": "Ahmedabad", 
+    "stadium": "Narendra Modi Stadium", 
+    "country": "IN", 
+    "homeAdvantage": 1.1,
+    "biggest_rival": "Rajasthan Royals",
+    "other_rivals": "Mumbai Indians",
+    "policing_conflict": null,
+    "uefa_pot": 2
+  },
+  { 
+    "name": "Lucknow Super Giants", 
+    "city": "Lucknow", 
+    "stadium": "Ekana Stadium", 
+    "country": "IN", 
+    "homeAdvantage": 1.1,
+    "biggest_rival": "Royal Challengers Bangalore",
+    "other_rivals": "Delhi Capitals",
+    "policing_conflict": null,
+    "uefa_pot": 2
+  },
+  { 
+    "name": "Rajasthan Royals", 
+    "city": "Jaipur", 
+    "stadium": "Sawai Mansingh Stadium", 
+    "country": "IN", 
+    "homeAdvantage": 1.1,
+    "biggest_rival": "Gujarat Titans",
+    "other_rivals": "Punjab Kings",
+    "policing_conflict": null,
+    "uefa_pot": 3
+  },
+  { 
+    "name": "Delhi Capitals", 
+    "city": "Delhi", 
+    "stadium": "Arun Jaitley Stadium", 
+    "country": "IN", 
+    "homeAdvantage": 1.1,
+    "biggest_rival": "Mumbai Indians",
+    "other_rivals": "Lucknow Super Giants",
+    "policing_conflict": null,
+    "uefa_pot": 3
+  },
+  { 
+    "name": "Punjab Kings", 
+    "city": "Mohali", 
+    "stadium": "IS Bindra Stadium", 
+    "country": "IN", 
+    "homeAdvantage": 1.1,
+    "biggest_rival": "Rajasthan Royals",
+    "other_rivals": "Delhi Capitals",
+    "policing_conflict": null,
+    "uefa_pot": 4
+  },
+  { 
+    "name": "Sunrisers Hyderabad", 
+    "city": "Hyderabad", 
+    "stadium": "Rajiv Gandhi Stadium", 
+    "country": "IN", 
+    "homeAdvantage": 1.1,
+    "biggest_rival": "Royal Challengers Bangalore",
+    "other_rivals": "Chennai Super Kings",
+    "policing_conflict": null,
+    "uefa_pot": 2
+  },
+  { 
+    "name": "Deccan Chargers", 
+    "city": "Hyderabad", 
+    "stadium": "Rajiv Gandhi Stadium", 
+    "country": "IN", 
+    "homeAdvantage": 1.1,
+    "biggest_rival": "Sunrisers Hyderabad",
+    "other_rivals": "Mumbai Indians",
+    "policing_conflict": null,
+    "uefa_pot": 3
+  },
+  { 
+    "name": "Pune Warriors India", 
+    "city": "Pune", 
+    "stadium": "Subrata Roy Sahara Stadium", 
+    "country": "IN", 
+    "homeAdvantage": 1.1,
+    "biggest_rival": "Mumbai Indians",
+    "other_rivals": "Chennai Super Kings",
+    "policing_conflict": null,
+    "uefa_pot": 4
+  }
+]

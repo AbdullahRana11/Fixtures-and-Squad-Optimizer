@@ -1,0 +1,23 @@
+{
+  "$schema": "https://railway.app/railway.schema.json",
+  "services": {
+    "backend": {
+      "source": {
+        "directory": "backend"
+      },
+      "config": {
+        "startCommand": "npm start",
+        "healthcheckPath": "/api/health"
+      }
+    },
+    "frontend": {
+      "source": {
+        "directory": "frontend"
+      },
+      "config": {
+        "startCommand": "npm run preview",
+        "buildCommand": "npm run build"
+      }
+    }
+  }
+}

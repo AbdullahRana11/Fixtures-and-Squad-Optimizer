@@ -1,0 +1,212 @@
+/* ============================================================
+   index.css  —  REPLACE frontend/src/index.css
+   New additions:
+     • .glass utility (lighter than tactical-glass)
+     • .glow-primary / .glow-secondary
+     • kbd styling for shortcut legend
+     • Improved scrollbar
+     • Flip card 3D classes
+     • Shimmer skeleton animation
+   ============================================================ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --primary: #00F260;
+    --secondary: #05D5FF;
+    --glow-primary: rgba(0, 242, 96, 0.5);
+    --glow-secondary: rgba(5, 213, 255, 0.5);
+    --background: #000000;
+  }
+
+  body {
+    @apply bg-void text-white font-outfit overflow-hidden antialiased;
+    background: #000000;
+  }
+
+  * {
+    @apply border-white/5;
+    cursor: default;
+  }
+}
+
+@layer components {
+  /* Heavy frosted glass */
+  .tactical-glass {
+    @apply bg-glass backdrop-blur-xl border border-white/10 relative overflow-hidden;
+  }
+
+  .tactical-glass::after {
+    content: '';
+    @apply absolute inset-0 opacity-[0.06] pointer-events-none;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 3px,
+      rgba(255, 255, 255, 0.03) 3px,
+      rgba(255, 255, 255, 0.03) 4px
+    );
+    animation: scan 10s linear infinite;
+  }
+
+  /* Lighter glass */
+  .glass {
+    @apply bg-white/[0.03] backdrop-blur-md border border-white/[0.08];
+  }
+
+  /* HUD corner brackets */
+  .hud-corner {
+    @apply absolute w-4 h-4;
+    border-color: rgba(0, 242, 96, 0.35);
+  }
+  .hud-corner-tl { @apply top-0 left-0 border-t-2 border-l-2; }
+  .hud-corner-tr { @apply top-0 right-0 border-t-2 border-r-2; }
+  .hud-corner-bl { @apply bottom-0 left-0 border-b-2 border-l-2; }
+  .hud-corner-br { @apply bottom-0 right-0 border-b-2 border-r-2; }
+
+  /* Glow utilities */
+  .glow-primary {
+    box-shadow: 0 0 20px var(--glow-primary);
+  }
+  .glow-secondary {
+    box-shadow: 0 0 20px var(--glow-secondary);
+  }
+  .glow-text {
+    text-shadow: 0 0 20px var(--glow-primary);
+  }
+
+  /* Skeleton shimmer */
+  .shimmer {
+    @apply relative overflow-hidden;
+    background: rgba(255,255,255,0.03);
+  }
+  .shimmer::after {
+    content: '';
+    @apply absolute inset-0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.06) 50%, transparent 100%);
+    animation: shimmer 1.6s ease-in-out infinite;
+  }
+
+  /* Keyboard shortcut styling */
+  kbd {
+    @apply inline-block px-1 py-0.5 rounded border border-white/15 bg-white/5;
+    font-family: ui-monospace, monospace;
+    font-size: 0.65rem;
+    line-height: 1;
+  }
+}
+
+/* ── Animations ─────────────────────────────────────────────── */
+
+@keyframes scan {
+  from { background-position: 0 0; }
+  to { background-position: 0 100%; }
+}
+
+@keyframes shimmer {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(100%); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 10px var(--glow-primary); }
+  50%       { box-shadow: 0 0 30px var(--glow-primary), 0 0 60px var(--glow-primary); }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* ── 3D card utilities ──────────────────────────────────────── */
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+/* ── Scrollbar ──────────────────────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.01);
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--primary);
+  opacity: 0.2;
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  opacity: 0.5;
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ── Root sizing ────────────────────────────────────────────── */
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* ── Selection ──────────────────────────────────────────────── */
+
+::selection {
+  background-color: var(--primary);
+  color: #000;
+}
+
+/* ── Input range track color fix ────────────────────────────── */
+
+input[type='range'] {
+  @apply h-1 rounded-full cursor-pointer;
+  background: rgba(255,255,255,0.08);
+  -webkit-appearance: none;
+  appearance: none;
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 8px var(--glow-primary);
+  cursor: pointer;
+}
+input[type='range']::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 8px var(--glow-primary);
+  cursor: pointer;
+  border: none;
+}
+
+/* ── Select element ─────────────────────────────────────────── */
+
+select {
+  background-image: none;
+  -webkit-appearance: none;
+  appearance: none;
+  color: white;
+}
+select option {
+  background: #111;
+  color: white;
+}
