@@ -505,6 +505,7 @@ export const FixtureDisplay: React.FC<FixtureDisplayProps> = ({ league, onBack }
                         if (!isExpanded && !pred) handlePredict(match);
                       }}
                       onSimulate={(m: any) => setSimFixture(m)}
+                      onPredict={() => handlePredict(match)}
                       backendTeams={backendTeams}
                     />
                   </motion.div>
@@ -656,7 +657,7 @@ const RenderLogo = ({ logo, fallback }: { logo: string; fallback: string }) => {
   return <div className="text-xl mb-1 filter drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">{logo || fallback}</div>;
 };
 
-const FixtureCard = ({ match, matchId, isExpanded, prediction, isLoadingPred, themeData, sportIcon, league, onToggle, onSimulate, backendTeams }: any) => {
+const FixtureCard = ({ match, matchId, isExpanded, prediction, isLoadingPred, themeData, sportIcon, league, onToggle, onSimulate, onPredict, backendTeams }: any) => {
   const homeTeamData = backendTeams?.find((t: any) => t.name === match.home);
   const awayTeamData = backendTeams?.find((t: any) => t.name === match.away);
   
@@ -857,7 +858,7 @@ const FixtureCard = ({ match, matchId, isExpanded, prediction, isLoadingPred, th
             </div>
           ) : (
             <button
-              onClick={(e) => { e.stopPropagation(); }}
+              onClick={(e) => { e.stopPropagation(); onPredict(); }}
               className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg bg-white/5 border border-white/10 hover:border-primary/30 font-mono text-[10px] text-gray-500 hover:text-white transition-all"
             >
               <TrendingUp size={12} /> Run AI Prediction
