@@ -1,7 +1,6 @@
-# ─────────────────────────────────────────────────────────────────────────────
 # Stage 1 — Build the Vite / React frontend
 # ─────────────────────────────────────────────────────────────────────────────
-FROM node:20-alpine AS frontend-builder
+FROM node:20-slim AS frontend-builder
 
 WORKDIR /app/frontend
 
@@ -19,7 +18,10 @@ RUN npm run build && ls -R dist
 
 # Stage 2 — Build the TypeScript backend
 # ─────────────────────────────────────────────────────────────────────────────
-FROM node:20-alpine AS backend-builder
+FROM node:20-slim AS backend-builder
+
+# Install openssl for Prisma
+RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app/backend
 
@@ -35,10 +37,12 @@ COPY backend/ ./
 RUN npx prisma generate && npm run build && ls -R dist
 
 
-# ─────────────────────────────────────────────────────────────────────────────
 # Stage 3 — Production image
 # ─────────────────────────────────────────────────────────────────────────────
-FROM node:20-alpine AS production
+FROM node:20-slim AS production
+
+# Install openssl for Prisma runtime
+RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
