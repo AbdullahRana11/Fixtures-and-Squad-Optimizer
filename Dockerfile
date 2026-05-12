@@ -1,6 +1,6 @@
 # Stage 1 — Build the Vite / React frontend
 # ─────────────────────────────────────────────────────────────────────────────
-FROM node:20-slim AS frontend-builder
+FROM node:20-bullseye-slim AS frontend-builder
 
 WORKDIR /app/frontend
 
@@ -18,10 +18,10 @@ RUN npm run build && ls -R dist
 
 # Stage 2 — Build the TypeScript backend
 # ─────────────────────────────────────────────────────────────────────────────
-FROM node:20-slim AS backend-builder
+FROM node:20-bullseye-slim AS backend-builder
 
-# Install openssl for Prisma
-RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+# Install openssl and ca-certificates for Prisma
+RUN apt-get update && apt-get install -y openssl ca-certificates libssl-dev && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app/backend
 
@@ -39,10 +39,10 @@ RUN npx prisma generate && npm run build && ls -R dist
 
 # Stage 3 — Production image
 # ─────────────────────────────────────────────────────────────────────────────
-FROM node:20-slim AS production
+FROM node:20-bullseye-slim AS production
 
-# Install openssl for Prisma runtime
-RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+# Install openssl and ca-certificates for Prisma and secure DB connection
+RUN apt-get update && apt-get install -y openssl ca-certificates libssl-dev && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
@@ -51,7 +51,6 @@ WORKDIR /app
 COPY --from=backend-builder /app/backend/package*.json ./
 
 # Copy built backend + pre-installed node_modules + prisma schema
-# (This avoids re-running npm ci in the final stage)
 COPY --from=backend-builder /app/backend/dist ./dist
 COPY --from=backend-builder /app/backend/node_modules ./node_modules
 COPY --from=backend-builder /app/backend/prisma ./prisma
@@ -70,11 +69,10 @@ USER node
 # HF Spaces exposes port 7860
 EXPOSE 7860
 
-# Startup: push schema -> seed data -> start Express
-# We use node for seeds because they are now pre-compiled into dist/
+# Startup: push schema (fast) -> start server immediately -> run seeds in background
+# This prevents the 30-minute timeout by ensuring the server listens on 7860 quickly.
 CMD ["sh", "-c", "\
-  npx prisma db push --accept-data-loss && \
-  node dist/prisma/seed.js && \
-  node dist/prisma/seed_cricket.js && \
+  npx prisma db push --accept-data-loss; \
+  (node dist/prisma/seed.js && node dist/prisma/seed_cricket.js) & \
   node dist/src/index.js \
 "]
