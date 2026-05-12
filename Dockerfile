@@ -67,6 +67,8 @@ RUN chown -R node:node /app
 USER node
 
 # HF Spaces exposes port 7860
+ENV PORT=7860
+ENV NODE_ENV=production
 EXPOSE 7860
 
 # Startup: Start server immediately in foreground, run DB tasks in background
