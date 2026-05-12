@@ -13,7 +13,7 @@ COPY frontend/ ./
 # Empty string → relative URLs → same-origin API calls (no CORS)
 ENV VITE_API_URL=""
 
-RUN npm run build
+RUN npm run build && ls -R dist
 # Output → /app/frontend/dist
 
 
@@ -29,8 +29,8 @@ RUN npm ci
 
 COPY backend/ ./
 
-# Compile TS → dist/  (also runs prisma generate via postinstall)
-RUN npm run build
+# Compile TS → dist/
+RUN npm run build && ls -R dist
 
 
 # ─────────────────────────────────────────────────────────────────────────────
