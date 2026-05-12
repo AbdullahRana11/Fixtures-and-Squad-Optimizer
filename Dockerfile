@@ -69,10 +69,9 @@ USER node
 # HF Spaces exposes port 7860
 EXPOSE 7860
 
-# Startup: push schema (fast) -> start server immediately -> run seeds in background
-# This prevents the 30-minute timeout by ensuring the server listens on 7860 quickly.
+# Startup: Start server immediately in foreground, run DB tasks in background
+# This ensures the port is opened instantly so HF Spaces sees the app as 'Running'.
 CMD ["sh", "-c", "\
-  npx prisma db push --accept-data-loss; \
-  (node dist/prisma/seed.js && node dist/prisma/seed_cricket.js) & \
+  (npx prisma db push --accept-data-loss && node dist/prisma/seed.js && node dist/prisma/seed_cricket.js) & \
   node dist/src/index.js \
 "]
