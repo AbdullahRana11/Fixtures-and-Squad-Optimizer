@@ -701,10 +701,10 @@ const FixtureCard = ({ match, matchId, isExpanded, prediction, isLoadingPred, th
         e.stopPropagation();
         onSimulate(match);
       }}
-      className="absolute top-2 right-8 p-1 rounded hover:bg-white/5 text-gray-600 hover:text-primary transition-all"
+      className="absolute top-2 right-8 px-2 py-0.5 rounded text-[9px] font-mono font-bold uppercase border border-white/10 text-gray-400 hover:text-emerald-400 hover:border-emerald-500/50 hover:bg-emerald-500/10 transition-all flex items-center gap-1"
       title="Run Simulation"
     >
-      <Shuffle size={12} />
+      <Zap size={10} /> Simulate
     </button>
     {/* Derby indicator */}
     {match.isDerby && (
