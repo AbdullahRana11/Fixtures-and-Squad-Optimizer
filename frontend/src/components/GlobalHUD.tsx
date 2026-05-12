@@ -65,7 +65,7 @@ export const GlobalHUD: React.FC = () => {
   // Poll backend health every 15s
   useEffect(() => {
     const check = () => {
-      fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/fpl/players`, {
+      fetch(`${import.meta.env.VITE_API_URL ?? 'http://localhost:3001'}/api/fpl/players`, {
         signal: AbortSignal.timeout(3000),
       })
         .then(() => { setBackendOnline(true); setShowBanner(false); })

@@ -17,7 +17,7 @@ temp_old_*.ts
 frontend_mods_extracted/
 improvements_zip/
 temp_unzip/
-dataset/
+# dataset/ is needed for seeding, removed from ignore
 extract.py
 
 # Frontend build artifacts (built fresh in Docker)

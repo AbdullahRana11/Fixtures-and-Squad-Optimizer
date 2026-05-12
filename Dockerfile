@@ -55,6 +55,7 @@ COPY --from=frontend-builder /app/frontend/dist ./public
 
 # Copy dataset for FPL seeding
 COPY FPL_Real_Players_25_26.xlsx ./FPL_Real_Players_25_26.xlsx
+COPY dataset ./dataset
 
 # HF Spaces requires the 'node' user (UID 1000)
 RUN chown -R node:node /app
@@ -64,10 +65,10 @@ USER node
 EXPOSE 7860
 
 # Startup: push schema -> seed data -> start Express
-# We use npx for prisma/ts-node which are in node_modules/.bin
+# We use node for seeds because they are now pre-compiled into dist/
 CMD ["sh", "-c", "\
   npx prisma db push --accept-data-loss && \
-  npx ts-node --skip-project prisma/seed.ts && \
-  npx ts-node --skip-project prisma/seed_cricket.ts && \
-  node dist/index.js \
+  node dist/prisma/seed.js && \
+  node dist/prisma/seed_cricket.js && \
+  node dist/src/index.js \
 "]
