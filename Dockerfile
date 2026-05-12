@@ -17,7 +17,6 @@ RUN npm run build && ls -R dist
 # Output → /app/frontend/dist
 
 
-# ─────────────────────────────────────────────────────────────────────────────
 # Stage 2 — Build the TypeScript backend
 # ─────────────────────────────────────────────────────────────────────────────
 FROM node:20-alpine AS backend-builder
@@ -25,12 +24,15 @@ FROM node:20-alpine AS backend-builder
 WORKDIR /app/backend
 
 COPY backend/package*.json ./
+# Copy prisma schema early so postinstall (prisma generate) works
+COPY backend/prisma ./prisma/
+
 RUN npm ci
 
 COPY backend/ ./
 
-# Compile TS → dist/
-RUN npm run build && ls -R dist
+# Explicitly generate just in case, then compile TS -> dist/
+RUN npx prisma generate && npm run build && ls -R dist
 
 
 # ─────────────────────────────────────────────────────────────────────────────
